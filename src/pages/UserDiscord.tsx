@@ -111,20 +111,25 @@ export default function UserDiscord() {
 
     // call api 
   useEffect(() => {
-    axios.post('http://10.10.20.18:3001/user', {
-      "email": "",
+    const fetch = async () => {
+      const result = await usersApi();
+      setUsers(result);
+    };
+    fetch();
+    // axios.post('http://10.10.20.18:3001/user', {
+    //   "email": "",
       
-      "deactive": false,
-      "page": 1,
-      "size": 10
-    })
-    .then(response => {
-      setUsers(response.data.content);
-      console.log(response)
-    })
-    .catch(error => {
-      console.error(error);
-    });
+    //   "deactive": false,
+    //   "page": 1,
+    //   "size": 10
+    // })
+    // .then(response => {
+    //   setUsers(response.data.content);
+    //   console.log(response)
+    // })
+    // .catch(error => {
+    //   console.error(error);
+    // });
    
   }, []);
 
