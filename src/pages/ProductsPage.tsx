@@ -22,9 +22,9 @@ export default function ProductsPage() {
 
   return (
     <>
-      {/* <Helmet>
+      <Helmet>
         <title> Dashboard: Products | Minimal UI </title>
-      </Helmet> */}
+      </Helmet>
 
       <Container>
         <Typography variant="h4" sx={{ mb: 5 }}>

@@ -149,9 +149,9 @@ export default function UserPage() {
 
   return (
     <>
-      {/* <Helmet>
+      <Helmet>
         <title> User | Minimal UI </title>
-      </Helmet> */}
+      </Helmet>
 
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>

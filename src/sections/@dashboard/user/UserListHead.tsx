@@ -52,13 +52,13 @@ export default function UserListHead({
         {headLabel.map((headCell:any) => (
           <TableCell
             key={headCell.id}
-            align={headCell.alignRight ? 'right' : 'left'}
-            //sortDirection={(orderBy=== headCell.id && order)? order:false}
+            align={headCell.alignRight ? 'center' : 'left'}
+            sortDirection={(orderBy=== headCell.id && (order==='desc'||order==='asc'))? order:false}
           >
             <TableSortLabel
               hideSortIcon
               active={orderBy === headCell.id}
-              //direction={orderBy === headCell.id ? order : 'asc'}
+              direction={orderBy === headCell.id && order==='desc' ? order : 'asc'}
               onClick={createSortHandler(headCell.id)}
             >
               {headCell.label}

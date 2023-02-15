@@ -20,9 +20,9 @@ const SORT_OPTIONS = [
 export default function BlogPage() {
   return (
     <>
-      {/* <Helmet>
+      <Helmet>
         <title> Dashboard: Blog | Minimal UI </title>
-      </Helmet> */}
+      </Helmet>
 
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
