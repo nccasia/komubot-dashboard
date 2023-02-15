@@ -263,7 +263,7 @@ export default function UserPage() {
         </Card>
       </Container>
 
-      {/* <Popover
+      <Popover
         open={Boolean(open)}
         anchorEl={open}
         onClose={handleCloseMenu}
@@ -290,7 +290,7 @@ export default function UserPage() {
           <Iconify icon={'eva:trash-2-outline'} sx={{ mr: 2 }} />
           Delete
         </MenuItem>
-      </Popover> */}
+      </Popover>
     </>
   );
 }
