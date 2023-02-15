@@ -1,7 +1,8 @@
 import { Helmet } from 'react-helmet-async';
+import axios from 'axios';
 import { filter } from 'lodash';
 import { sentenceCase } from 'change-case';
-import { useState } from 'react';
+import React,{ useEffect, useState, useMemo } from 'react';
 // @mui
 import {
   Card,
@@ -22,28 +23,45 @@ import {
   TableContainer,
   TablePagination,
 } from '@mui/material';
+
 // components
 import Label from '../components/label';
 import Iconify from '../components/iconify';
 import Scrollbar from '../components/scrollbar';
 // sections
-import { UserListHead, UserListToolbar } from '../sections/@dashboard/user';
+import { UserListHead, UserListToolbar } from '../sections/@dashboard/usediscord';
+import {usersApi} from '../_mock/userdiscord';
 // mock
-import USERLIST from '../_mock/user';
-import { AnyARecord } from 'dns';
+
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Name', alignRight: false },
-  { id: 'company', label: 'Company', alignRight: false },
-  { id: 'role', label: 'Role', alignRight: false },
-  { id: 'isVerified', label: 'Verified', alignRight: false },
-  { id: 'status', label: 'Status', alignRight: false },
+  { id: 'Avatar', label: 'Avatar', alignRight: false },
+  { id: 'UserId', label: 'UserId', alignRight: false },
+  { id: 'Username', label: 'Username', alignRight: false },
+  { id: 'Email', label: 'Email', alignRight: false },
+  { id: 'Roles', label: 'Roles', alignRight: false },
+  { id: 'Roles_discord', label: 'Roles_discord', alignRight: false },
+  { id: 'Deactive', label: 'Deactive', alignRight: false },
   { id: '' },
 ];
 
 // ----------------------------------------------------------------------
+
+
+
+interface Iuser{
+  
+    avatar: string,
+    userId: string,
+    username: string,
+    email: string,
+    roles: string|null,
+    roles_discord: string|null
+    deactive: boolean
+  
+}
 
 function descendingComparator(a:any, b:any, orderBy:string) {
   if (b[orderBy] < a[orderBy]) {
@@ -69,12 +87,12 @@ function applySortFilter(array:any, comparator:any, query:string) {
     return a[1] - b[1];
   });
   if (query) {
-    return filter(array, (_user:any) => _user.name.toLowerCase().indexOf(query.toLowerCase()) !== -1);
+    return filter(array, (_user:any) => _user.username.toLowerCase().indexOf(query.toLowerCase()) !== -1);
   }
   return stabilizedThis.map((el:any) => el[0]);
 }
 
-export default function UserPage() {
+export default function UserDiscord() {
   const [open, setOpen] = useState(null);
 
   const [page, setPage] = useState(0);
@@ -88,7 +106,27 @@ export default function UserPage() {
   const [filterName, setFilterName] = useState('');
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  
+
+  const [users, setUsers] = useState<Iuser[]>([]);
+
+    // call api 
+  useEffect(() => {
+    axios.post('http://10.10.20.18:3001/user', {
+      "email": "",
+      
+      "deactive": false,
+      "page": 1,
+      "size": 10
+    })
+    .then(response => {
+      setUsers(response.data.content);
+      console.log(response)
+    })
+    .catch(error => {
+      console.error(error);
+    });
+   
+  }, []);
 
   const handleOpenMenu = (event:any) => {
     setOpen(event.currentTarget);
@@ -106,7 +144,7 @@ export default function UserPage() {
 
   const handleSelectAllClick = (event:any) => {
     if (event.target.checked) {
-      const newSelecteds:any = USERLIST.map((n:any) => n.name);
+      const newSelecteds:any = users.map((n:Iuser) => n.userId);
       setSelected(newSelecteds);
       return;
     }
@@ -142,26 +180,27 @@ export default function UserPage() {
     setFilterName(event.target.value);
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - users.length) : 0;
 
-  const filteredUsers = applySortFilter(USERLIST, getComparator(order, orderBy), filterName);
+  const filteredUsers = applySortFilter(users, getComparator(order, orderBy), filterName)
+  // console.log(filterName)
 
   const isNotFound = !filteredUsers.length && !!filterName;
 
   return (
     <>
-      {/* <Helmet>
+      <Helmet>
         <title> User | Minimal UI </title>
-      </Helmet> */}
+      </Helmet>
 
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
             User
           </Typography>
-          <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
+          {/* <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
             New User
-          </Button>
+          </Button> */}
         </Stack>
 
         <Card>
@@ -174,39 +213,43 @@ export default function UserPage() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={USERLIST.length}
+                  rowCount={users.length}
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
-                  {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row:any) => {
-                    const { id, name, role, status, company, avatarUrl, isVerified } = row;
-                    const selectedUser = selected.indexOf((name)) !== -1;
+                 
+                  {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row:Iuser) => {
+                    const { avatar, userId, username, email, roles, roles_discord, deactive } = row;
+                    const selectedUser = selected.indexOf((userId)) !== -1;
 
                     return (
-                      <TableRow hover key={id} tabIndex={-1} role="checkbox" selected={selectedUser}>
+                      <TableRow hover key={userId} tabIndex={-1} role="checkbox" selected={selectedUser}>
                         <TableCell padding="checkbox">
-                          <Checkbox checked={selectedUser} onChange={(event) => handleClick(event, name)} />
+                          <Checkbox checked={selectedUser} onChange={(event) => handleClick(event, userId)} />
                         </TableCell>
 
                         <TableCell component="th" scope="row" padding="none">
                           <Stack direction="row" alignItems="center" spacing={2}>
-                            <Avatar alt={name} src={avatarUrl} />
+                            <Avatar src={avatar} />
                             <Typography variant="subtitle2" noWrap>
-                              {name}
+                              {/* {avatar} */}
                             </Typography>
                           </Stack>
                         </TableCell>
 
-                        <TableCell align="left">{company}</TableCell>
 
-                        <TableCell align="left">{role}</TableCell>
+                        <TableCell align="left">{userId}</TableCell>
+                        <TableCell align="left">{username}</TableCell>
+                        <TableCell align="left">{email}</TableCell>
+                        <TableCell align="left">{roles}</TableCell>
+                        <TableCell align="left">{roles_discord}</TableCell>
 
-                        <TableCell align="left">{isVerified ? 'Yes' : 'No'}</TableCell>
+                        {/* <TableCell align="left">{deactive ? 'Yes' : 'No'}</TableCell> */}
 
                         <TableCell align="left">
-                          <Label color={(status === 'banned' && 'error') || 'success'}>{sentenceCase(status)}</Label>
+                          <Label sx={{color:deactive?'red': 'green'}}  disableAnimation={(deactive)} >{String(deactive)}</Label>
                         </TableCell>
 
                         <TableCell align="right">
@@ -254,7 +297,7 @@ export default function UserPage() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={USERLIST.length}
+            count={users.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
