@@ -29,7 +29,7 @@ import { UserListHead, UserListToolbar } from '../sections/@dashboard/user';
 // mock
 
 import { textStyle } from "../utils/textStyles"
-import axios from 'axios';
+import {apiAxios, channelLink} from '../axios/ApiAxios';
 
 // ----------------------------------------------------------------------
 
@@ -37,7 +37,7 @@ const TABLE_HEAD = [
     { id: 'id', label: 'Id', alignRight: true },
     { id: 'name', label: 'Name', alignRight: true },
     { id: 'type', label: 'Type', alignRight: true },
-    // { id: '', label: '', alignRight: true  },
+    { id: 'action', label: 'Action', alignRight: true  },
 ];
 
 interface ChannelFace{
@@ -96,7 +96,7 @@ export default function ChannelPage() {
     const [channel, setChannel] = useState<ChannelFace[]>([]);
 
     React.useEffect(()=>{
-        axios.get('http://10.10.20.18:3001/channel')
+        apiAxios.get(channelLink)
         .then(function (response) {
             setChannel(response.data.content);
         })
@@ -209,11 +209,11 @@ export default function ChannelPage() {
                                             <TableCell align="center">{textStyle(row.name)}</TableCell>
                                             <TableCell align="center">{row.type}</TableCell>
 
-                                            {/* <TableCell align="center">
+                                            <TableCell align="center">
                                                 <IconButton size="large" color="inherit" onClick={handleOpenMenu}>
                                                     <Iconify icon={'eva:more-vertical-fill'} />
                                                 </IconButton>
-                                            </TableCell> */}
+                                            </TableCell>
                                         </TableRow>
                                     );
                                 })}
@@ -263,7 +263,7 @@ export default function ChannelPage() {
                 </Card>
             </Container>
 
-            {/* <Popover
+            <Popover
                 open={Boolean(open)}
                 anchorEl={open}
                 onClose={handleCloseMenu}
@@ -290,7 +290,7 @@ export default function ChannelPage() {
                     <Iconify icon={'eva:trash-2-outline'} sx={{ mr: 2 }} />
                     Delete
                 </MenuItem>
-            </Popover> */}
+            </Popover>
         </>
     );
 }

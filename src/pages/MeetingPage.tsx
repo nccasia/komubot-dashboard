@@ -23,28 +23,34 @@ import {
 } from '@mui/material';
 // components
 import Iconify from '../components/iconify';
+import Label from '../components/label';
 //import Scrollbar from '../components/scrollbar';
 // sections
 import { UserListHead, UserListToolbar } from '../sections/@dashboard/user';
 // mock
 
-import { textStyle } from "../utils/textStyles"
-import axios from 'axios';
-
+import {apiAxios, meetingLink} from '../axios/ApiAxios';
+import Moment from "moment";
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-    { id: 'id', label: 'Id', alignRight: true },
-    { id: 'name', label: 'Name', alignRight: true },
-    { id: 'type', label: 'Type', alignRight: true },
-    // { id: '', label: '', alignRight: true  },
+    { id: 'createdTimestamp', label: 'Created Time', alignRight: true },
+    { id: 'task', label: 'Task', alignRight: true },
+    { id: 'repeat', label: 'Repeat', alignRight: true },
+    { id: 'repeatTime', label: 'Repeat Time', alignRight: true },
+    { id: 'channelFullName', label: 'Channel', alignRight: true },
+    { id: 'cancel', label: 'Cancel', alignRight: true },
+    { id: 'action', label: 'Action', alignRight: true  },
 ];
 
-interface ChannelFace{
-    id:string,
-    name:string,
-    type:string,
-    
+interface MeetingFace{
+    id:number,
+    createdTimestamp:string,
+    task:string,
+    repeat:string,
+    cancel:boolean,
+    repeatTime:string,
+    channelFullName:string, 
 }
 
 // ----------------------------------------------------------------------
@@ -78,7 +84,7 @@ function applySortFilter(array: any, comparator: any, query: string) {
     return stabilizedThis.map((el: any) => el[0]);
 }
 
-export default function ChannelPage() {
+export default function MeetingPage() {
     const [open, setOpen] = useState<Element | ((element: Element) => Element) | null | undefined>();
 
     const [page, setPage] = useState(0);
@@ -93,17 +99,17 @@ export default function ChannelPage() {
 
     const [rowsPerPage, setRowsPerPage] = useState(5);
 
-    const [channel, setChannel] = useState<ChannelFace[]>([]);
+    const [meeting, setMeeting] = useState<MeetingFace[]>([]);
 
     React.useEffect(()=>{
-        axios.get('http://10.10.20.18:3001/channel')
+        apiAxios.get(meetingLink)
         .then(function (response) {
-            setChannel(response.data.content);
+            setMeeting(response.data.content);
         })
         .catch(function (error) {
             console.log(error);
         })
-    },[channel]);
+    },[meeting]);
 
     const handleOpenMenu = (event: any) => {
         setOpen(event.currentTarget);
@@ -121,14 +127,14 @@ export default function ChannelPage() {
 
     const handleSelectAllClick = (event: any) => {
         if (event.target.checked) {
-            const newSelecteds: any = channel.map((n: ChannelFace) => n.id);
+            const newSelecteds: any = meeting.map((n: MeetingFace) => n.id);
             setSelected(newSelecteds);
             return;
         }
         setSelected([]);
     };
 
-    const handleClick = (event: any, index: string) => {
+    const handleClick = (event: any, index: number) => {
         const selectedIndex: number = selected.indexOf((index));
         let newSelected: any = [];
         if (selectedIndex === -1) {
@@ -157,26 +163,26 @@ export default function ChannelPage() {
         setFilterName(event.target.value);
     };
 
-    const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - channel.length) : 0;
+    const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - meeting.length) : 0;
 
-    const filteredUsers = applySortFilter(channel, getComparator(order, orderBy), filterName);
+    const filteredUsers = applySortFilter(meeting, getComparator(order, orderBy), filterName);
 
     const isNotFound = !filteredUsers.length && !!filterName;
 
     return (
         <>
             <Helmet>
-                <title> Channel | Minimal UI </title>
+                <title>  Meeting | Minimal UI </title>
             </Helmet>
 
 
             <Container>
                 <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
                     <Typography variant="h4" gutterBottom>
-                        Channel
+                        Meeting
                     </Typography>
                     <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
-                        New Channel
+                        New  Meeting
                     </Button>
                 </Stack>
 
@@ -190,13 +196,13 @@ export default function ChannelPage() {
                                 order={order}
                                 orderBy={orderBy}
                                 headLabel={TABLE_HEAD}
-                                rowCount={channel.length}
+                                rowCount={meeting.length}
                                 numSelected={selected.length}
                                 onRequestSort={handleRequestSort}
                                 onSelectAllClick={handleSelectAllClick}
                             />
                             <TableBody>
-                                {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row: ChannelFace) => {
+                                {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row: MeetingFace) => {
                                     const selectedUser = selected.indexOf((row.id)) !== -1;
                                     return (
                                         <TableRow hover key={Number(row.id)} tabIndex={-1} role="checkbox" selected={selectedUser}>
@@ -205,15 +211,21 @@ export default function ChannelPage() {
                                                 <Checkbox checked={selectedUser} onChange={(event) => handleClick(event, row.id)} />
                                             </TableCell>
 
-                                            <TableCell align="center"><b>{row.id}</b></TableCell>
-                                            <TableCell align="center">{textStyle(row.name)}</TableCell>
-                                            <TableCell align="center">{row.type}</TableCell>
-
-                                            {/* <TableCell align="center">
+                                            <TableCell align="center">{Moment(Number(row.createdTimestamp)).format('HH:MM DD/MM/YYYY ')}</TableCell>
+                                            <TableCell align="center"><b>{row.task}</b></TableCell>
+                                            <TableCell align="center">{row.repeat}</TableCell>
+                                            <TableCell align="center">{row.repeatTime}</TableCell>
+                                            <TableCell align="center">{row.channelFullName}</TableCell>
+                                            <TableCell align="center" >
+                                                <Label color={row.cancel?'success':'error'}>{(row.cancel)?"Open":"Close"}</Label>
+                                            </TableCell>
+                                            
+                                            
+                                            <TableCell align="center">
                                                 <IconButton size="large" color="inherit" onClick={handleOpenMenu}>
                                                     <Iconify icon={'eva:more-vertical-fill'} />
                                                 </IconButton>
-                                            </TableCell> */}
+                                            </TableCell>
                                         </TableRow>
                                     );
                                 })}
@@ -252,9 +264,9 @@ export default function ChannelPage() {
                     {/* </Scrollbar> */}
 
                     <TablePagination
-                        rowsPerPageOptions={channel.length<5? [0,5]:[5, 10, 25]}
+                        rowsPerPageOptions={meeting.length<5? [0,5]:[5, 10, 25]}
                         component="div"
-                        count={channel.length}
+                        count={meeting.length}
                         rowsPerPage={rowsPerPage}
                         page={page}
                         onPageChange={handleChangePage}
@@ -263,7 +275,7 @@ export default function ChannelPage() {
                 </Card>
             </Container>
 
-            {/* <Popover
+            <Popover
                 open={Boolean(open)}
                 anchorEl={open}
                 onClose={handleCloseMenu}
@@ -290,7 +302,7 @@ export default function ChannelPage() {
                     <Iconify icon={'eva:trash-2-outline'} sx={{ mr: 2 }} />
                     Delete
                 </MenuItem>
-            </Popover> */}
+            </Popover>
         </>
     );
 }

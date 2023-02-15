@@ -7,6 +7,7 @@ import BlogPage from './pages/BlogPage';
 import UserPage from './pages/UserPage';
 import ChannelPage from './pages/ChannelPage';
 import LoginPage from './pages/LoginPage';
+import MeetingPage from './pages/MeetingPage';
 import Page404 from './pages/Page404';
 import ProductsPage from './pages/ProductsPage';
 import DashboardAppPage from './pages/DashboardAppPage';
@@ -25,6 +26,7 @@ export default function Router() {
         { path: 'app', element: <DashboardAppPage /> },
         { path: 'user', element: <UserPage /> },
         { path: 'channel', element: < ChannelPage/> },
+        { path: 'meeting', element: < MeetingPage/> },
         { path: 'userdiscord', element: <UserDiscord /> },
         { path: 'products', element: <ProductsPage /> },
         { path: 'blog', element: <BlogPage /> },
