@@ -22,6 +22,16 @@ const navConfig = [
     icon: icon("ic_user"),
   },
   {
+    title: 'channel',
+    path: '/dashboard/channel',
+    icon: icon('ic_user'),
+  },
+  {
+    title: 'meeting',
+    path: '/dashboard/meeting',
+    icon: icon('ic_user'),
+  },
+  {
     title: "userdiscord",
     path: "/dashboard/userdiscord",
     icon: icon("ic_user"),
