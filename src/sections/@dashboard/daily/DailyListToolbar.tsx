@@ -32,13 +32,13 @@ const StyledSearch = styled(OutlinedInput)(({ theme }:any) => ({
 
 // ----------------------------------------------------------------------
 
-UserListToolbar.propTypes = {
+DailyListToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
   filterName: PropTypes.string.isRequired,
   onFilterName: PropTypes.func.isRequired,
 };
 
-export default function UserListToolbar({ numSelected, filterName, onFilterName }:PropTypes.InferProps<typeof UserListToolbar.propTypes>) {
+export default function DailyListToolbar({ numSelected, filterName, onFilterName }:PropTypes.InferProps<typeof DailyListToolbar.propTypes>) {
   return (
     <StyledRoot
       sx={{
@@ -52,21 +52,18 @@ export default function UserListToolbar({ numSelected, filterName, onFilterName 
         <Typography component="div" variant="subtitle1">
           {numSelected} selected
         </Typography>
-      ) : 
-      
-      (
+      ) : (
         <StyledSearch
           value={filterName}
           onChange={onFilterName}
-          placeholder="Search user..."
+          placeholder="Search Daily..."
           startAdornment={
             <InputAdornment position="start">
               <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled', width: 20, height: 20 }} />
             </InputAdornment>
           }
         />
-      )
-      }
+      )}
 
       {numSelected > 0 ? (
         <Tooltip title="Delete">
@@ -74,15 +71,13 @@ export default function UserListToolbar({ numSelected, filterName, onFilterName 
             <Iconify icon="eva:trash-2-fill" />
           </IconButton>
         </Tooltip>
-      ) :
-      (
+      ) : (
         <Tooltip title="Filter list">
           <IconButton>
             <Iconify icon="ic:round-filter-list" />
           </IconButton>
         </Tooltip>
-      )
-      }
+      )}
     </StyledRoot>
   );
 }

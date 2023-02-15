@@ -17,7 +17,7 @@ const visuallyHidden = {
 };
 
 UserListHead.propTypes = {
-  order: PropTypes.oneOf(['asc', 'desc']),
+  order: PropTypes.oneOf(['asc', 'desc']).isRequired,
   orderBy: PropTypes.string.isRequired,
   rowCount: PropTypes.number.isRequired,
   headLabel: PropTypes.array.isRequired,
@@ -39,7 +39,6 @@ export default function UserListHead({
     onRequestSort(event, property);
   };
 
-
   return (
     <TableHead>
       <TableRow>
@@ -52,22 +51,23 @@ export default function UserListHead({
         </TableCell>
         {headLabel.map((headCell:any) => (
           <TableCell
-            key={headCell.id}
-            align={headCell.alignRight ? 'center' : 'left'}
-            sortDirection={(orderBy=== headCell.id && (order==='desc'||order==='asc'))? order:false}
+          key={headCell.id}
+          align={headCell.alignRight ? 'right' : 'left'}
+          sortDirection={(orderBy=== headCell.id && order === 'desc' )? 'desc' : order === 'asc' ? 'asc' : false}
+        >
+          
+          <TableSortLabel
+            hideSortIcon
+            active={orderBy === headCell.id}
+            direction={orderBy === headCell.id && order ? 'desc' : 'asc'}
+            onClick={createSortHandler(headCell.id)}
           >
-            <TableSortLabel
-              hideSortIcon
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id && order==='desc' ? order : 'asc'}
-              onClick={createSortHandler(headCell.id)}
-            >
-              {headCell.label}
-              {orderBy === headCell.id ? (
-                <Box sx={{ ...visuallyHidden }}>{order === 'desc' ? 'sorted descending' : 'sorted ascending'}</Box>
-              ) : null}
-            </TableSortLabel>
-          </TableCell>
+            {headCell.label}
+            {orderBy === headCell.id ? (
+              <Box sx={{ ...visuallyHidden }}>{order === 'desc' ? 'sorted descending' : 'sorted ascending'}</Box>
+            ) : null}
+          </TableSortLabel>
+        </TableCell>
         ))}
       </TableRow>
     </TableHead>

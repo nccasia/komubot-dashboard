@@ -16,7 +16,7 @@ const visuallyHidden = {
   clip: 'rect(0 0 0 0)',
 };
 
-UserListHead.propTypes = {
+DailyListHead.propTypes = {
   order: PropTypes.oneOf(['asc', 'desc']),
   orderBy: PropTypes.string.isRequired,
   rowCount: PropTypes.number.isRequired,
@@ -26,7 +26,7 @@ UserListHead.propTypes = {
   onSelectAllClick: PropTypes.func.isRequired,
 };
 
-export default function UserListHead({
+export default function DailyListHead({
   order,
   orderBy,
   rowCount,
@@ -34,11 +34,10 @@ export default function UserListHead({
   numSelected,
   onRequestSort,
   onSelectAllClick,
-}:PropTypes.InferProps<typeof UserListHead.propTypes>) {
+}:PropTypes.InferProps<typeof DailyListHead.propTypes>) {
   const createSortHandler = (property:any) => (event:any) => {
     onRequestSort(event, property);
   };
-
 
   return (
     <TableHead>
@@ -52,14 +51,15 @@ export default function UserListHead({
         </TableCell>
         {headLabel.map((headCell:any) => (
           <TableCell
+        
             key={headCell.id}
-            align={headCell.alignRight ? 'center' : 'left'}
-            sortDirection={(orderBy=== headCell.id && (order==='desc'||order==='asc'))? order:false}
+            align={headCell.alignRight ? 'right' : 'left'}
+            //sortDirection={(orderBy=== headCell.id && order)? order:false}
           >
             <TableSortLabel
               hideSortIcon
               active={orderBy === headCell.id}
-              direction={orderBy === headCell.id && order==='desc' ? order : 'asc'}
+              //direction={orderBy === headCell.id ? order : 'asc'}
               onClick={createSortHandler(headCell.id)}
             >
               {headCell.label}
