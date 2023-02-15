@@ -25,9 +25,9 @@ export default function DashboardAppPage() {
 
   return (
     <>
-      {/* <Helmet>
+      <Helmet>
         <title> Dashboard | Minimal UI </title>
-      </Helmet> */}
+      </Helmet>
       <Container maxWidth="xl">
         <Typography variant="h4" sx={{ mb: 5 }}>
           Hi, Welcome back
