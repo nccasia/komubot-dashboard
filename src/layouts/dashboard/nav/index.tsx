@@ -43,7 +43,7 @@ export default function Nav({ openNav, onCloseNav }: PropTypes.InferProps<typeof
     if (openNav) {
         onCloseNav();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    //  eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 
   const renderContent = (
