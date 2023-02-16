@@ -113,7 +113,6 @@ export default function UserDiscord() {
   useEffect(() => {
     axios.post('http://10.10.20.18:3001/user', {
       "email": "",
-      
       "deactive": false,
       "page": 1,
       "size": 10

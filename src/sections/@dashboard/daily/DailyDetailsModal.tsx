@@ -13,8 +13,7 @@ const containerStyle = {
   transform: "translate(-50%, -50%)",
   boxShadow: 2,
   borderRadius: "8px",
-  minWidth:'35%',
-
+  minWidth: "35%",
 };
 const headerStyle = {
   display: "flex",
@@ -33,7 +32,7 @@ const bodyStyle = {
   borderRadius: "0  0 8px 8px",
   p: 4,
   pt: 2,
-  gap:1,
+  gap: 1,
   display: "flex",
   flexDirection: "column",
   alignItems: "flex-start",
@@ -46,33 +45,39 @@ const SpaceBetween = {
   width: "100%",
 };
 const UserDetailsModal = ({ user, onClose }: Props) => {
-  console.log(user);
-
   return (
     <Modal open={user !== null} onClose={onClose}>
       <Box sx={containerStyle}>
         <Box sx={headerStyle}>
-           
           <Typography sx={{ textTransform: "capitalize" }} variant="h4">
             {user?.email}
           </Typography>
           <IconButton color="inherit" onClick={onClose}>
-            <HighlightOffIcon fontSize='medium' />
+            <HighlightOffIcon fontSize="medium" />
           </IconButton>
         </Box>
         <Box sx={bodyStyle}>
           <Box sx={SpaceBetween}>
             <Typography variant="h6">Channel</Typography>
             <Typography variant="h6">Time</Typography>
-         
           </Box>
           <Box sx={SpaceBetween}>
-          <Typography variant="body2">{user?.channelFullName}</Typography>
-            <Typography variant="body2">{user&&formatDateTime(user?.createdAt)}</Typography>
+            <Typography variant="body2">{user?.channelFullName}</Typography>
+            <Typography variant="body2">
+              {user && formatDateTime(user?.createdAt)}
+            </Typography>
           </Box>
           <Typography variant="h6">Daily</Typography>
           <Typography
-            sx={{ whiteSpace: "break-spaces", minWidth: 250 ,padding:'10px',color:'#7C7C8E',borderRadius:'6px',backgroundColor:'#F1F1EF', width:'100%'}}
+            sx={{
+              whiteSpace: "break-spaces",
+              minWidth: 250,
+              padding: "10px",
+              color: "#7C7C8E",
+              borderRadius: "6px",
+              backgroundColor: "#F1F1EF",
+              width: "100%",
+            }}
             variant="body2"
           >
             {user?.daily}
