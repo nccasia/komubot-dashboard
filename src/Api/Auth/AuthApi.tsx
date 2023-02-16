@@ -13,7 +13,7 @@ export const Login = async (values: Author): Promise<string> => {
     const res = await axios.post(`http://10.10.20.18:3001/auth/login`, {
       ...values,
     });
-    const token = res.data;
+    const token = res.data.accessToken;
     setAccessToken(token);
     notyf.success("Login successfully");
     return token;
