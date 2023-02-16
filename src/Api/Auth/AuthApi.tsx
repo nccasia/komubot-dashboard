@@ -1,7 +1,7 @@
 import axios, { AxiosError } from "axios";
 import { Author } from "../../interface/interface";
-import { setAccessToken } from "./../../utils/localStorerage";
-import { notyf } from "./../../utils/notif";
+import { setAccessToken } from "../../utils/localStorerage";
+import { notyf } from "../../utils/notif";
 
 interface ErrorResponse {
   error: {

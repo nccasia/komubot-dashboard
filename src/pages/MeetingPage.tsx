@@ -29,7 +29,7 @@ import Label from '../components/label';
 import { UserListHead, UserListToolbar } from '../sections/@dashboard/user';
 // mock
 
-import {apiAxios, meetingLink} from '../axios/ApiAxios';
+import {apiAxios, meetingLink} from '../axios/apiAxios';
 import Moment from "moment";
 // ----------------------------------------------------------------------
 

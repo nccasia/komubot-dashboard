@@ -17,11 +17,21 @@ import {
   AppCurrentSubject,
   AppConversionRates,
 } from '../sections/@dashboard/app';
+import { useEffect } from 'react';
+import {  useNavigate } from 'react-router';
 
 // ----------------------------------------------------------------------
 
 export default function DashboardAppPage() {
   const theme:any = useTheme();
+  const isLoggedIn = localStorage.getItem('token');
+  const navigate = useNavigate();
+
+useEffect(() => {
+  if (!isLoggedIn) {
+    navigate("/login", { replace: true });
+  }
+}, [])
 
   return (
     <>
