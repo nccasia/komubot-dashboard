@@ -23,6 +23,8 @@ import {
   TableContainer,
   TablePagination,
 } from '@mui/material';
+import Moment from 'moment';
+
 
 // components
 import Label from '../components/label';
@@ -30,20 +32,20 @@ import Iconify from '../components/iconify';
 import Scrollbar from '../components/scrollbar';
 // sections
 import { UserListHead, UserListToolbar } from '../sections/@dashboard/usediscord';
-import {usersApi} from '../_mock/userdiscord';
 // mock
+import { penaltyApi } from '../_mock/penalty';
 
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'Avatar', label: 'Avatar', alignRight: false },
-  { id: 'UserId', label: 'UserId', alignRight: false },
-  { id: 'Username', label: 'Username', alignRight: false },
-  { id: 'Email', label: 'Email', alignRight: false },
-  { id: 'Roles', label: 'Roles', alignRight: false },
-  { id: 'Roles_discord', label: 'Roles_discord', alignRight: false },
-  { id: 'Deactive', label: 'Deactive', alignRight: false },
+  { id: 'ID', label: 'ID', alignRight: false },
+  { id: 'Name', label: 'Name', alignRight: false },
+  { id: 'Ammount', label: 'Ammount', alignRight: false },
+  { id: 'Reason', label: 'Reason', alignRight: false },
+  { id: 'Isreject', label: 'Isreject', alignRight: false },
+  { id: 'Channel', label: 'Channel', alignRight: false },
+  { id: 'Time', label: 'Time', alignRight: false },
   { id: '' },
 ];
 
@@ -51,15 +53,15 @@ const TABLE_HEAD = [
 
 
 
-interface Iuser{
+interface Ipenalty{
   
-    avatar: string,
     userId: string,
     username: string,
-    email: string,
-    roles: string|null,
-    roles_discord: string|null
-    deactive: boolean
+    ammount: string,
+    reason: string,
+    isReject: boolean,
+    channelFullName: string,
+    createdTimestamp: string,
   
 }
 
@@ -92,7 +94,7 @@ function applySortFilter(array:any, comparator:any, query:string) {
   return stabilizedThis.map((el:any) => el[0]);
 }
 
-export default function UserDiscord() {
+export default function Penalty() {
   const [open, setOpen] = useState(null);
 
   const [page, setPage] = useState(0);
@@ -107,31 +109,18 @@ export default function UserDiscord() {
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
-  const [users, setUsers] = useState<Iuser[]>([]);
+  const [penal, setPenal] = useState<Ipenalty[]>([]);
 
     // call api 
   useEffect(() => {
     const fetch = async () => {
-      const result = await usersApi();
-      setUsers(result);
+      const result = await penaltyApi();
+      setPenal(result);
     };
-    fetch();
-    // axios.post('http://10.10.20.18:3001/user', {
-    //   "email": "",
-      
-    //   "deactive": false,
-    //   "page": 1,
-    //   "size": 10
-    // })
-    // .then(response => {
-    //   setUsers(response.data.content);
-    //   console.log(response)
-    // })
-    // .catch(error => {
-    //   console.error(error);
-    // });
-   
+    fetch();   
   }, []);
+//   console.log(penal)
+
 
   const handleOpenMenu = (event:any) => {
     setOpen(event.currentTarget);
@@ -149,7 +138,7 @@ export default function UserDiscord() {
 
   const handleSelectAllClick = (event:any) => {
     if (event.target.checked) {
-      const newSelecteds:any = users.map((n:Iuser) => n.userId);
+      const newSelecteds:any = penal.map((n:Ipenalty) => n.userId);
       setSelected(newSelecteds);
       return;
     }
@@ -185,9 +174,9 @@ export default function UserDiscord() {
     setFilterName(event.target.value);
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - users.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - penal.length) : 0;
 
-  const filteredUsers = applySortFilter(users, getComparator(order, orderBy), filterName)
+  const filteredUsers = applySortFilter(penal, getComparator(order, orderBy), filterName)
   // console.log(filterName)
 
   const isNotFound = !filteredUsers.length && !!filterName;
@@ -201,7 +190,7 @@ export default function UserDiscord() {
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            User
+            Penalty
           </Typography>
           {/* <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
             New User
@@ -218,44 +207,34 @@ export default function UserDiscord() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={users.length}
+                  rowCount={penal.length}
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
-                 
-                  {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row:Iuser) => {
-                    const { avatar, userId, username, email, roles, roles_discord, deactive } = row;
+                  {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row:Ipenalty) => {
+                    const { userId, username, ammount, reason, isReject, channelFullName, createdTimestamp
+                    } = row;
                     const selectedUser = selected.indexOf((userId)) !== -1;
-
+                    // console.log(row)
                     return (
                       <TableRow hover key={userId} tabIndex={-1} role="checkbox" selected={selectedUser}>
                         <TableCell padding="checkbox">
                           <Checkbox checked={selectedUser} onChange={(event) => handleClick(event, userId)} />
                         </TableCell>
 
-                        <TableCell component="th" scope="row" padding="none">
-                          <Stack direction="row" alignItems="center" spacing={2}>
-                            <Avatar src={avatar} />
-                            <Typography variant="subtitle2" noWrap>
-                              {/* {avatar} */}
-                            </Typography>
-                          </Stack>
-                        </TableCell>
-
-
                         <TableCell align="left">{userId}</TableCell>
                         <TableCell align="left">{username}</TableCell>
-                        <TableCell align="left">{email}</TableCell>
-                        <TableCell align="left">{roles}</TableCell>
-                        <TableCell align="left">{roles_discord}</TableCell>
-
-                        {/* <TableCell align="left">{deactive ? 'Yes' : 'No'}</TableCell> */}
-
+                        <TableCell align="left">{ammount}</TableCell>
+                        <TableCell align="left">{reason}</TableCell>
                         <TableCell align="left">
-                          <Label color = {deactive?'error': 'success'}  disableAnimation={(deactive)} >{String(deactive)}</Label>
+                          <Label color={isReject?'error': 'success'}  disableAnimation={(isReject)} >{String(isReject)}</Label>
                         </TableCell>
+                        <TableCell align="left">{channelFullName}</TableCell>
+                        
+                        <TableCell align="left">{Moment(Number(createdTimestamp)).format('HH:MM DD/MM/YYYY ')
+}</TableCell>
 
                         <TableCell align="right">
                           <IconButton size="large" color="inherit" onClick={handleOpenMenu}>
@@ -302,7 +281,7 @@ export default function UserDiscord() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={users.length}
+            count={penal.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
@@ -311,7 +290,7 @@ export default function UserDiscord() {
         </Card>
       </Container>
 
-      {/* <Popover
+      <Popover
         open={Boolean(open)}
         anchorEl={open}
         onClose={handleCloseMenu}
@@ -334,11 +313,11 @@ export default function UserDiscord() {
           Edit
         </MenuItem>
 
-        <MenuItem sx={{ color: 'error.main' }}>
+        {/* <MenuItem sx={{ color: 'error.main' }}>
           <Iconify icon={'eva:trash-2-outline'} sx={{ mr: 2 }} />
           Delete
-        </MenuItem>
-      </Popover> */}
+        </MenuItem> */}
+      </Popover>
     </>
   );
 }
