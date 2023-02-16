@@ -33,3 +33,6 @@ apiAxios.interceptors.response.use(
 export const channelLink = "channel";
 export const meetingLink = "meeting";
 export const dailyLink = "daily";
+export const penaltyLink = "penalty";
+export const messageLink = "message";
+export const userLink = "user";

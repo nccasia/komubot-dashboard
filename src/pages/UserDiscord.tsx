@@ -30,7 +30,7 @@ import Iconify from '../components/iconify';
 import Scrollbar from '../components/scrollbar';
 // sections
 import { UserListHead, UserListToolbar } from '../sections/@dashboard/usediscord';
-import {usersApi} from '../_mock/userdiscord';
+import { apiAxios, userLink } from '../axios/apiAxios';
 // mock
 
 
@@ -111,26 +111,13 @@ export default function UserDiscord() {
 
     // call api 
   useEffect(() => {
-    const fetch = async () => {
-      const result = await usersApi();
-      setUsers(result);
-    };
-    fetch();
-    // axios.post('http://10.10.20.18:3001/user', {
-    //   "email": "",
-      
-    //   "deactive": false,
-    //   "page": 1,
-    //   "size": 10
-    // })
-    // .then(response => {
-    //   setUsers(response.data.content);
-    //   console.log(response)
-    // })
-    // .catch(error => {
-    //   console.error(error);
-    // });
-   
+    apiAxios.post(userLink)
+        .then(function (response) {
+            setUsers(response.data.content);
+        })
+        .catch(function (error) {
+            console.log(error);
+        })
   }, []);
 
   const handleOpenMenu = (event:any) => {

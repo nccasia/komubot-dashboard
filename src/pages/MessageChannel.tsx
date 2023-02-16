@@ -33,7 +33,7 @@ import Scrollbar from '../components/scrollbar';
 // sections
 import { UserListHead, UserListToolbar } from '../sections/@dashboard/usediscord';
 // mock
-import { MessageApi } from '../_mock/message';
+import { apiAxios, messageLink } from '../axios/apiAxios';
 
 
 // ----------------------------------------------------------------------
@@ -51,8 +51,8 @@ const TABLE_HEAD = [
 
 
 interface Imessage{
-    userId: string,
-    username: string,
+    id: string,
+    email: string,
     createdTimestamp: string,
     content: string,  
 }
@@ -106,11 +106,13 @@ export default function Message() {
 
     // call api 
   useEffect(() => {
-    const fetch = async () => {
-      const result = await MessageApi();
-      setMessage(result);
-    };
-    fetch();   
+    apiAxios.get(messageLink)
+        .then(function (response) {
+            setMessage(response.data.content);
+        })
+        .catch(function (error) {
+            console.log(error);
+        })
   }, []);
 //   console.log(penal)
 
@@ -131,7 +133,7 @@ export default function Message() {
 
   const handleSelectAllClick = (event:any) => {
     if (event.target.checked) {
-      const newSelecteds:any = message.map((n:Imessage) => n.userId);
+      const newSelecteds:any = message.map((n:Imessage) => n.id);
       setSelected(newSelecteds);
       return;
     }
@@ -207,17 +209,17 @@ export default function Message() {
                 />
                 <TableBody>
                   {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row:Imessage) => {
-                    const {userId, username, createdTimestamp, content,} = row;
-                    const selectedUser = selected.indexOf((userId)) !== -1;
+                    const {id, email, createdTimestamp, content,} = row;
+                    const selectedUser = selected.indexOf((id)) !== -1;
                     // console.log(row)
                     return (
-                      <TableRow hover key={userId} tabIndex={-1} role="checkbox" selected={selectedUser}>
+                      <TableRow hover key={id} tabIndex={-1} role="checkbox" selected={selectedUser}>
                         <TableCell padding="checkbox">
-                          <Checkbox checked={selectedUser} onChange={(event) => handleClick(event, userId)} />
+                          <Checkbox checked={selectedUser} onChange={(event) => handleClick(event, id)} />
                         </TableCell>
 
-                        <TableCell align="left">{userId}</TableCell>
-                        <TableCell align="left">{username}</TableCell>
+                        <TableCell align="left">{id}</TableCell>
+                        <TableCell align="left">{email}</TableCell>
                         <TableCell align="left">{Moment(Number(createdTimestamp)).format('HH:MM DD/MM/YYYY ')}</TableCell>
                         <TableCell align="left">{content}</TableCell>                      
                        

@@ -18,7 +18,7 @@ const navConfig = [
   },
   {
     title: "user",
-    path: "/dashboard/user",
+    path: "/dashboard/userdiscord",
     icon: icon("ic_user"),
   },
   {
@@ -30,11 +30,6 @@ const navConfig = [
     title: 'meeting',
     path: '/dashboard/meeting',
     icon: icon('ic_user'),
-  },
-  {
-    title: "userdiscord",
-    path: "/dashboard/userdiscord",
-    icon: icon("ic_user"),
   },
   {
     title: "penalty",

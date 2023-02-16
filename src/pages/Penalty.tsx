@@ -33,7 +33,7 @@ import Scrollbar from '../components/scrollbar';
 // sections
 import { UserListHead, UserListToolbar } from '../sections/@dashboard/usediscord';
 // mock
-import { penaltyApi } from '../_mock/penalty';
+import { apiAxios, penaltyLink } from '../axios/apiAxios';
 
 
 // ----------------------------------------------------------------------
@@ -113,11 +113,13 @@ export default function Penalty() {
 
     // call api 
   useEffect(() => {
-    const fetch = async () => {
-      const result = await penaltyApi();
-      setPenal(result);
-    };
-    fetch();   
+    apiAxios.get(penaltyLink)
+        .then(function (response) {
+            setPenal(response.data.content);
+        })
+        .catch(function (error) {
+            console.log(error);
+        })
   }, []);
 //   console.log(penal)
 
