@@ -4,10 +4,10 @@ import { sample } from 'lodash';
 
 // ----------------------------------------------------------------------
 
-export const usersApi = async () => {
+export const penaltyApi = async () => {
   try {
-    const res = await axios.post(
-      "http://10.10.20.18:3001/user"
+    const res = await axios.get(
+      "http://10.10.20.18:3001/penalty"
     );
   return res.data.content;
   } catch (error) {

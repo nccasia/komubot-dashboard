@@ -12,6 +12,7 @@ import ProductsPage from './pages/ProductsPage';
 import DashboardAppPage from './pages/DashboardAppPage';
 import UserDiscord from './pages/UserDiscord';
 import DailyPage from './pages/DailyPage';
+import Penalty from './pages/Penalty';
 
 // ----------------------------------------------------------------------
 
@@ -26,6 +27,7 @@ export default function Router() {
         { path: 'user', element: <UserPage /> },
         { path: 'channel', element: < ChannelPage/> },
         { path: 'userdiscord', element: <UserDiscord /> },
+        { path: 'penalty', element: <Penalty /> },
         { path: 'products', element: <ProductsPage /> },
         { path: 'blog', element: <BlogPage /> },
         { path: 'daily', element: <DailyPage /> },
