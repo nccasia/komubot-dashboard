@@ -103,7 +103,7 @@ export default function ChannelPage() {
         .catch(function (error) {
             console.log(error);
         })
-    },[channel]);
+    },[]);
 
     const handleOpenMenu = (event: any) => {
         setOpen(event.currentTarget);

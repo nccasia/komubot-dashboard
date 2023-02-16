@@ -109,7 +109,7 @@ export default function MeetingPage() {
         .catch(function (error) {
             console.log(error);
         })
-    },[meeting]);
+    },[]);
 
     const handleOpenMenu = (event: any) => {
         setOpen(event.currentTarget);

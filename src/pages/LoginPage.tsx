@@ -45,9 +45,9 @@ export default function LoginPage() {
 
   return (
     <>
-      <Helmet>
-        <title> Login | Minimal UI </title>
-      </Helmet>
+      {/* <Helmet>
+        <title> Login | Komubot </title>
+      </Helmet> */}
 
       <StyledRoot>
         <Logo
@@ -70,7 +70,7 @@ export default function LoginPage() {
         <Container maxWidth="sm">
           <StyledContent>
             <Typography variant="h4" gutterBottom>
-              Sign in to Minimal
+              Sign in to Komubot
             </Typography>
 
             <Typography variant="body2" sx={{ mb: 5 }}>
