@@ -42,6 +42,11 @@ const navConfig = [
     icon: icon("ic_user"),
   },
   {
+    title: "message",
+    path: "/dashboard/Message",
+    icon: icon("ic_user"),
+  },
+  {
     title: "daily",
     path: "/dashboard/daily",
     icon: icon("ic_user"),
