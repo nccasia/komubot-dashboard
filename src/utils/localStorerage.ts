@@ -5,9 +5,10 @@ export const setAccessToken = (accessToken: string) => {
 };
 
 export const getAccessToken = () => {
-  return localStorage.getItem(token);
+  const newToken = localStorage.getItem(token);
+  return newToken;
 };
 
 export const removeAccessToken = () => {
-  return localStorage.removeItem(token);
+  // return localStorage.removeItem(token);
 };

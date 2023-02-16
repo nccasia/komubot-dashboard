@@ -29,7 +29,7 @@ import { UserListHead, UserListToolbar } from '../sections/@dashboard/user';
 // mock
 
 import { textStyle } from "../utils/textStyles"
-import {apiAxios, channelLink} from '../axios/ApiAxios';
+import {apiAxios, channelLink} from '../axios/apiAxios';
 
 // ----------------------------------------------------------------------
 
