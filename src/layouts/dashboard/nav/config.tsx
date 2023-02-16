@@ -37,6 +37,11 @@ const navConfig = [
     icon: icon("ic_user"),
   },
   {
+    title: "penalty",
+    path: "/dashboard/Penalty",
+    icon: icon("ic_user"),
+  },
+  {
     title: "daily",
     path: "/dashboard/daily",
     icon: icon("ic_user"),
