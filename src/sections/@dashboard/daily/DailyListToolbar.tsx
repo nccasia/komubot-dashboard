@@ -16,7 +16,7 @@ import { endOfDay, startOfDay } from "date-fns";
 import React from "react";
 import { DateRangePicker } from "rsuite";
 import { DateRange } from "rsuite/esm/DateRangePicker/types";
-import { filterDailys } from "../../../Api/Dailys/dailysApi";
+import { filterDailys } from "../../../Api/dailys/dailysApi";
 // ----------------------------------------------------------------------
 
 const StyledRoot = styled(Toolbar)(({ theme }) => ({
