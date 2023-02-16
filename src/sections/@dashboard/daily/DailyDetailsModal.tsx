@@ -1,6 +1,7 @@
 import { Modal, Box, Typography, IconButton } from "@mui/material";
-import { dailystype } from "../../../pages/DailyPage";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+import { dailystype } from "../../../interface/interface";
+import { formatDateTime } from "../../../utils/formatDateTime";
 type Props = {
   user: dailystype | null;
   onClose: () => void;
@@ -62,12 +63,12 @@ const UserDetailsModal = ({ user, onClose }: Props) => {
         <Box sx={bodyStyle}>
           <Box sx={SpaceBetween}>
             <Typography variant="h6">Channel</Typography>
-            <Typography variant="h6">Start at</Typography>
+            <Typography variant="h6">Time</Typography>
          
           </Box>
           <Box sx={SpaceBetween}>
           <Typography variant="body2">{user?.channelFullName}</Typography>
-            <Typography variant="body2">{String(user?.createdAt)}</Typography>
+            <Typography variant="body2">{user&&formatDateTime(user?.createdAt)}</Typography>
           </Box>
           <Typography variant="h6">Daily</Typography>
           <Typography

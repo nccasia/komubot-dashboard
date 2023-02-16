@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export const fetchData = async () => {
+export const getDailys = async () => {
   try {
     const res = await axios.get(
       "http://10.10.20.18:3001/daily"

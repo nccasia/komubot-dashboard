@@ -13,26 +13,45 @@ import { LoadingButton } from "@mui/lab";
 import FormControlLabel from "@mui/material/FormControlLabel";
 // components
 import Iconify from "../../../components/iconify";
+import { Author } from "./../../../interface/interface";
+import { Login } from "../../../Api/Auth/AuthApi";
 
 // ----------------------------------------------------------------------
 
 export default function LoginForm() {
   const navigate = useNavigate();
-
+  const [author, setAuthor] = useState<Author>({
+    username: "",
+    password: "",
+  });
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
-  const handleClick = () => {
-    navigate("/dashboard", { replace: true });
+  const handleChange =
+    (prop: keyof Author) => (event: React.ChangeEvent<HTMLInputElement>) => {
+      setAuthor({ ...author, [prop]: event.target.value });
+    };
+  const handleClick = async () => {
+    const res = await Login(author);
+    if (res) {
+      navigate("/dashboard", { replace: true });
+    }
   };
 
   return (
     <>
       <Stack spacing={3}>
-        <TextField name="email" label="Email address" />
+        <TextField
+          value={author.username}
+          name="email"
+          onChange={handleChange("username")}
+          label="Email address"
+        />
 
         <TextField
+          value={author.password}
           name="password"
           label="Password"
+          onChange={handleChange("password")}
           type={showPassword ? "text" : "password"}
           InputProps={{
             endAdornment: (
