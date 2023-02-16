@@ -19,8 +19,10 @@ import Message from './pages/MessageChannel';
 // ----------------------------------------------------------------------
 
 export default function Router() {
+  
   const routes = useRoutes([
     {
+      
       path: '/dashboard',
       element: <DashboardLayout />,
       children: [
@@ -54,6 +56,6 @@ export default function Router() {
       element: <Navigate to="/404" replace />,
     },
   ]);
-
+ 
   return routes;
 }

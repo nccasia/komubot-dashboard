@@ -9,6 +9,8 @@ import Logo from '../components/logo';
 import Iconify from '../components/iconify';
 // sections
 import { LoginForm } from '../sections/auth/login';
+import { useNavigate } from 'react-router-dom';
+import { apiAxios } from '../axios/apiAxios';
 
 // ----------------------------------------------------------------------
 
@@ -41,8 +43,11 @@ const StyledContent = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function LoginPage() {
-  const mdUp = useResponsive('up', 'md','sm');
 
+  const mdUp = useResponsive('up', 'md','sm');
+const handleLoginWithGoogle = ()=>{
+  // apiAxios.get('auth')
+}
   return (
     <>
       {/* <Helmet>
@@ -73,32 +78,24 @@ export default function LoginPage() {
               Sign in to Komubot
             </Typography>
 
-            <Typography variant="body2" sx={{ mb: 5 }}>
-              Don’t have an account? {''}
-              <Link variant="subtitle2">Get started</Link>
-            </Typography>
+      
 
-            <Stack direction="row" spacing={2}>
-              <Button fullWidth size="large" color="inherit" variant="outlined">
-                <Iconify icon="eva:google-fill" color="#DF3E30" width={22} height={22} />
-              </Button>
-
-              <Button fullWidth size="large" color="inherit" variant="outlined">
-                <Iconify icon="eva:facebook-fill" color="#1877F2" width={22} height={22} />
-              </Button>
-
-              <Button fullWidth size="large" color="inherit" variant="outlined">
-                <Iconify icon="eva:twitter-fill" color="#1C9CEA" width={22} height={22} />
-              </Button>
-            </Stack>
-
+       
+            <LoginForm />
             <Divider sx={{ my: 3 }}>
               <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                 OR
               </Typography>
             </Divider>
+            <Stack direction="row" spacing={2}>
+              <Button onClick={handleLoginWithGoogle} fullWidth size="large" color="inherit" variant="outlined">
+                <Iconify icon="eva:google-fill" color="#DF3E30" width={22} height={22} />
+              </Button>
 
-            <LoginForm />
+            
+            </Stack>
+
+           
           </StyledContent>
         </Container>
       </StyledRoot>

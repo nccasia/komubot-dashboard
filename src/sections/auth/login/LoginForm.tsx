@@ -14,7 +14,8 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 // components
 import Iconify from "../../../components/iconify";
 import { Author } from "./../../../interface/interface";
-import { Login } from "../../../Api/Auth/AuthApi";
+import { setAccessToken } from './../../../utils/localStorerage';
+import { Login } from "../../../Api/Auth/authApi";
 
 // ----------------------------------------------------------------------
 
@@ -33,6 +34,7 @@ export default function LoginForm() {
   const handleClick = async () => {
     const res = await Login(author);
     if (res) {
+   
       navigate("/dashboard", { replace: true });
     }
   };
