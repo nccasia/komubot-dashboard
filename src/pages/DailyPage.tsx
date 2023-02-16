@@ -1,45 +1,22 @@
-import { Helmet } from "react-helmet-async";
 import { filter } from "lodash";
-import { sentenceCase } from "change-case";
-import { useState, useEffect, useCallback } from "react";
+import { useEffect, useState } from "react";
 // @mui
 import {
-  Card,
-  Table,
-  Stack,
-  Paper,
   Avatar,
-  Button,
-  Popover,
-  Checkbox,
-  TableRow,
-  MenuItem,
-  TableBody,
-  TableCell,
-  Container,
-  Typography,
-  IconButton,
-  TableContainer,
-  TablePagination,
-  Tooltip,
-  Box,
-  Modal,
+  Button, Card, Checkbox, Container, IconButton, MenuItem, Paper, Popover, Stack, Table, TableBody,
+  TableCell, TableContainer,
+  TablePagination, TableRow, Tooltip, Typography
 } from "@mui/material";
 // components
-import Label from "../components/label";
 import Iconify from "../components/iconify";
-import Scrollbar from "../components/scrollbar";
 // sections
-import { DailyListToolbar, DailyListHead } from "../sections/@dashboard/daily";
+import { DailyListHead, DailyListToolbar } from "../sections/@dashboard/daily";
 // mock
-import { AnyARecord } from "dns";
-import axios from "axios";
-import { Console } from "console";
 // import DailyListHead from './../sections/@dashboard/daily/DailyListHead';
-import UserDetailsModal from "../sections/@dashboard/daily/DailyDetailsModal";
-import { dailystype } from "../interface/interface";
-import { formatDateTime } from './../utils/formatDateTime';
 import { getDailys } from "../Api/Dailys/DailysApi";
+import { dailystype } from "../interface/interface";
+import UserDetailsModal from "../sections/@dashboard/daily/DailyDetailsModal";
+import { formatDateTime } from './../utils/formatDateTime';
 
 // ----------------------------------------------------------------------
 
@@ -176,8 +153,8 @@ export default function DailyPage() {
   //call api
   useEffect(() => {
     const fetch = async () => {
-      const result = await getDailys();
-      setDailys(result);
+      const dailysData = await getDailys();
+      setDailys(dailysData);
     };
     fetch();
   }, []);
@@ -207,6 +184,7 @@ export default function DailyPage() {
             numSelected={selected.length}
             filterName={filterName}
             onFilterName={handleFilterByName}
+            setDailys={setDailys}
           />
 
           {/* <Scrollbar sx={{}}> */}

@@ -1,33 +1,42 @@
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 // @mui
-import { styled, alpha } from '@mui/material/styles';
-import { Toolbar, Tooltip, IconButton, Typography, OutlinedInput, InputAdornment } from '@mui/material';
-// component
-import Iconify from '../../../components/iconify';
-import { DateRange } from 'react-date-range';
-import 'react-date-range/dist/theme/default.css'; // theme css file
-import { useState } from 'react';
+import { alpha, styled } from "@mui/material/styles";
 
+import {
+  InputAdornment,
+  OutlinedInput,
+  Toolbar,
+  Typography
+} from "@mui/material";
+// component
+import "rsuite/dist/rsuite.min.css";
+import Iconify from "../../../components/iconify";
+
+import { endOfDay, startOfDay } from "date-fns";
+import React from "react";
+import { DateRangePicker } from "rsuite";
+import { DateRange } from "rsuite/esm/DateRangePicker/types";
+import { filterDailys } from "../../../Api/Dailys/DailysApi";
 // ----------------------------------------------------------------------
 
 const StyledRoot = styled(Toolbar)(({ theme }) => ({
   height: 96,
-  display: 'flex',
-  justifyContent: 'space-between',
+  display: "flex",
+  justifyContent: "space-between",
   padding: theme.spacing(0, 1, 0, 3),
 }));
 
-const StyledSearch = styled(OutlinedInput)(({ theme }:any) => ({
+const StyledSearch = styled(OutlinedInput)(({ theme }: any) => ({
   width: 240,
-  transition: theme.transitions.create(['box-shadow', 'width'], {
+  transition: theme.transitions.create(["box-shadow", "width"], {
     easing: theme.transitions.easing.easeInOut,
     duration: theme.transitions.duration.shorter,
   }),
-  '&.Mui-focused': {
+  "&.Mui-focused": {
     width: 320,
     boxShadow: theme.customShadows.z8,
   },
-  '& fieldset': {
+  "& fieldset": {
     borderWidth: `1px !important`,
     borderColor: `${alpha(theme.palette.grey[500], 0.32)} !important`,
   },
@@ -39,28 +48,35 @@ DailyListToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
   filterName: PropTypes.string.isRequired,
   onFilterName: PropTypes.func.isRequired,
+  setDailys: PropTypes.func.isRequired,
 };
 
-
-export default function DailyListToolbar({ numSelected, filterName, onFilterName }:PropTypes.InferProps<typeof DailyListToolbar.propTypes>) {
-  const [state, setState] = useState([
-    {
-      startDate: new Date(),
-      endDate: new Date(),
-      key: "selection"
+export default function DailyListToolbar({
+  numSelected,
+  filterName,
+  onFilterName,
+  setDailys,
+}: PropTypes.InferProps<typeof DailyListToolbar.propTypes>) {
+  async function handleSelect(
+    value: DateRange | null,
+    event: React.SyntheticEvent<Element, Event>
+  ) {
+    if (value) {
+      const startDay = startOfDay(value?.[0]).getTime();
+      const endDay = endOfDay(value?.[1]).getTime();
+      const dailysData = await filterDailys(startDay, endDay);
+      setDailys(dailysData);
     }
-  ]);
- 
+  }
   return (
     <StyledRoot
       sx={{
         ...(numSelected > 0 && {
-          color: 'primary.main',
-          bgcolor: 'primary.lighter',
+          color: "primary.main",
+          bgcolor: "primary.lighter",
         }),
       }}
     >
-      
       {numSelected > 0 ? (
         <Typography component="div" variant="subtitle1">
           {numSelected} selected
@@ -72,38 +88,20 @@ export default function DailyListToolbar({ numSelected, filterName, onFilterName
           placeholder="Search Daily..."
           startAdornment={
             <InputAdornment position="start">
-              <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled', width: 20, height: 20 }} />
+              <Iconify
+                icon="eva:search-fill"
+                sx={{ color: "text.disabled", width: 20, height: 20 }}
+              />
             </InputAdornment>
           }
         />
       )}
 
-      {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton>
-            <Iconify icon="eva:trash-2-fill" />
-          </IconButton>
-        </Tooltip>
-      ) : (
-        <Tooltip title="Filter list">
-          <IconButton>
-            <Iconify icon="ic:round-filter-list" />
-          </IconButton>
-        </Tooltip>
-      )}
-    {/* <div className="my-date-range-wrapper">
-      <DateRange
-        onChange={(item:any) => setState([item.selection])}
-        showDateDisplay={true}
-        moveRangeOnFirstSelection={false}
-        ranges={state}
-        showPreview
-        direction="vertical"
-      
-        
-      
+      <DateRangePicker
+        format="dd/MM/yyyy"
+        onChange={handleSelect}
+        showOneCalendar
       />
-    </div> */}
     </StyledRoot>
   );
 }
