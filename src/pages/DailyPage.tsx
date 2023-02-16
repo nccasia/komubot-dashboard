@@ -36,8 +36,10 @@ import { AnyARecord } from "dns";
 import axios from "axios";
 import { Console } from "console";
 // import DailyListHead from './../sections/@dashboard/daily/DailyListHead';
-import { fetchData } from "./../_mock/daily";
 import UserDetailsModal from "../sections/@dashboard/daily/DailyDetailsModal";
+import { dailystype } from "../interface/interface";
+import { formatDateTime } from './../utils/formatDateTime';
+import { getDailys } from "../Api/Dailys/DailysApi";
 
 // ----------------------------------------------------------------------
 
@@ -51,16 +53,7 @@ const TABLE_HEAD = [
 ];
 
 // ----------------------------------------------------------------------
-export type dailystype = {
-  channelid: string;
-  daily: string;
-  email: string;
-  dailyContent: string;
-  createdAt: Date;
-  id: number;
-  userid: string;
-  channelFullName:string;
-};
+
 function descendingComparator(a: any, b: any, orderBy: string) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
@@ -90,8 +83,8 @@ function applySortFilter(array: any, comparator: any, query: string) {
   if (query) {
     return filter(
       array,
-      (_user: any) =>
-        _user.name.toLowerCase().indexOf(query.toLowerCase()) !== -1
+      (dailys:dailystype) =>
+      dailys.email.toLowerCase().indexOf(query.toLowerCase()) !== -1
     );
   }
   return stabilizedThis.map((el: any) => el[0]);
@@ -183,7 +176,7 @@ export default function DailyPage() {
   //call api
   useEffect(() => {
     const fetch = async () => {
-      const result = await fetchData();
+      const result = await getDailys();
       setDailys(result);
     };
     fetch();
@@ -232,10 +225,10 @@ export default function DailyPage() {
                 {filteredUsers
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row: dailystype) => {
-                    const {   channelid ,
+                    const {    
                       daily ,
                       email ,
-                      dailyContent ,
+                      channelFullName ,
                       createdAt,
                       id ,
                       userid  } = row;
@@ -286,9 +279,9 @@ export default function DailyPage() {
                             </Typography>
                           </TableCell>
                         </Tooltip>
-                        <TableCell align="left">{channelid}</TableCell>
+                        <TableCell align="left">{channelFullName}</TableCell>
 
-                        <TableCell align="left">{String(createdAt)}</TableCell>
+                        <TableCell align="left">{formatDateTime(createdAt)}</TableCell>
 
                         <TableCell align="right">
                           <IconButton

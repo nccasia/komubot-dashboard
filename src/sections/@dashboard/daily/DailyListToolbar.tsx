@@ -4,6 +4,9 @@ import { styled, alpha } from '@mui/material/styles';
 import { Toolbar, Tooltip, IconButton, Typography, OutlinedInput, InputAdornment } from '@mui/material';
 // component
 import Iconify from '../../../components/iconify';
+import { DateRange } from 'react-date-range';
+import 'react-date-range/dist/theme/default.css'; // theme css file
+import { useState } from 'react';
 
 // ----------------------------------------------------------------------
 
@@ -38,7 +41,16 @@ DailyListToolbar.propTypes = {
   onFilterName: PropTypes.func.isRequired,
 };
 
+
 export default function DailyListToolbar({ numSelected, filterName, onFilterName }:PropTypes.InferProps<typeof DailyListToolbar.propTypes>) {
+  const [state, setState] = useState([
+    {
+      startDate: new Date(),
+      endDate: new Date(),
+      key: "selection"
+    }
+  ]);
+ 
   return (
     <StyledRoot
       sx={{
@@ -48,6 +60,7 @@ export default function DailyListToolbar({ numSelected, filterName, onFilterName
         }),
       }}
     >
+      
       {numSelected > 0 ? (
         <Typography component="div" variant="subtitle1">
           {numSelected} selected
@@ -78,6 +91,19 @@ export default function DailyListToolbar({ numSelected, filterName, onFilterName
           </IconButton>
         </Tooltip>
       )}
+    {/* <div className="my-date-range-wrapper">
+      <DateRange
+        onChange={(item:any) => setState([item.selection])}
+        showDateDisplay={true}
+        moveRangeOnFirstSelection={false}
+        ranges={state}
+        showPreview
+        direction="vertical"
+      
+        
+      
+      />
+    </div> */}
     </StyledRoot>
   );
 }
