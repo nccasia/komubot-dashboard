@@ -1,53 +1,73 @@
-import { Helmet } from 'react-helmet-async';
+import { Helmet } from "react-helmet-async";
 // @mui
-import { styled } from '@mui/material/styles';
-import { Link, Container, Typography, Divider, Stack, Button } from '@mui/material';
+import { styled } from "@mui/material/styles";
+import {
+  Link,
+  Container,
+  Typography,
+  Divider,
+  Stack,
+  Button,
+} from "@mui/material";
 // hooks
-import useResponsive from '../hooks/useResponsive';
+import useResponsive from "../hooks/useResponsive";
 // components
-import Logo from '../components/logo';
-import Iconify from '../components/iconify';
+import Logo from "../components/logo";
+import Iconify from "../components/iconify";
 // sections
-import { LoginForm } from '../sections/auth/login';
-import { useNavigate } from 'react-router-dom';
-import { apiAxios } from '../axios/apiAxios';
-
+import { LoginForm } from "../sections/auth/login";
+import { useNavigate } from "react-router-dom";
+import { apiAxios } from "../axios/apiAxios";
+import { useState } from "react";
+import { GoogleLogin } from "react-google-login";
 // ----------------------------------------------------------------------
 
-const StyledRoot = styled('div')(({ theme }) => ({
-  [theme.breakpoints.up('md')]: {
-    display: 'flex',
+const StyledRoot = styled("div")(({ theme }) => ({
+  [theme.breakpoints.up("md")]: {
+    display: "flex",
   },
 }));
 
-const StyledSection = styled('div')(({ theme }:any) => ({
-  width: '100%',
+const StyledSection = styled("div")(({ theme }: any) => ({
+  width: "100%",
   maxWidth: 480,
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'center',
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "center",
   boxShadow: theme.customShadows.card,
   backgroundColor: theme.palette.background.default,
 }));
 
-const StyledContent = styled('div')(({ theme }) => ({
+const StyledContent = styled("div")(({ theme }) => ({
   maxWidth: 480,
-  margin: 'auto',
-  minHeight: '100vh',
-  display: 'flex',
-  justifyContent: 'center',
-  flexDirection: 'column',
+  margin: "auto",
+  minHeight: "100vh",
+  display: "flex",
+  justifyContent: "center",
+  flexDirection: "column",
   padding: theme.spacing(12, 0),
 }));
 
 // ----------------------------------------------------------------------
+const clientId =
+  "498168811060-khvb6seteg4hk1ftts06sn5780ef7dqi.apps.googleusercontent.com"
+
 
 export default function LoginPage() {
+  const [idToken, setIdToken] = useState<string | null>(null);
 
-  const mdUp = useResponsive('up', 'md','sm');
-const handleLoginWithGoogle = ()=>{
-  // apiAxios.get('auth')
-}
+  const handleGoogleLoginSuccess = (response:any) => {
+    console.log("Google login success:", response);
+    // handle the response here, for example, you can send a token to your server for authentication
+  };
+  
+  const handleGoogleLoginFailure = (response:any) => {
+    console.log("Google login failed:", response);
+    // handle the error here
+  };
+
+  const mdUp = useResponsive("up", "md", "sm");
+
   return (
     <>
       {/* <Helmet>
@@ -57,7 +77,7 @@ const handleLoginWithGoogle = ()=>{
       <StyledRoot>
         <Logo
           sx={{
-            position: 'fixed',
+            position: "fixed",
             top: { xs: 16, sm: 24, md: 40 },
             left: { xs: 16, sm: 24, md: 40 },
           }}
@@ -68,7 +88,10 @@ const handleLoginWithGoogle = ()=>{
             <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
               Hi, Welcome Back
             </Typography>
-            <img src="/assets/illustrations/illustration_login.png" alt="login" />
+            <img
+              src="/assets/illustrations/illustration_login.png"
+              alt="login"
+            />
           </StyledSection>
         )}
 
@@ -77,25 +100,40 @@ const handleLoginWithGoogle = ()=>{
             <Typography variant="h4" gutterBottom>
               Sign in to Komubot
             </Typography>
-
-      
-
-       
             <LoginForm />
             <Divider sx={{ my: 3 }}>
-              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+              <Typography variant="body2" sx={{ color: "text.secondary" }}>
                 OR
               </Typography>
             </Divider>
+            ,
             <Stack direction="row" spacing={2}>
-              <Button onClick={handleLoginWithGoogle} fullWidth size="large" color="inherit" variant="outlined">
-                <Iconify icon="eva:google-fill" color="#DF3E30" width={22} height={22} />
-              </Button>
-
-            
+              <GoogleLogin
+                clientId={clientId}
+                onSuccess={handleGoogleLoginSuccess}
+                onFailure={handleGoogleLoginFailure}
+                uxMode='redirect'
+                cookiePolicy={"single_host_origin"}
+                
+                render={(renderProps) => (
+                  <Button
+                    onClick={renderProps.onClick}
+                    fullWidth
+                    size="large"
+                    color="inherit"
+                    variant="outlined"
+                  >
+                    <Iconify
+                      icon="eva:google-fill"
+                      color="#DF3E30"
+                      width={22}
+                      height={22}
+                    />
+                  </Button>
+                )}
+              />
+         
             </Stack>
-
-           
           </StyledContent>
         </Container>
       </StyledRoot>
