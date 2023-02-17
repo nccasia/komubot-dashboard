@@ -1,26 +1,19 @@
-import { Helmet } from "react-helmet-async";
 // @mui
-import { styled } from "@mui/material/styles";
 import {
-  Link,
-  Container,
-  Typography,
-  Divider,
-  Stack,
-  Button,
+  Button, Container, Divider,
+  Stack, Typography
 } from "@mui/material";
+import { styled } from "@mui/material/styles";
 // hooks
 import useResponsive from "../hooks/useResponsive";
 // components
-import Logo from "../components/logo";
 import Iconify from "../components/iconify";
+import Logo from "../components/logo";
 // sections
-import { LoginForm } from "../sections/auth/login";
-import { useNavigate } from "react-router-dom";
-import { apiAxios } from "../axios/apiAxios";
+import { gapi } from "gapi-script";
 import { useEffect, useState } from "react";
 import { GoogleLogin } from "react-google-login";
-import { gapi } from "gapi-script";
+import { LoginForm } from "../sections/auth/login";
 // ----------------------------------------------------------------------
 
 const StyledRoot = styled("div")(({ theme }) => ({
@@ -54,7 +47,7 @@ const clientId =
   "498168811060-ii509rnksf25l04drpgka1kjh0jgs14f.apps.googleusercontent.com";
 
 export default function LoginPage() {
-  const [idToken, setIdToken] = useState<string | null>(null);
+
 
   const handleGoogleLoginSuccess = (response: any) => {
     console.log("Google login success:", response);

@@ -33,19 +33,16 @@ import Scrollbar from '../components/scrollbar';
 // sections
 import { UserListHead, UserListToolbar } from '../sections/@dashboard/usediscord';
 // mock
-import { apiAxios, penaltyLink } from '../axios/ApiAxios';
+import { apiAxios, messageLink } from '../axios/ApiAxios';
 
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
   { id: 'ID', label: 'ID', alignRight: false },
-  { id: 'Name', label: 'Name', alignRight: false },
-  { id: 'Ammount', label: 'Ammount', alignRight: false },
-  { id: 'Reason', label: 'Reason', alignRight: false },
-  { id: 'Isreject', label: 'Isreject', alignRight: false },
-  { id: 'Channel', label: 'Channel', alignRight: false },
+  { id: 'Email', label: 'Email', alignRight: false },
   { id: 'Time', label: 'Time', alignRight: false },
+  { id: 'Content', label: 'Content', alignRight: false },
   { id: '' },
 ];
 
@@ -53,16 +50,11 @@ const TABLE_HEAD = [
 
 
 
-interface Ipenalty{
-  
-    userId: string,
-    username: string,
-    ammount: string,
-    reason: string,
-    isReject: boolean,
-    channelFullName: string,
+interface Imessage{
+    id: string,
+    email: string,
     createdTimestamp: string,
-  
+    content: string,  
 }
 
 function descendingComparator(a:any, b:any, orderBy:string) {
@@ -89,12 +81,12 @@ function applySortFilter(array:any, comparator:any, query:string) {
     return a[1] - b[1];
   });
   if (query) {
-    return filter(array, (_user:any) => _user.username.toLowerCase().indexOf(query.toLowerCase()) !== -1);
+    return filter(array, (_user:any) => _user.email.toLowerCase().indexOf(query.toLowerCase()) !== -1);
   }
   return stabilizedThis.map((el:any) => el[0]);
 }
 
-export default function Penalty() {
+export default function Message() {
   const [open, setOpen] = useState(null);
 
   const [page, setPage] = useState(0);
@@ -109,13 +101,14 @@ export default function Penalty() {
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
-  const [penal, setPenal] = useState<Ipenalty[]>([]);
+  const [message, setMessage] = useState<Imessage[]>([]);
+  console.log(message)
 
     // call api 
   useEffect(() => {
-    apiAxios.get(penaltyLink)
+    apiAxios.get(messageLink)
         .then(function (response) {
-            setPenal(response.data.content);
+            setMessage(response.data.content);
         })
         .catch(function (error) {
             console.log(error);
@@ -140,7 +133,7 @@ export default function Penalty() {
 
   const handleSelectAllClick = (event:any) => {
     if (event.target.checked) {
-      const newSelecteds:any = penal.map((n:Ipenalty) => n.userId);
+      const newSelecteds:any = message.map((n:Imessage) => n.id);
       setSelected(newSelecteds);
       return;
     }
@@ -176,9 +169,9 @@ export default function Penalty() {
     setFilterName(event.target.value);
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - penal.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - message.length) : 0;
 
-  const filteredUsers = applySortFilter(penal, getComparator(order, orderBy), filterName)
+  const filteredUsers = applySortFilter(message, getComparator(order, orderBy), filterName)
   // console.log(filterName)
 
   const isNotFound = !filteredUsers.length && !!filterName;
@@ -209,34 +202,27 @@ export default function Penalty() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={penal.length}
+                  rowCount={message.length}
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
-                  {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row:Ipenalty) => {
-                    const { userId, username, ammount, reason, isReject, channelFullName, createdTimestamp
-                    } = row;
-                    const selectedUser = selected.indexOf((userId)) !== -1;
+                  {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row:Imessage) => {
+                    const {id, email, createdTimestamp, content,} = row;
+                    const selectedUser = selected.indexOf((id)) !== -1;
                     // console.log(row)
                     return (
-                      <TableRow hover key={userId} tabIndex={-1} role="checkbox" selected={selectedUser}>
+                      <TableRow hover key={id} tabIndex={-1} role="checkbox" selected={selectedUser}>
                         <TableCell padding="checkbox">
-                          <Checkbox checked={selectedUser} onChange={(event) => handleClick(event, userId)} />
+                          <Checkbox checked={selectedUser} onChange={(event) => handleClick(event, id)} />
                         </TableCell>
 
-                        <TableCell align="left">{userId}</TableCell>
-                        <TableCell align="left">{username}</TableCell>
-                        <TableCell align="left">{ammount}</TableCell>
-                        <TableCell align="left">{reason}</TableCell>
-                        <TableCell align="left">
-                          <Label color={isReject?'error': 'success'}  disableAnimation={(isReject)} >{String(isReject)}</Label>
-                        </TableCell>
-                        <TableCell align="left">{channelFullName}</TableCell>
-                        
-                        <TableCell align="left">{Moment(Number(createdTimestamp)).format('HH:MM DD/MM/YYYY ')
-}</TableCell>
+                        <TableCell align="left">{id}</TableCell>
+                        <TableCell align="left">{email}</TableCell>
+                        <TableCell align="left">{Moment(Number(createdTimestamp)).format('HH:MM DD/MM/YYYY ')}</TableCell>
+                        <TableCell align="left">{content}</TableCell>                      
+                       
 
                         <TableCell align="right">
                           <IconButton size="large" color="inherit" onClick={handleOpenMenu}>
@@ -283,7 +269,7 @@ export default function Penalty() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={penal.length}
+            count={message.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}

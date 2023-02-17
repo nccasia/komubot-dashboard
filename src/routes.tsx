@@ -14,6 +14,7 @@ import DashboardAppPage from './pages/DashboardAppPage';
 import UserDiscord from './pages/UserDiscord';
 import DailyPage from './pages/DailyPage';
 import Penalty from './pages/Penalty';
+import Message from './pages/MessageChannel';
 
 // ----------------------------------------------------------------------
 
@@ -32,6 +33,7 @@ export default function Router() {
         { path: 'meeting', element: < MeetingPage/> },
         { path: 'userdiscord', element: <UserDiscord /> },
         { path: 'penalty', element: <Penalty /> },
+        { path: 'message', element: <Message /> },
         { path: 'products', element: <ProductsPage /> },
         { path: 'blog', element: <BlogPage /> },
         { path: 'daily', element: <DailyPage /> },

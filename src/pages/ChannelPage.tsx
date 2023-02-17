@@ -2,7 +2,6 @@ import { Helmet } from 'react-helmet-async';
 import { filter } from 'lodash';
 import React from 'react';
 import { useState } from 'react';
-// @mui
 import {
     Card,
     Table,
@@ -21,17 +20,12 @@ import {
     TableContainer,
     TablePagination,
 } from '@mui/material';
-// components
 import Iconify from '../components/iconify';
-//import Scrollbar from '../components/scrollbar';
-// sections
 import { UserListHead, UserListToolbar } from '../sections/@dashboard/user';
-// mock
-
 import { textStyle } from "../utils/textStyles"
-import {apiAxios, channelLink} from '../axios/apiAxios';
-
-// ----------------------------------------------------------------------
+import {apiAxios, channelLink} from '../axios/ApiAxios';
+import {ChannelFace} from "../interface/interface"
+import {getChannel} from "../Api/Channel/ChannelApi"
 
 const TABLE_HEAD = [
     { id: 'id', label: 'Id', alignRight: true },
@@ -39,15 +33,6 @@ const TABLE_HEAD = [
     { id: 'type', label: 'Type', alignRight: true },
     { id: 'action', label: 'Action', alignRight: true  },
 ];
-
-interface ChannelFace{
-    id:string,
-    name:string,
-    type:string,
-    
-}
-
-// ----------------------------------------------------------------------
 
 function descendingComparator(a: any, b: any, orderBy: string) {
     if (b[orderBy] < a[orderBy]) {
@@ -96,13 +81,7 @@ export default function ChannelPage() {
     const [channel, setChannel] = useState<ChannelFace[]>([]);
 
     React.useEffect(()=>{
-        apiAxios.get(channelLink)
-        .then(function (response) {
-            setChannel(response.data.content);
-        })
-        .catch(function (error) {
-            console.log(error);
-        })
+        getChannel().then(data=>setChannel(data));
     },[]);
 
     const handleOpenMenu = (event: any) => {

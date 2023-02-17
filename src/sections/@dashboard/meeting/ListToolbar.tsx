@@ -16,7 +16,6 @@ import { endOfDay, startOfDay } from "date-fns";
 import React from "react";
 import { DateRangePicker } from "rsuite";
 import { DateRange } from "rsuite/esm/DateRangePicker/types";
-import { filterDailys } from "../../../Api/Dailys/DailysApi";
 // ----------------------------------------------------------------------
 
 const StyledRoot = styled(Toolbar)(({ theme }) => ({
@@ -44,19 +43,19 @@ const StyledSearch = styled(OutlinedInput)(({ theme }: any) => ({
 
 // ----------------------------------------------------------------------
 
-DailyListToolbar.propTypes = {
+ListToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
   filterName: PropTypes.string.isRequired,
   onFilterName: PropTypes.func.isRequired,
-  setDailys: PropTypes.func.isRequired,
+  setDayTime: PropTypes.func.isRequired,
 };
 
-export default function DailyListToolbar({
+export default function ListToolbar({
   numSelected,
   filterName,
   onFilterName,
-  setDailys,
-}: PropTypes.InferProps<typeof DailyListToolbar.propTypes>) {
+  setDayTime,
+}: PropTypes.InferProps<typeof ListToolbar.propTypes>) {
   async function handleSelect(
     value: DateRange | null,
     event: React.SyntheticEvent<Element, Event>
@@ -64,8 +63,10 @@ export default function DailyListToolbar({
     if (value) {
       const startDay = startOfDay(value?.[0]).getTime();
       const endDay = endOfDay(value?.[1]).getTime();
-      const dailysData = await filterDailys(startDay, endDay);
-      setDailys(dailysData);
+      setDayTime({startDay:startDay, endDay:endDay});
+    }
+    else{
+      setDayTime(null);
     }
   }
   return (
