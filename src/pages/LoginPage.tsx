@@ -17,7 +17,7 @@ import Iconify from "../components/iconify";
 // sections
 import { LoginForm } from "../sections/auth/login";
 import { useNavigate } from "react-router-dom";
-import { apiAxios } from "../axios/apiAxios";
+import { apiAxios } from "../axios/ApiAxios";
 import { useState } from "react";
 import { GoogleLogin } from "react-google-login";
 // ----------------------------------------------------------------------
@@ -57,7 +57,7 @@ export default function LoginPage() {
   const [idToken, setIdToken] = useState<string | null>(null);
 
   const handleGoogleLoginSuccess = (response:any) => {
-    console.log("Google login success:", response);
+    console.log("Google login success:",  response);
     // handle the response here, for example, you can send a token to your server for authentication
   };
   

@@ -2,7 +2,6 @@ import { Helmet } from 'react-helmet-async';
 import { filter } from 'lodash';
 import React from 'react';
 import { useState } from 'react';
-// @mui
 import {
     Card,
     Table,
@@ -21,17 +20,13 @@ import {
     TableContainer,
     TablePagination,
 } from '@mui/material';
-// components
 import Iconify from '../components/iconify';
 import Label from '../components/label';
-//import Scrollbar from '../components/scrollbar';
-// sections
-import { UserListHead, UserListToolbar } from '../sections/@dashboard/user';
-// mock
-
-import {apiAxios, meetingLink} from '../axios/apiAxios';
+import { UserListHead} from '../sections/@dashboard/user';
+import ListToolbar from '../sections/@dashboard/meeting/ListToolbar';
+import {DayTime,MeetingFace} from "../interface/interface"
 import Moment from "moment";
-// ----------------------------------------------------------------------
+import {getMeeting} from "../Api/Meeting/MeetingApi"
 
 const TABLE_HEAD = [
     { id: 'createdTimestamp', label: 'Created Time', alignRight: true },
@@ -42,18 +37,6 @@ const TABLE_HEAD = [
     { id: 'cancel', label: 'Cancel', alignRight: true },
     { id: 'action', label: 'Action', alignRight: true  },
 ];
-
-interface MeetingFace{
-    id:number,
-    createdTimestamp:string,
-    task:string,
-    repeat:string,
-    cancel:boolean,
-    repeatTime:string,
-    channelFullName:string, 
-}
-
-// ----------------------------------------------------------------------
 
 function descendingComparator(a: any, b: any, orderBy: string) {
     if (b[orderBy] < a[orderBy]) {
@@ -100,16 +83,10 @@ export default function MeetingPage() {
     const [rowsPerPage, setRowsPerPage] = useState(5);
 
     const [meeting, setMeeting] = useState<MeetingFace[]>([]);
-
+    const [daytime, setDayTime] = useState<DayTime | null>(null);
     React.useEffect(()=>{
-        apiAxios.get(meetingLink)
-        .then(function (response) {
-            setMeeting(response.data.content);
-        })
-        .catch(function (error) {
-            console.log(error);
-        })
-    },[]);
+        getMeeting(daytime).then(data=>setMeeting(data));
+    },[daytime]);
 
     const handleOpenMenu = (event: any) => {
         setOpen(event.currentTarget);
@@ -187,7 +164,7 @@ export default function MeetingPage() {
                 </Stack>
 
                 <Card>
-                    <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
+                    <ListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} setDayTime={setDayTime} />
 
                     {/* <Scrollbar sx={{}}> */}
                     <TableContainer >
