@@ -13,7 +13,7 @@ import Iconify from "../components/iconify";
 import { DailyListHead, DailyListToolbar } from "../sections/@dashboard/daily";
 // mock
 // import DailyListHead from './../sections/@dashboard/daily/DailyListHead';
-import { getDailys } from "../Api/dailys/dailysApi";
+import { getDailys } from "../Api/Dailys/DailysApi";
 import { dailystype } from "../interface/interface";
 import UserDetailsModal from "../sections/@dashboard/daily/DailyDetailsModal";
 import { formatDateTime } from './../utils/formatDateTime';

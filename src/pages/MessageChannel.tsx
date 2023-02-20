@@ -33,7 +33,7 @@ import Scrollbar from '../components/scrollbar';
 // sections
 import { UserListHead, UserListToolbar } from '../sections/@dashboard/usediscord';
 // mock
-import { apiAxios, messageLink } from '../axios/apiAxios';
+import { apiAxios, messageLink } from '../axios/ApiAxios';
 
 
 // ----------------------------------------------------------------------
@@ -41,6 +41,7 @@ import { apiAxios, messageLink } from '../axios/apiAxios';
 const TABLE_HEAD = [
   { id: 'ID', label: 'ID', alignRight: false },
   { id: 'Email', label: 'Email', alignRight: false },
+  { id: 'Channel', label: 'Channel', alignRight: false },
   { id: 'Time', label: 'Time', alignRight: false },
   { id: 'Content', label: 'Content', alignRight: false },
   { id: '' },
@@ -53,6 +54,7 @@ const TABLE_HEAD = [
 interface Imessage{
     id: string,
     email: string,
+    channelFullName: string,
     createdTimestamp: string,
     content: string,  
 }
@@ -101,19 +103,34 @@ export default function Message() {
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
+  const [isLoading, setIsLoading] = useState(true);
   const [message, setMessage] = useState<Imessage[]>([]);
   console.log(message)
 
     // call api 
   useEffect(() => {
-    apiAxios.get(messageLink)
-        .then(function (response) {
-            setMessage(response.data.content);
-        })
-        .catch(function (error) {
-            console.log(error);
-        })
-  }, []);
+    fetchData();
+  },
+  []);
+
+  async function fetchData() {
+    try {
+      // Cập nhật giá trị biến trạng thái để hiển thị Loading...
+      setIsLoading(true);
+
+      // Gọi API để lấy dữ liệu từ server
+      const response = await apiAxios.get(messageLink);
+
+      // Cập nhật giá trị biến trạng thái để ẩn Loading...
+      setIsLoading(false);
+
+      // Lưu trữ dữ liệu vào biến trạng thái data
+      setMessage(response.data.content);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
 //   console.log(penal)
 
 
@@ -207,9 +224,12 @@ export default function Message() {
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
                 />
-                <TableBody>
+                {isLoading ? (
+                  <p>Loading...</p>
+                ) : (
+                  <TableBody>
                   {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row:Imessage) => {
-                    const {id, email, createdTimestamp, content,} = row;
+                    const {id, email, channelFullName, createdTimestamp, content,} = row;
                     const selectedUser = selected.indexOf((id)) !== -1;
                     // console.log(row)
                     return (
@@ -220,6 +240,7 @@ export default function Message() {
 
                         <TableCell align="left">{id}</TableCell>
                         <TableCell align="left">{email}</TableCell>
+                        <TableCell align="left">{channelFullName}</TableCell>
                         <TableCell align="left">{Moment(Number(createdTimestamp)).format('HH:MM DD/MM/YYYY ')}</TableCell>
                         <TableCell align="left">{content}</TableCell>                      
                        
@@ -238,6 +259,8 @@ export default function Message() {
                     </TableRow>
                   )}
                 </TableBody>
+                )}
+                
 
                 {isNotFound && (
                   <TableBody>

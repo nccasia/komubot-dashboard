@@ -1,25 +1,19 @@
-import { Helmet } from "react-helmet-async";
 // @mui
-import { styled } from "@mui/material/styles";
 import {
-  Link,
-  Container,
-  Typography,
-  Divider,
-  Stack,
-  Button,
+  Button, Container, Divider,
+  Stack, Typography
 } from "@mui/material";
+import { styled } from "@mui/material/styles";
 // hooks
 import useResponsive from "../hooks/useResponsive";
 // components
-import Logo from "../components/logo";
 import Iconify from "../components/iconify";
+import Logo from "../components/logo";
 // sections
-import { LoginForm } from "../sections/auth/login";
-import { useNavigate } from "react-router-dom";
-import { apiAxios } from "../axios/apiAxios";
-import { useState } from "react";
+import { gapi } from "gapi-script"; 
+import { useEffect, useState } from "react";
 import { GoogleLogin } from "react-google-login";
+import { LoginForm } from "../sections/auth/login";
 // ----------------------------------------------------------------------
 
 const StyledRoot = styled("div")(({ theme }) => ({
@@ -50,23 +44,31 @@ const StyledContent = styled("div")(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 const clientId =
-  "498168811060-khvb6seteg4hk1ftts06sn5780ef7dqi.apps.googleusercontent.com"
-
+  "498168811060-ii509rnksf25l04drpgka1kjh0jgs14f.apps.googleusercontent.com";
 
 export default function LoginPage() {
-  const [idToken, setIdToken] = useState<string | null>(null);
 
-  const handleGoogleLoginSuccess = (response:any) => {
+
+  const handleGoogleLoginSuccess = (response: any) => {
     console.log("Google login success:", response);
     // handle the response here, for example, you can send a token to your server for authentication
   };
-  
-  const handleGoogleLoginFailure = (response:any) => {
+
+  const handleGoogleLoginFailure = (response: any) => {
     console.log("Google login failed:", response);
     // handle the error here
   };
 
   const mdUp = useResponsive("up", "md", "sm");
+  useEffect(() => {
+    function start() {
+      gapi.client.init({
+        clientId: clientId,
+        scope: "email",
+      });
+    }
+    gapi.load("client:auth2", start);
+  }, []);
 
   return (
     <>
@@ -106,15 +108,13 @@ export default function LoginPage() {
                 OR
               </Typography>
             </Divider>
-            ,
             <Stack direction="row" spacing={2}>
               <GoogleLogin
                 clientId={clientId}
+                buttonText="Login"
                 onSuccess={handleGoogleLoginSuccess}
                 onFailure={handleGoogleLoginFailure}
-                uxMode='redirect'
                 cookiePolicy={"single_host_origin"}
-                
                 render={(renderProps) => (
                   <Button
                     onClick={renderProps.onClick}
@@ -132,7 +132,6 @@ export default function LoginPage() {
                   </Button>
                 )}
               />
-         
             </Stack>
           </StyledContent>
         </Container>
