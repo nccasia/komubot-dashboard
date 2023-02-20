@@ -41,7 +41,7 @@ export default function Router() {
     },
     {
       path: 'login',
-      element: <LoginPage />,
+      element:  token ? <Navigate to="/dashboard" />: <LoginPage />,
     },
     {
       element: <SimpleLayout />,
