@@ -36,9 +36,10 @@ UserListToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
   filterName: PropTypes.string.isRequired,
   onFilterName: PropTypes.func.isRequired,
+  onClickFilter: PropTypes.func,
 };
 
-export default function UserListToolbar({ numSelected, filterName, onFilterName }:PropTypes.InferProps<typeof UserListToolbar.propTypes>) {
+export default function UserListToolbar({ numSelected, filterName, onFilterName,onClickFilter }:PropTypes.InferProps<typeof UserListToolbar.propTypes>) {
   
   // console.log(filterName);
   return (
@@ -79,7 +80,7 @@ export default function UserListToolbar({ numSelected, filterName, onFilterName 
       ) :
       (
         <Tooltip title="Filter list">
-          <IconButton>
+          <IconButton onClick={onClickFilter?onClickFilter:undefined}>
             <Iconify icon="ic:round-filter-list" />
           </IconButton>
         </Tooltip>

@@ -26,7 +26,7 @@ import { UserListHead} from '../sections/@dashboard/user';
 import ListToolbar from '../sections/@dashboard/meeting/ListToolbar';
 import {DayTime,MeetingFace} from "../interface/interface"
 import Moment from "moment";
-import {getMeeting} from "../Api/Meeting/MeetingApi"
+import {getMeeting} from "../api/meeting/MeetingApi"
 
 const TABLE_HEAD = [
     { id: 'createdTimestamp', label: 'Created Time', alignRight: true },
@@ -194,7 +194,7 @@ export default function MeetingPage() {
                                             <TableCell align="center">{row.repeatTime}</TableCell>
                                             <TableCell align="center">{row.channelFullName}</TableCell>
                                             <TableCell align="center" >
-                                                <Label color={row.cancel?'success':'error'}>{(row.cancel)?"Open":"Close"}</Label>
+                                                <Label color={row.cancel?'success':'error'}>{String(row.cancel)}</Label>
                                             </TableCell>
                                             
                                             
