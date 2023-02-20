@@ -1,4 +1,4 @@
-import {apiAxios, meetingLink} from '../../axios/ApiAxios';
+import {apiAxios, meetingLink} from '../../axios/apiAxios';
 import {DayTime} from "../../interface/interface"
 
 export const getMeeting= async (index:DayTime | null) => {
