@@ -11,7 +11,7 @@ import Logo from "../components/logo";
 import { gapi } from "gapi-script";
 import { useEffect } from "react";
 import { GoogleLogin } from "react-google-login";
-import { loginWithGoogle } from "../Api/Auth/authApi";
+import { loginWithGoogle } from "../Api/Auth/AuthApi";
 import { LoginForm } from "../sections/auth/login";
 // ----------------------------------------------------------------------
 
