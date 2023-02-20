@@ -64,7 +64,7 @@ export default function DailyListToolbar({
     if (value) {
       const startDay = startOfDay(value?.[0]).getTime();
       const endDay = endOfDay(value?.[1]).getTime();
-      const dailysData = await filterDailys(startDay, endDay);
+      const dailysData = await filterDailys({startDay:startDay, endDay:endDay});
       setDailys(dailysData);
     }
   }
