@@ -1,5 +1,5 @@
 import axios, { AxiosError } from "axios";
-import { apiAxios } from "../../axios/ApiAxios";
+import { apiAxios } from "../../axios/apiAxios";
 import { Author } from "../../interface/interface";
 import { setAccessToken } from "../../utils/localStorerage";
 import { notyf } from "../../utils/notif";

@@ -33,7 +33,7 @@ import Scrollbar from '../components/scrollbar';
 // sections
 import { UserListHead, UserListToolbar } from '../sections/@dashboard/usediscord';
 // mock
-import { apiAxios, messageLink } from '../axios/ApiAxios';
+import { apiAxios, messageLink } from '../axios/apiAxios';
 
 
 // ----------------------------------------------------------------------
@@ -110,8 +110,7 @@ export default function Message() {
     // call api 
   useEffect(() => {
     fetchData();
-  },
-  []);
+  },[]);
 
   async function fetchData() {
     try {
@@ -225,7 +224,7 @@ export default function Message() {
                   onSelectAllClick={handleSelectAllClick}
                 />
                 {isLoading ? (
-                  <p>Loading...</p>
+                  <p style={{textAlign: 'center', fontSize: 20, color: 'red'}}>Loading...</p>
                 ) : (
                   <TableBody>
                   {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row:Imessage) => {

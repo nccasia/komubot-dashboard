@@ -1,4 +1,4 @@
-import { apiAxios, dailyLink } from "../../axios/ApiAxios";
+import { apiAxios, dailyLink } from "../../axios/apiAxios";
 
 export const getDailys = async () => {
   try {

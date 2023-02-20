@@ -1,4 +1,4 @@
-import { apiAxios, channelLink } from "../../axios/ApiAxios";
+import { apiAxios, channelLink } from "../../axios/apiAxios";
 
 export const getChannel = async () => {
     try {
