@@ -1,18 +1,17 @@
 // @mui
-import {
-  Button, Container, Divider,
-  Stack, Typography
-} from "@mui/material";
+import { Button, Container, Divider, Stack, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 // hooks
+import { useNavigate } from "react-router-dom";
 import useResponsive from "../hooks/useResponsive";
 // components
 import Iconify from "../components/iconify";
 import Logo from "../components/logo";
 // sections
 import { gapi } from "gapi-script";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { GoogleLogin } from "react-google-login";
+import { loginWithGoogle } from "../Api/Auth/authApi";
 import { LoginForm } from "../sections/auth/login";
 // ----------------------------------------------------------------------
 
@@ -47,16 +46,18 @@ const clientId =
   "498168811060-ii509rnksf25l04drpgka1kjh0jgs14f.apps.googleusercontent.com";
 
 export default function LoginPage() {
-
-
-  const handleGoogleLoginSuccess = (response: any) => {
-    console.log("Google login success:", response);
-    // handle the response here, for example, you can send a token to your server for authentication
+  const navigate = useNavigate();
+  const handleGoogleLoginSuccess = async (response: any) => {
+    const tokenId: string = await response.tokenId;
+    const res = await loginWithGoogle(tokenId);
+    if (res) {
+      navigate("/dashboard", { replace: true });
+    }
   };
 
   const handleGoogleLoginFailure = (response: any) => {
     console.log("Google login failed:", response);
-    // handle the error here
+    // handle the error
   };
 
   const mdUp = useResponsive("up", "md", "sm");
