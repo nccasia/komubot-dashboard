@@ -25,8 +25,8 @@ const TABLE_HEAD = [
   { id: "Daily", label: "Daily", alignRight: false },
   { id: "Channel", label: "Channel", alignRight: false },
   { id: "Time", label: "Time", alignRight: false },
-  { id: "status", label: "Status", alignRight: false },
-  { id: "" },
+  { id: "Detail", label: "Detail", alignRight: false },
+  
 ];
 
 // ----------------------------------------------------------------------
@@ -171,12 +171,7 @@ export default function DailyPage() {
           <Typography variant="h4" gutterBottom>
             Daily
           </Typography>
-          <Button
-            variant="contained"
-            startIcon={<Iconify icon="eva:plus-fill" />}
-          >
-            New User
-          </Button>
+     
         </Stack>
 
         <Card>
@@ -208,8 +203,7 @@ export default function DailyPage() {
                       email ,
                       channelFullName ,
                       createdAt,
-                      id ,
-                      userid  } = row;
+                      id  } = row;
                     const selectedDaily = selected.indexOf(id) !== -1;
                     return (
                       <TableRow
@@ -264,12 +258,14 @@ export default function DailyPage() {
                         <TableCell align="right">
                           <IconButton
                             size="large"
+                            
                             color="inherit"
-                            onClick={handleOpenMenu}
+                            onClick={() => setSelectedUser(row)}
                           >
-                            <Iconify icon={"eva:more-vertical-fill"} />
+                            <Iconify icon={"bi:info-circle-fill"} />
                           </IconButton>
                         </TableCell>
+                      
                       </TableRow>
                     );
                   })}
@@ -319,34 +315,7 @@ export default function DailyPage() {
         </Card>
       </Container>
 
-      <Popover
-        open={Boolean(open)}
-        anchorEl={open}
-        onClose={handleCloseMenu}
-        anchorOrigin={{ vertical: "top", horizontal: "left" }}
-        transformOrigin={{ vertical: "top", horizontal: "right" }}
-        PaperProps={{
-          sx: {
-            p: 1,
-            width: 140,
-            "& .MuiMenuItem-root": {
-              px: 1,
-              typography: "body2",
-              borderRadius: 0.75,
-            },
-          },
-        }}
-      >
-        <MenuItem>
-          <Iconify icon={"eva:edit-fill"} sx={{ mr: 2 }} />
-          Edit
-        </MenuItem>
-
-        <MenuItem sx={{ color: "error.main" }}>
-          <Iconify icon={"eva:trash-2-outline"} sx={{ mr: 2 }} />
-          Delete
-        </MenuItem>
-      </Popover>
+   
       <UserDetailsModal user={selectedUser} onClose={() => setSelectedUser(null)} />
     </>
   );
