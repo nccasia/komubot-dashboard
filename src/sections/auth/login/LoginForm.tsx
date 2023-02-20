@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import FormControlLabel from "@mui/material/FormControlLabel";
 // components
-import { Login } from "../../../Api/Auth/AuthApi";
+import { Login } from "../../../Api/Auth/authApi";
 import Iconify from "../../../components/iconify";
 import { Author } from "./../../../interface/interface";
 
