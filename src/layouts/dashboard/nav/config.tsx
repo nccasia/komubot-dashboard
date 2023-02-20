@@ -24,12 +24,12 @@ const navConfig = [
   {
     title: 'channel',
     path: '/dashboard/channel',
-    icon: icon('ic_user'),
+    icon: icon('ic_channel'),
   },
   {
     title: 'meeting',
     path: '/dashboard/meeting',
-    icon: icon('ic_user'),
+    icon: icon('ic_meeting'),
   },
   {
     title: "penalty",
@@ -39,23 +39,23 @@ const navConfig = [
   {
     title: "message",
     path: "/dashboard/Message",
-    icon: icon("ic_user"),
+    icon: icon("ic_message"),
   },
   {
     title: "daily",
     path: "/dashboard/daily",
-    icon: icon("ic_user"),
+    icon: icon("ic_daily"),
   },
-  {
-    title: "product",
-    path: "/dashboard/products",
-    icon: icon("ic_cart"),
-  },
-  {
-    title: "blog",
-    path: "/dashboard/blog",
-    icon: icon("ic_blog"),
-  },
+  // {
+  //   title: "product",
+  //   path: "/dashboard/products",
+  //   icon: icon("ic_cart"),
+  // },
+  // {
+  //   title: "blog",
+  //   path: "/dashboard/blog",
+  //   icon: icon("ic_blog"),
+  // },
 ];
 
 export default navConfig;
