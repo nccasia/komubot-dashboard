@@ -1,7 +1,7 @@
 
 export const textStyle =(index:string)=>{
     
-        index=index.replaceAll(/_/g,'-').replaceAll(/ /g,'-').replaceAll(/[A-Z]/g, word => word.toLowerCase());     
+        index=index.replace(/_/g,'-').replace(/ /g,'-').replace(/[A-Z]/g, word => word.toLowerCase());     
 
     return(
         <p>{index}</p>

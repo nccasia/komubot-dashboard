@@ -24,10 +24,10 @@ import {  useNavigate } from 'react-router';
 
 export default function DashboardAppPage() {
   const theme:any = useTheme();
-  const isLoggedIn = localStorage.getItem('token');
   const navigate = useNavigate();
-
-useEffect(() => {
+  
+  useEffect(() => {
+  const isLoggedIn = localStorage.getItem('token');
   if (!isLoggedIn) {
     navigate("/login", { replace: true });
   }

@@ -1,21 +1,18 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 // @mui
-import {
-  Link,
-  Stack,
-  IconButton,
-  InputAdornment,
-  TextField,
-  Checkbox,
-} from "@mui/material";
 import { LoadingButton } from "@mui/lab";
+import {
+  Checkbox, IconButton,
+  InputAdornment, Link,
+  Stack, TextField
+} from "@mui/material";
 import FormControlLabel from "@mui/material/FormControlLabel";
 // components
 import Iconify from "../../../components/iconify";
 import { Author } from "./../../../interface/interface";
 import { setAccessToken } from './../../../utils/localStorerage';
-import { Login } from "../../../api/auth/AuthApi";
+import { Login } from "../../../api/auth/authApi";
 
 // ----------------------------------------------------------------------
 

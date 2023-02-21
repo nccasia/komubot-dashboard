@@ -19,18 +19,18 @@ import Message from './pages/MessageChannel';
 // ----------------------------------------------------------------------
 
 export default function Router() {
-  
+  const token = localStorage.getItem('token');
+
   const routes = useRoutes([
     {
-      
       path: '/dashboard',
-      element: <DashboardLayout />,
+      element: token ? <DashboardLayout /> : <Navigate to="/login" />,
       children: [
         { element: <Navigate to="/dashboard/app" />, index: true },
         { path: 'app', element: <DashboardAppPage /> },
         { path: 'user', element: <UserPage /> },
-        { path: 'channel', element: < ChannelPage/> },
-        { path: 'meeting', element: < MeetingPage/> },
+        { path: 'channel', element: <ChannelPage /> },
+        { path: 'meeting', element: <MeetingPage /> },
         { path: 'userdiscord', element: <UserDiscord /> },
         { path: 'penalty', element: <Penalty /> },
         { path: 'message', element: <Message /> },
@@ -41,7 +41,7 @@ export default function Router() {
     },
     {
       path: 'login',
-      element: <LoginPage />,
+      element:  token ? <Navigate to="/dashboard" />: <LoginPage />,
     },
     {
       element: <SimpleLayout />,
@@ -56,6 +56,6 @@ export default function Router() {
       element: <Navigate to="/404" replace />,
     },
   ]);
- 
+
   return routes;
 }

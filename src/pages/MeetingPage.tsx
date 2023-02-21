@@ -54,39 +54,47 @@ function getComparator(order: string, orderBy: string) {
         : (a: any, b: any) => -descendingComparator(a, b, orderBy);
 }
 
-function applySortFilter(array: any, comparator: any, query: string) {
+function applySortFilter(array: any, comparator: any) {
     const stabilizedThis = array.map((el: any, index: number) => [el, index]);
     stabilizedThis.sort((a: any, b: any) => {
         const order = comparator(a[0], b[0]);
         if (order !== 0) return order;
         return a[0] - b[0];
     });
-    if (query) {
-        return filter(array, (_user: any) => _user.name.toLowerCase().indexOf(query.toLowerCase()) !== -1);
-    }
     return stabilizedThis.map((el: any) => el[0]);
 }
 
 export default function MeetingPage() {
     const [open, setOpen] = useState<Element | ((element: Element) => Element) | null | undefined>();
-
-    const [page, setPage] = useState(0);
-
     const [order, setOrder] = useState('asc');
-
     const [selected, setSelected] = useState<any>([]);
-
     const [orderBy, setOrderBy] = useState('id');
 
     const [filterName, setFilterName] = useState('');
-
+    const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
-
     const [meeting, setMeeting] = useState<MeetingFace[]>([]);
-    const [daytime, setDayTime] = useState<DayTime | null>(null);
+    const [length, setLength] = useState<number>(0);
+    const [daytime, setDayTime] = useState<DayTime>();
+    console.log(daytime);
     React.useEffect(()=>{
-        getMeeting(daytime).then(data=>setMeeting(data));
-    },[daytime]);
+        const timeoutId = setTimeout(() => {
+            getMeeting({
+                page:page+1,
+                size:rowsPerPage,
+                repeat:filterName,
+                from:daytime?daytime.startDay:0,
+                to:daytime?daytime.endDay:0,
+            }).then(data=>setMeeting(data));
+        }, 800);
+        return () => {
+            clearTimeout(timeoutId);
+        };
+    },[daytime,page,rowsPerPage,filterName]);
+
+    React.useEffect(()=>{
+        getMeeting(null).then(data=> setLength(data.length));
+    },[]);
 
     const handleOpenMenu = (event: any) => {
         setOpen(event.currentTarget);
@@ -140,11 +148,7 @@ export default function MeetingPage() {
         setFilterName(event.target.value);
     };
 
-    const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - meeting.length) : 0;
-
-    const filteredUsers = applySortFilter(meeting, getComparator(order, orderBy), filterName);
-
-    const isNotFound = !filteredUsers.length && !!filterName;
+    const filteredUsers = applySortFilter(meeting, getComparator(order, orderBy));
 
     return (
         <>
@@ -179,7 +183,7 @@ export default function MeetingPage() {
                                 onSelectAllClick={handleSelectAllClick}
                             />
                             <TableBody>
-                                {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row: MeetingFace) => {
+                                {filteredUsers.map((row: MeetingFace) => {
                                     const selectedUser = selected.indexOf((row.id)) !== -1;
                                     return (
                                         <TableRow hover key={Number(row.id)} tabIndex={-1} role="checkbox" selected={selectedUser}>
@@ -206,44 +210,15 @@ export default function MeetingPage() {
                                         </TableRow>
                                     );
                                 })}
-                                {emptyRows > 0 && (
-                                    <TableRow style={{ height: 53 * emptyRows }}>
-                                        <TableCell colSpan={6} />
-                                    </TableRow>
-                                )}
                             </TableBody>
-
-                            {isNotFound && (
-                                <TableBody>
-                                    <TableRow>
-                                        <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
-                                            <Paper
-                                                sx={{
-                                                    textAlign: 'center',
-                                                }}
-                                            >
-                                                <Typography variant="h6" paragraph>
-                                                    Not found
-                                                </Typography>
-
-                                                <Typography variant="body2">
-                                                    No results found for &nbsp;
-                                                    <strong>&quot;{filterName}&quot;</strong>.
-                                                    <br /> Try checking for typos or using complete words.
-                                                </Typography>
-                                            </Paper>
-                                        </TableCell>
-                                    </TableRow>
-                                </TableBody>
-                            )}
                         </Table>
                     </TableContainer>
                     {/* </Scrollbar> */}
 
                     <TablePagination
-                        rowsPerPageOptions={meeting.length<5? [0,5]:[5, 10, 25]}
+                        rowsPerPageOptions={[5, 10, length]}
                         component="div"
-                        count={meeting.length}
+                        count={length}
                         rowsPerPage={rowsPerPage}
                         page={page}
                         onPageChange={handleChangePage}

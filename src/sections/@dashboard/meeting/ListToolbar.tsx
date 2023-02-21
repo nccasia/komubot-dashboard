@@ -26,7 +26,8 @@ const StyledRoot = styled(Toolbar)(({ theme }) => ({
 }));
 
 const StyledSearch = styled(OutlinedInput)(({ theme }: any) => ({
-  width: 240,
+  width: 250,
+  height:35,
   transition: theme.transitions.create(["box-shadow", "width"], {
     easing: theme.transitions.easing.easeInOut,
     duration: theme.transitions.duration.shorter,
@@ -41,7 +42,6 @@ const StyledSearch = styled(OutlinedInput)(({ theme }: any) => ({
   },
 }));
 
-// ----------------------------------------------------------------------
 
 ListToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
@@ -86,7 +86,7 @@ export default function ListToolbar({
         <StyledSearch
           value={filterName}
           onChange={onFilterName}
-          placeholder="Search Daily..."
+          placeholder="Search..."
           startAdornment={
             <InputAdornment position="start">
               <Iconify
@@ -102,6 +102,8 @@ export default function ListToolbar({
         format="dd/MM/yyyy"
         onChange={handleSelect}
         showOneCalendar
+        placeholder="Filter date..."
+        style={{width:250}}
       />
     </StyledRoot>
   );
