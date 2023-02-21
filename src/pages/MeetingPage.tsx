@@ -54,13 +54,16 @@ function getComparator(order: string, orderBy: string) {
         : (a: any, b: any) => -descendingComparator(a, b, orderBy);
 }
 
-function applySortFilter(array: any, comparator: any) {
+function applySortFilter(array: any, comparator: any, query:string,) {
     const stabilizedThis = array.map((el: any, index: number) => [el, index]);
     stabilizedThis.sort((a: any, b: any) => {
         const order = comparator(a[0], b[0]);
         if (order !== 0) return order;
         return a[0] - b[0];
     });
+    if (query) {
+        return filter(array, (_user:any) => _user.repeat.toLowerCase().indexOf(query.toLowerCase()) !== -1);
+      }
     return stabilizedThis.map((el: any) => el[0]);
 }
 
@@ -76,13 +79,12 @@ export default function MeetingPage() {
     const [meeting, setMeeting] = useState<MeetingFace[]>([]);
     const [length, setLength] = useState<number>(0);
     const [daytime, setDayTime] = useState<DayTime>();
-    console.log(daytime);
+
     React.useEffect(()=>{
         const timeoutId = setTimeout(() => {
             getMeeting({
                 page:page+1,
                 size:rowsPerPage,
-                repeat:filterName,
                 from:daytime?daytime.startDay:0,
                 to:daytime?daytime.endDay:0,
             }).then(data=>setMeeting(data));
@@ -90,7 +92,7 @@ export default function MeetingPage() {
         return () => {
             clearTimeout(timeoutId);
         };
-    },[daytime,page,rowsPerPage,filterName]);
+    },[daytime,page,rowsPerPage]);
 
     React.useEffect(()=>{
         getMeeting(null).then(data=> setLength(data.length));
@@ -148,7 +150,7 @@ export default function MeetingPage() {
         setFilterName(event.target.value);
     };
 
-    const filteredUsers = applySortFilter(meeting, getComparator(order, orderBy));
+    const filteredUsers = applySortFilter(meeting, getComparator(order, orderBy),filterName);
 
     return (
         <>

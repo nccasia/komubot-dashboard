@@ -27,7 +27,6 @@ const StyledRoot = styled(Toolbar)(({ theme }) => ({
 
 const StyledSearch = styled(OutlinedInput)(({ theme }: any) => ({
   width: 250,
-  height:35,
   transition: theme.transitions.create(["box-shadow", "width"], {
     easing: theme.transitions.easing.easeInOut,
     duration: theme.transitions.duration.shorter,
@@ -99,11 +98,11 @@ export default function ListToolbar({
       )}
 
       <DateRangePicker
+        placeholder="Select date..."
         format="dd/MM/yyyy"
         onChange={handleSelect}
         showOneCalendar
-        placeholder="Filter date..."
-        style={{width:250}}
+        style={{width:250, display:'flex', alignItems: 'center'}}
       />
     </StyledRoot>
   );

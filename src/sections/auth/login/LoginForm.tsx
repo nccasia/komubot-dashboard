@@ -7,6 +7,7 @@ import {
   InputAdornment, Link,
   Stack, TextField
 } from "@mui/material";
+import { KeyboardEvent } from "react";
 import FormControlLabel from "@mui/material/FormControlLabel";
 // components
 import Iconify from "../../../components/iconify";
@@ -30,14 +31,22 @@ export default function LoginForm() {
     };
   const handleClick = async () => {
     const res = await Login(author);
+  
     if (res) {
    
       navigate("/dashboard", { replace: true });
     }
   };
+  //handle enter login
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    handleClick();
+  };
+
+
 
   return (
-    <>
+    <form onSubmit={handleSubmit}>
       <Stack spacing={3}>
         <TextField
           value={author.username}
@@ -89,10 +98,11 @@ export default function LoginForm() {
         size="large"
         type="submit"
         variant="contained"
-        onClick={handleClick}
+    
+        
       >
         Login
       </LoadingButton>
-    </>
+    </form>
   );
 }

@@ -9,9 +9,6 @@ export const getMeeting= async (index:GetMeeting | null) => {
             if(index.page && index.size){
                 queryParams += `&page=${index.page}&size=${index.size}`;
             }
-            if(index.repeat){
-                queryParams +=`&repeat=${index.repeat}`;
-            }
             if (index.to && index.from) {
                 queryParams += `&from=${index.from}&to=${index.to}`;
             }
