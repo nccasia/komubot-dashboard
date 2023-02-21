@@ -77,10 +77,10 @@ function applySortFilter(array:any, comparator:any, query:string, main:string) {
     return stabilizedThis.map((el:any) => el[0]);
   }
   if(main==="Active"){
-    return filter(array, (_user:Iuser) => _user.deactive===false);
+    return filter(array, (_user:Iuser) => _user.deactive===true);
   }
   if(main==="Deactive"){
-    return filter(array, (_user:Iuser) => _user.deactive===true);
+    return filter(array, (_user:Iuser) => _user.deactive===false);
   }
   
 }
