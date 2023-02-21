@@ -30,9 +30,9 @@ import Iconify from '../components/iconify';
 import Scrollbar from '../components/scrollbar';
 // sections
 import { UserListHead, UserListToolbar } from '../sections/@dashboard/usediscord';
-import { apiAxios, userLink } from '../axios/apiAxios';
+import { apiAxios, userLink } from '../axios/ApiAxios';
 // mock
-
+import {patchUser} from "../api/user/UserPatch";
 
 // ----------------------------------------------------------------------
 
@@ -51,7 +51,7 @@ const TABLE_HEAD = [
 
 
 
-interface Iuser{
+export interface Iuser{
   
     avatar: string,
     userId: string,
@@ -79,7 +79,7 @@ function getComparator(order:string, orderBy:string) {
     : (a:any, b:any) => -descendingComparator(a, b, orderBy);
 }
 
-function applySortFilter(array:any, comparator:any, query:string) {
+function applySortFilter(array:any, comparator:any, query:string, main:string) {
   const stabilizedThis = array.map((el:any, index:number) => [el, index]);
   stabilizedThis.sort((a:any, b:any) => {
     const order = comparator(a[0], b[0]);
@@ -87,13 +87,23 @@ function applySortFilter(array:any, comparator:any, query:string) {
     return a[1] - b[1];
   });
   if (query) {
-    return filter(array, (_user:any) => _user.username.toLowerCase().indexOf(query.toLowerCase()) !== -1);
+    return filter(array, (_user:Iuser) => _user.username.toLowerCase().indexOf(query.toLowerCase()) !== -1);
   }
-  return stabilizedThis.map((el:any) => el[0]);
+  if(main==="All"){
+    return stabilizedThis.map((el:any) => el[0]);
+  }
+  if(main==="Active"){
+    return filter(array, (_user:Iuser) => _user.deactive===false);
+  }
+  if(main==="Deactive"){
+    return filter(array, (_user:Iuser) => _user.deactive===true);
+  }
+  
 }
 
 export default function UserDiscord() {
   const [open, setOpen] = useState(null);
+  const [openfilter, setOpenFilter] = useState(null);
 
   const [page, setPage] = useState(0);
 
@@ -127,6 +137,13 @@ export default function UserDiscord() {
 
   const handleCloseMenu = () => {
     setOpen(null);
+  };
+  const handleOpenFilter = (event:any) => {
+    setOpenFilter(event.currentTarget);
+  };
+
+  const handleCloseFilter = () => {
+    setOpenFilter(null);
   };
 
   const handleRequestSort = (event:any, property:string) => {
@@ -173,9 +190,22 @@ export default function UserDiscord() {
     setFilterName(event.target.value);
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - users.length) : 0;
+  const editUser = (index:string, main:boolean) => {
+      const list:Iuser[]=users;
+      list.forEach((item:Iuser)=>{
+          if(item.userId===index){
+            item.deactive=!main;
+          }
+      })
+      patchUser({index:index,data: list})
+      handleCloseMenu();
+  };
 
-  const filteredUsers = applySortFilter(users, getComparator(order, orderBy), filterName)
+  
+
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - users.length) : 0;
+  const [filter, setFilter] = useState<string>('Active');
+  const filteredUsers = applySortFilter(users, getComparator(order, orderBy), filterName, filter)
   // console.log(filterName)
 
   const isNotFound = !filteredUsers.length && !!filterName;
@@ -197,10 +227,10 @@ export default function UserDiscord() {
         </Stack>
 
         <Card>
-          <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
+          <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} onClickFilter={handleOpenFilter}/>
 
           {/* <Scrollbar sx={{}}> */}
-            <TableContainer sx={{ minWidth: 800 }}>
+            <TableContainer >
               <Table>
                 <UserListHead
                   order={order}
@@ -250,6 +280,31 @@ export default function UserDiscord() {
                             <Iconify icon={'eva:more-vertical-fill'} />
                           </IconButton>
                         </TableCell>
+                          <Popover
+                            open={Boolean(open)}
+                            anchorEl={open}
+                            onClose={handleCloseMenu}
+                            anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+                            transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                            PaperProps={{
+                              sx: {
+                                p: 1,
+                                width: 140,
+                                '& .MuiMenuItem-root': {
+                                  px: 1,
+                                  typography: 'body2',
+                                  borderRadius: 0.75,
+                                },
+                              },
+                            }}
+                          >
+                            <MenuItem>
+                              <Button sx={{color:'gray'}} fullWidth onClick={()=>editUser(userId,deactive)}>
+                                <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
+                                  {!deactive? 'active':'deactive'}
+                              </Button>
+                            </MenuItem>
+                          </Popover>
                       </TableRow>
                     );
                   })}
@@ -299,34 +354,28 @@ export default function UserDiscord() {
         </Card>
       </Container>
 
-      {/* <Popover
-        open={Boolean(open)}
-        anchorEl={open}
-        onClose={handleCloseMenu}
-        anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-        PaperProps={{
-          sx: {
-            p: 1,
-            width: 140,
-            '& .MuiMenuItem-root': {
-              px: 1,
-              typography: 'body2',
-              borderRadius: 0.75,
-            },
-          },
-        }}
-      >
-        <MenuItem>
-          <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
-          Edit
-        </MenuItem>
-
-        <MenuItem sx={{ color: 'error.main' }}>
-          <Iconify icon={'eva:trash-2-outline'} sx={{ mr: 2 }} />
-          Delete
-        </MenuItem>
-      </Popover> */}
+      <Popover
+            open={Boolean(openfilter)}
+            anchorEl={openfilter}
+            onClose={handleCloseFilter}
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+            transformOrigin={{ vertical: 'top', horizontal: 'center' }}
+            PaperProps={{
+              sx: {
+                p: 1,
+                width: 140,
+                '& .MuiMenuItem-root': {
+                  px: 1,
+                  typography: 'body2',
+                  borderRadius: 0.75,
+                },
+              },
+            }}
+          >
+            <Button sx={{color:'gray', backgroundColor:filter==='Active'?'#b6b1b1':'white'}} fullWidth onClick={()=>setFilter('Active')}>Active</Button>
+            <Button sx={{color:'gray', backgroundColor:filter==='Deactive'?'#b6b1b1':'white'}} fullWidth onClick={()=>setFilter('Deactive')}>Deactive</Button>
+            <Button sx={{color:'gray', backgroundColor:filter==='All'?'#b6b1b1':'white'}} fullWidth onClick={()=>setFilter('All')}>All</Button>
+          </Popover>
     </>
   );
 }

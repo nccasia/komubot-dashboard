@@ -21,6 +21,12 @@ export interface DayTime{
   startDay:number,
   endDay:number,
 }
+export interface GetMeeting{
+    page:number,
+    size:number,
+    to:number,
+    from:number,
+}
 export interface MeetingFace{
   id:number,
   createdTimestamp:string,
@@ -31,7 +37,7 @@ export interface MeetingFace{
   channelFullName:string, 
 }
 
-//ChannelFace
+//Channel
 export interface ChannelFace{
   id:string,
   name:string,
@@ -56,4 +62,9 @@ export interface reportMsgToday {
   totalMsgQuyNhon: number;
   totalMsgSaiGon: number;
   totalMsgSaiGon2: number;
+}
+export interface GetChannel{
+  page:number,
+  size:number,
+  name:string,
 }
