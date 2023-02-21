@@ -1,4 +1,4 @@
-import {apiAxios, userLink} from '../../axios/ApiAxios';
+import {apiAxios, userLink} from '../../axios/apiAxios';
 import {Iuser} from "../../pages/UserDiscord"
 export interface PacthUser{
     index:string,

@@ -12,7 +12,7 @@ import { DailyListHead, DailyListToolbar } from "../sections/@dashboard/daily";
 // mock
 // import DailyListHead from './../sections/@dashboard/daily/DailyListHead';
 import { useDebounce } from 'use-debounce';
-import { filterDailys } from "../api/dailys/DailysApi";
+import { filterDailys } from "../api/dailysApi/dailysApi";
 import { dailystype } from "../interface/interface";
 import UserDetailsModal from "../sections/@dashboard/daily/DailyDetailsModal";
 import { formatDateTime } from './../utils/formatDateTime';

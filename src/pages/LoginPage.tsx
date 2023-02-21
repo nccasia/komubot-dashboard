@@ -11,7 +11,7 @@ import Logo from "../components/logo";
 import { gapi } from "gapi-script";
 import { useEffect } from "react";
 import { GoogleLogin } from "react-google-login";
-import { loginWithGoogle } from "../api/auth/authApi";
+import { loginWithGoogle } from "../api/authApi/authApi";
 import { LoginForm } from "../sections/auth/login";
 // ----------------------------------------------------------------------
 
@@ -100,7 +100,7 @@ export default function LoginPage() {
 
         <Container maxWidth="sm">
           <StyledContent>
-            <Typography variant="h4" gutterBottom>
+            <Typography variant="h4" marginBottom={'20px'} gutterBottom>
               Sign in to Komubot
             </Typography>
             <LoginForm />

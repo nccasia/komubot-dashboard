@@ -23,9 +23,9 @@ import {
 import Iconify from '../components/iconify';
 import { UserListHead, UserListToolbar } from '../sections/@dashboard/user';
 import { textStyle } from "../utils/textStyles"
-import {apiAxios, channelLink} from '../axios/ApiAxios';
+import {apiAxios, channelLink} from '../axios/apiAxios';
 import {ChannelFace} from "../interface/interface"
-import {getChannel} from "../api/channel/ChannelApi"
+import {getChannel} from "../api/channelApi/channelApi"
 
 const TABLE_HEAD = [
     { id: 'id', label: 'Id', alignRight: true },
