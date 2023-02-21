@@ -11,3 +11,6 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+.rs-picker-toggle>.rs-stack>.rs-stack-item{
+  padding:10px ;
+}

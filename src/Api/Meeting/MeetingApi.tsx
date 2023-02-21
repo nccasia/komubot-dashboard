@@ -1,12 +1,18 @@
 import {apiAxios, meetingLink} from '../../axios/ApiAxios';
-import {DayTime} from "../../interface/interface"
+import {GetMeeting} from "../../interface/interface"
 
-export const getMeeting= async (index:DayTime | null) => {
+export const getMeeting= async (index:GetMeeting | null) => {
     try {
         let queryParams = "";
-        if (index && index.startDay && index.endDay) {
-            queryParams = `?from=${index.startDay}&to=${index.endDay}`;
-          }
+        if (index !==null){
+            queryParams = "?";
+            if(index.page && index.size){
+                queryParams += `&page=${index.page}&size=${index.size}`;
+            }
+            if (index.to && index.from) {
+                queryParams += `&from=${index.from}&to=${index.to}`;
+            }
+        }
         const res = await apiAxios.get(meetingLink+queryParams);
         return res.data.content;
     } catch (error) {

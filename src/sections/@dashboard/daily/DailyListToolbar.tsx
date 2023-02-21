@@ -6,7 +6,6 @@ import {
   InputAdornment,
   OutlinedInput,
   Toolbar,
-  Typography
 } from "@mui/material";
 // component
 import "rsuite/dist/rsuite.min.css";
@@ -16,7 +15,6 @@ import { endOfDay, startOfDay } from "date-fns";
 import React from "react";
 import { DateRangePicker } from "rsuite";
 import { DateRange } from "rsuite/esm/DateRangePicker/types";
-import { filterDailys } from "../../../Api/Dailys/DailysApi";
 // ----------------------------------------------------------------------
 
 const StyledRoot = styled(Toolbar)(({ theme }) => ({
@@ -24,8 +22,22 @@ const StyledRoot = styled(Toolbar)(({ theme }) => ({
   display: "flex",
   justifyContent: "space-between",
   padding: theme.spacing(0, 1, 0, 3),
+  
+  // Add media query for screen width less than 490px
+  [theme.breakpoints.down(490)]: {
+    flexDirection: "column",
+    height: "max-content",
+    padding: "11px 0"
+  }
 }));
+const StyledDateRangePicker = styled(DateRangePicker)(({ theme }) => ({
+  // styles for larger screens
 
+  [theme.breakpoints.down(490)]: {
+    // styles for smaller screens
+      marginTop: "10px"
+  }
+}));
 const StyledSearch = styled(OutlinedInput)(({ theme }: any) => ({
   width: 240,
   transition: theme.transitions.create(["box-shadow", "width"], {
@@ -45,62 +57,53 @@ const StyledSearch = styled(OutlinedInput)(({ theme }: any) => ({
 // ----------------------------------------------------------------------
 
 DailyListToolbar.propTypes = {
-  numSelected: PropTypes.number.isRequired,
   filterName: PropTypes.string.isRequired,
   onFilterName: PropTypes.func.isRequired,
-  setDailys: PropTypes.func.isRequired,
+  setPage: PropTypes.func.isRequired,
+  setStartDay: PropTypes.func.isRequired,
+  setEndDay: PropTypes.func.isRequired,
 };
 
 export default function DailyListToolbar({
-  numSelected,
   filterName,
   onFilterName,
-  setDailys,
+  setPage,
+  setStartDay,
+  setEndDay,
 }: PropTypes.InferProps<typeof DailyListToolbar.propTypes>) {
   async function handleSelect(
     value: DateRange | null,
     event: React.SyntheticEvent<Element, Event>
   ) {
     if (value) {
-      const startDay = startOfDay(value?.[0]).getTime();
-      const endDay = endOfDay(value?.[1]).getTime();
-      const dailysData = await filterDailys({startDay:startDay, endDay:endDay});
-      setDailys(dailysData);
+      setStartDay(startOfDay(value?.[0]).getTime());
+      setEndDay(endOfDay(value?.[1]).getTime());
+      setPage(0);
     }
   }
-  return (
-    <StyledRoot
-      sx={{
-        ...(numSelected > 0 && {
-          color: "primary.main",
-          bgcolor: "primary.lighter",
-        }),
-      }}
-    >
-      {numSelected > 0 ? (
-        <Typography component="div" variant="subtitle1">
-          {numSelected} selected
-        </Typography>
-      ) : (
-        <StyledSearch
-          value={filterName}
-          onChange={onFilterName}
-          placeholder="Search Daily..."
-          startAdornment={
-            <InputAdornment position="start">
-              <Iconify
-                icon="eva:search-fill"
-                sx={{ color: "text.disabled", width: 20, height: 20 }}
-              />
-            </InputAdornment>
-          }
-        />
-      )}
 
-      <DateRangePicker
+  return (
+    <StyledRoot>
+      <StyledSearch
+        value={filterName}
+        onChange={onFilterName}
+        placeholder="Search Daily..."
+        startAdornment={
+          <InputAdornment position="start">
+            <Iconify
+              icon="eva:search-fill"
+              sx={{ color: "text.disabled", width: 20, height: 20 }}
+            />
+          </InputAdornment>
+        }
+      />
+
+      <StyledDateRangePicker
         format="dd/MM/yyyy"
         onChange={handleSelect}
         showOneCalendar
+        defaultValue={[startOfDay(new Date()), endOfDay(new Date())]}
+    
       />
     </StyledRoot>
   );
