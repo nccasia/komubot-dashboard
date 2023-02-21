@@ -16,7 +16,7 @@ import { DailyListHead, DailyListToolbar } from "../sections/@dashboard/daily";
 import { dailystype } from "../interface/interface";
 import UserDetailsModal from "../sections/@dashboard/daily/DailyDetailsModal";
 import { formatDateTime } from './../utils/formatDateTime';
-import { getDailys } from "../Api/Dailys/DailysApi";
+import { getDailys ,filterDailys} from "../Api/Dailys/DailysApi";
 
 // ----------------------------------------------------------------------
 
@@ -68,7 +68,6 @@ function applySortFilter(array: any, comparator: any, query: string) {
 }
 
 export default function DailyPage() {
-  const [open, setOpen] = useState(null);
 
   const [page, setPage] = useState(0);
 
@@ -80,15 +79,9 @@ export default function DailyPage() {
 
   const [filterName, setFilterName] = useState("");
 
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  const handleOpenMenu = (event: any) => {
-    setOpen(event.currentTarget);
-  };
 
-  const handleCloseMenu = () => {
-    setOpen(null);
-  };
 
   const handleRequestSort = (event: any, property: string) => {
     const isAsc = orderBy === property && order === "asc";
@@ -153,7 +146,7 @@ export default function DailyPage() {
   //call api
   useEffect(() => {
     const fetch = async () => {
-      const dailysData = await getDailys();
+      const dailysData = await filterDailys({size: rowsPerPage});
       setDailys(dailysData);
     };
     fetch();
