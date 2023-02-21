@@ -11,7 +11,7 @@ import {
   AppConversionRates, AppCurrentVisits,
   AppWidgetSummary
 } from '../sections/@dashboard/app';
-import { getReport, getReportMsgToday } from './../Api/app/appApi';
+import { getReport, getReportMsgToday } from '../api/appApi/appApi';
 import { reportMsgToday } from './../interface/interface';
 
 // ----------------------------------------------------------------------

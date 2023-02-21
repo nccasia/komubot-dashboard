@@ -30,9 +30,9 @@ import Iconify from '../components/iconify';
 import Scrollbar from '../components/scrollbar';
 // sections
 import { UserListHead, UserListToolbar } from '../sections/@dashboard/usediscord';
-import { apiAxios, userLink } from '../axios/ApiAxios';
+import { apiAxios, userLink } from '../axios/apiAxios';
 // mock
-import {patchUser} from "../api/user/UserPatch";
+import {patchUser} from "../api/userApi/userPatch";
 
 // ----------------------------------------------------------------------
 

@@ -26,7 +26,7 @@ import { UserListHead} from '../sections/@dashboard/user';
 import ListToolbar from '../sections/@dashboard/meeting/ListToolbar';
 import {DayTime,MeetingFace} from "../interface/interface"
 import Moment from "moment";
-import {getMeeting} from "../api/meeting/MeetingApi"
+import {getMeeting} from "../api/meetingApi/meetingApi"
 
 const TABLE_HEAD = [
     { id: 'createdTimestamp', label: 'Created Time', alignRight: true },
