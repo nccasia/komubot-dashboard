@@ -1,42 +1,55 @@
 import { Helmet } from 'react-helmet-async';
-import { faker } from '@faker-js/faker';
 // @mui
+import { Container, Grid, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { Grid, Container, Typography } from '@mui/material';
 // components
-import Iconify from '../components/iconify';
 // sections
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router';
+import { Report } from '../interface/interface';
 import {
-  AppTasks,
-  AppNewsUpdate,
-  AppOrderTimeline,
-  AppCurrentVisits,
-  AppWebsiteVisits,
-  AppTrafficBySite,
-  AppWidgetSummary,
-  AppCurrentSubject,
-  AppConversionRates,
+  AppConversionRates, AppCurrentVisits,
+  AppWidgetSummary
 } from '../sections/@dashboard/app';
-import { useEffect } from 'react';
-import {  useNavigate } from 'react-router';
+import { getReport, getReportMsgToday } from '../api/appApi/appApi';
+import { reportMsgToday } from './../interface/interface';
 
 // ----------------------------------------------------------------------
 
 export default function DashboardAppPage() {
   const theme:any = useTheme();
   const navigate = useNavigate();
-  
+  const [report,setReport]= useState<Report>({  "totalUserActive": 0,
+  "totalDailyOfToday": 0,
+  "totalMsgOfToday": 0,
+  "totalMeeting": 0,
+  "totalChannel": 0})
+  const [reportMsgToday,setReportMsgToday] = useState<reportMsgToday>({    "totalMsgVinh": 0,
+  "totalMsgHaNoi": 0,
+  "totalMsgHaNoi2": 0,
+  "totalMsgHaNoi3": 0,
+  "totalMsgDaNang": 0,
+  "totalMsgQuyNhon": 0,
+  "totalMsgSaiGon": 0,
+  "totalMsgSaiGon2": 0})
   useEffect(() => {
   const isLoggedIn = localStorage.getItem('token');
   if (!isLoggedIn) {
     navigate("/login", { replace: true });
   }
+  const fetch = async () => {
+    const data = await getReport();
+    const dataToday = await getReportMsgToday();
+    setReport(data.result)
+    setReportMsgToday(dataToday.result)
+  };
+  fetch();
 }, [])
 
   return (
     <>
       <Helmet>
-        <title> Dashboard | Minimal UI </title>
+        <title>Komu Dashboard </title>
       </Helmet>
       <Container maxWidth="xl">
         <Typography variant="h4" sx={{ mb: 5 }}>
@@ -44,70 +57,38 @@ export default function DashboardAppPage() {
         </Typography>
 
         <Grid container spacing={3}>
-          <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Weekly Sales" total={714000} color="info" icon={'ant-design:android-filled'} />
+
+          <Grid   onClick={()=> navigate("/dashboard/userdiscord", { replace: true })} item xs={12} sm={6} md={3} >
+            <AppWidgetSummary  sx={{cursor:'pointer'}} title="Active Users" total={report?.totalUserActive} color="info" icon={'mdi:users-group'} />
+          </Grid>
+     
+          <Grid   onClick={()=> navigate("/dashboard/Message", { replace: true })}  item xs={12} sm={6} md={3}>
+            <AppWidgetSummary  sx={{cursor:'pointer'}}  title="Messages Today" total={report?.totalMsgOfToday} color="info" icon={'jam:messages-alt-f'} />
           </Grid>
 
-          <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="New Users" total={1352831} color="info" icon={'ant-design:apple-filled'} />
+          <Grid    onClick={()=> navigate("/dashboard/meeting", { replace: true })}  item xs={12} sm={6} md={3}>
+            <AppWidgetSummary  sx={{cursor:'pointer'}} title="Meeting" total={report?.totalMeeting} color="warning" icon={'material-symbols:hangout-meeting'} />
           </Grid>
 
-          <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Item Orders" total={1723315} color="warning" icon={'ant-design:windows-filled'} />
+          <Grid    onClick={()=> navigate("/dashboard/channel", { replace: true })}  item xs={12} sm={6} md={3}>
+            <AppWidgetSummary  sx={{cursor:'pointer'}} title="Channel" total={report?.totalChannel} color="error" icon={'fluent:channel-alert-16-filled'} />
           </Grid>
+        
 
-          <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Bug Reports" total={234} color="error" icon={'ant-design:bug-filled'} />
-          </Grid>
-
-          <Grid item xs={12} md={6} lg={8}>
-            <AppWebsiteVisits
-              title="Website Visits"
-              subheader="(+43%) than last year"
-              chartLabels={[
-                '01/01/2003',
-                '02/01/2003',
-                '03/01/2003',
-                '04/01/2003',
-                '05/01/2003',
-                '06/01/2003',
-                '07/01/2003',
-                '08/01/2003',
-                '09/01/2003',
-                '10/01/2003',
-                '11/01/2003',
-              ]}
-              chartData={[
-                {
-                  name: 'Team A',
-                  type: 'column',
-                  fill: 'solid',
-                  data: [23, 11, 22, 27, 13, 22, 37, 21, 44, 22, 30],
-                },
-                {
-                  name: 'Team B',
-                  type: 'area',
-                  fill: 'gradient',
-                  data: [44, 55, 41, 67, 22, 43, 21, 41, 56, 27, 43],
-                },
-                {
-                  name: 'Team C',
-                  type: 'line',
-                  fill: 'solid',
-                  data: [30, 25, 36, 30, 45, 35, 64, 52, 59, 36, 39],
-                },
-              ]}
-            />
-          </Grid>
+       
 
           <Grid item xs={12} md={6} lg={4}>
             <AppCurrentVisits
-              title="Current Visits"
+              title="Total message today"
               chartData={[
-                { label: 'America', value: 4344 },
-                { label: 'Asia', value: 5435 },
-                { label: 'Europe', value: 1443 },
-                { label: 'Africa', value: 4443 },
+                { label: 'Vinh', value: reportMsgToday.totalMsgVinh },
+                { label: 'Hà Nội', value: reportMsgToday.totalMsgHaNoi },
+                { label: 'Hà Nội 2', value: reportMsgToday.totalMsgHaNoi2 },
+                { label: 'Hà Nội 3', value: reportMsgToday.totalMsgHaNoi3 },
+                { label: 'Đà Nẵng', value: reportMsgToday.totalMsgDaNang },
+                { label: 'Quỳ Nhơn', value: reportMsgToday.totalMsgQuyNhon },
+                { label: 'Sài Gòn', value: reportMsgToday.totalMsgSaiGon },
+                { label: 'Sài Gòn 2', value: reportMsgToday.totalMsgSaiGon2 },
               ]}
               chartColors={[
                 theme.palette.primary.main,
@@ -137,90 +118,8 @@ export default function DashboardAppPage() {
             />
           </Grid>
 
-          <Grid item xs={12} md={6} lg={4}>
-            <AppCurrentSubject
-              title="Current Subject"
-              chartLabels={['English', 'History', 'Physics', 'Geography', 'Chinese', 'Math']}
-              chartData={[
-                { name: 'Series 1', data: [80, 50, 30, 40, 100, 20] },
-                { name: 'Series 2', data: [20, 30, 40, 80, 20, 80] },
-                { name: 'Series 3', data: [44, 76, 78, 13, 43, 10] },
-              ]}
-              chartColors={[...Array(6)].map(() => theme.palette.text.secondary)}
-            />
-          </Grid>
 
-          <Grid item xs={12} md={6} lg={8}>
-            <AppNewsUpdate
-              title="News Update"
-              list={[...Array(5)].map((_, index) => ({
-                id: faker.datatype.uuid(),
-                title: faker.name.jobTitle(),
-                description: faker.name.jobTitle(),
-                image: `/assets/images/covers/cover_${index + 1}.jpg`,
-                postedAt: faker.date.recent(),
-              }))}
-            />
-          </Grid>
-
-          <Grid item xs={12} md={6} lg={4}>
-            <AppOrderTimeline
-              title="Order Timeline"
-              list={[...Array(5)].map((_, index) => ({
-                id: faker.datatype.uuid(),
-                title: [
-                  '1983, orders, $4220',
-                  '12 Invoices have been paid',
-                  'Order #37745 from September',
-                  'New order placed #XF-2356',
-                  'New order placed #XF-2346',
-                ][index],
-                type: `order${index + 1}`,
-                time: faker.date.past(),
-              }))}
-            />
-          </Grid>
-
-          <Grid item xs={12} md={6} lg={4}>
-            <AppTrafficBySite
-              title="Traffic by Site"
-              list={[
-                {
-                  name: 'FaceBook',
-                  value: 323234,
-                  icon: <Iconify icon={'eva:facebook-fill'} color="#1877F2" width={32} />,
-                },
-                {
-                  name: 'Google',
-                  value: 341212,
-                  icon: <Iconify icon={'eva:google-fill'} color="#DF3E30" width={32} />,
-                },
-                {
-                  name: 'Linkedin',
-                  value: 411213,
-                  icon: <Iconify icon={'eva:linkedin-fill'} color="#006097" width={32} />,
-                },
-                {
-                  name: 'Twitter',
-                  value: 443232,
-                  icon: <Iconify icon={'eva:twitter-fill'} color="#1C9CEA" width={32} />,
-                },
-              ]}
-            />
-          </Grid>
-
-          <Grid item xs={12} md={6} lg={8}>
-            <AppTasks
-              title="Tasks"
-              list={[
-                { id: '1', label: 'Create FireStone Logo' },
-                { id: '2', label: 'Add SCSS and JS files if required' },
-                { id: '3', label: 'Stakeholder Meeting' },
-                { id: '4', label: 'Scoping & Estimations' },
-                { id: '5', label: 'Sprint Showcase' },
-              ]}
-            />
-          </Grid>
+      
         </Grid>
       </Container>
     </>

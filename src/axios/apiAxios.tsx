@@ -36,3 +36,5 @@ export const dailyLink = "daily";
 export const penaltyLink = "penalty";
 export const messageLink = "message";
 export const userLink = "user";
+export const reportLink = "dashboard"
+export const reportMsgLink = "dashboard/reportMsg"

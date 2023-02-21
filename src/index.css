@@ -12,5 +12,17 @@ code {
     monospace;
 }
 .rs-picker-toggle>.rs-stack>.rs-stack-item{
-  padding:10px ;
+  padding:8px 6px 8px 15px;
+}
+.rs-picker-daterange-menu .rs-picker-daterange-panel-show-one-calendar .rs-picker-toolbar-ranges {
+  width: 170px !important;
+}
+.rs-picker-daterange-menu .rs-picker-daterange-panel-show-one-calendar .rs-picker-toolbar {
+  max-width: 150px !important;
+}
+.rs-picker-daterange-calendar-single{
+  width: 242px !important;
+}
+.rs-picker-toggle-textbox{
+  padding:0 34px !important;
 }

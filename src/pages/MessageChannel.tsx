@@ -33,7 +33,7 @@ import Scrollbar from '../components/scrollbar';
 // sections
 import { UserListHead, UserListToolbar } from '../sections/@dashboard/usediscord';
 // mock
-import { apiAxios, messageLink } from '../axios/ApiAxios';
+import { apiAxios, messageLink } from '../axios/apiAxios';
 
 
 // ----------------------------------------------------------------------
