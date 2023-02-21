@@ -28,7 +28,7 @@ export const filterDailys = async (filters?: FilterParams) => {
       if (queryParams) queryParams = `?${queryParams.substr(1)}`;
     }
     const res = await apiAxios.get(dailyLink + queryParams);
-    return res.data.content;
+    return res.data;
   } catch (error) {
     console.error(error);
     return [];
