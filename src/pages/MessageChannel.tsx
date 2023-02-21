@@ -83,7 +83,7 @@ function applySortFilter(array:any, comparator:any, query:string) {
     return a[1] - b[1];
   });
   if (query) {
-    return filter(array, (_user:any) => _user.email.toLowerCase().indexOf(query.toLowerCase()) !== -1);
+    return filter(array, (_user:any) => _user.id.toLowerCase().indexOf(query.toLowerCase()) !== -1);
   }
   return stabilizedThis.map((el:any) => el[0]);
 }
@@ -201,7 +201,7 @@ export default function Message() {
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            Penalty
+            Message
           </Typography>
           {/* <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
             New User
