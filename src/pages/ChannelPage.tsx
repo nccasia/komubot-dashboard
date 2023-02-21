@@ -23,9 +23,9 @@ import {
 import Iconify from '../components/iconify';
 import { UserListHead, UserListToolbar } from '../sections/@dashboard/user';
 import { textStyle } from "../utils/textStyles"
-// import {apiAxios, channelLink} from '../axios/ApiAxios';
+import {apiAxios, channelLink} from '../axios/ApiAxios';
 import {ChannelFace} from "../interface/interface"
-import {getChannel} from "../Api/Channel/ChannelApi"
+import {getChannel} from "../api/channel/ChannelApi"
 
 const TABLE_HEAD = [
     { id: 'id', label: 'Id', alignRight: true },
@@ -50,38 +50,38 @@ function getComparator(order: string, orderBy: string) {
         : (a: any, b: any) => -descendingComparator(a, b, orderBy);
 }
 
-function applySortFilter(array: any, comparator: any, query: string) {
+function applySortFilter(array: ChannelFace[], comparator: any) {
     const stabilizedThis = array.map((el: any, index: number) => [el, index]);
     stabilizedThis.sort((a: any, b: any) => {
         const order = comparator(a[0], b[0]);
         if (order !== 0) return order;
         return a[0] - b[0];
     });
-    if (query) {
-        return filter(array, (_user: any) => _user.name.toLowerCase().indexOf(query.toLowerCase()) !== -1);
-    }
     return stabilizedThis.map((el: any) => el[0]);
 }
 
 export default function ChannelPage() {
     const [open, setOpen] = useState<Element | ((element: Element) => Element) | null | undefined>();
-
-    const [page, setPage] = useState(0);
-
     const [order, setOrder] = useState('asc');
-
     const [selected, setSelected] = useState<any>([]);
-
     const [orderBy, setOrderBy] = useState('id');
-
+    
     const [filterName, setFilterName] = useState('');
-
+    const [page, setPage] = useState<number>(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
-
     const [channel, setChannel] = useState<ChannelFace[]>([]);
+    const [channellength, setChannelLength] = useState<number>(0);
 
     React.useEffect(()=>{
-        getChannel().then(data=>setChannel(data));
+        const timeoutId = setTimeout(() => {
+            getChannel({page:page+1, size:rowsPerPage, name:filterName}).then(data=> setChannel(data));
+        }, 800);
+        return () => {
+            clearTimeout(timeoutId);
+        };
+    },[page,rowsPerPage,filterName]);
+    React.useEffect(()=>{
+        getChannel(null).then(data=> setChannelLength(data.length));
     },[]);
 
     const handleOpenMenu = (event: any) => {
@@ -130,16 +130,13 @@ export default function ChannelPage() {
         setPage(0);
         setRowsPerPage(parseInt(event.target.value, 10));
     };
-
+    
     const handleFilterByName = (event: any) => {
         setPage(0);
         setFilterName(event.target.value);
     };
 
-    const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - channel.length) : 0;
-
-    const filteredUsers = applySortFilter(channel, getComparator(order, orderBy), filterName);
-
+    const filteredUsers = applySortFilter(channel, getComparator(order, orderBy));
     const isNotFound = !filteredUsers.length && !!filterName;
 
     return (
@@ -147,7 +144,6 @@ export default function ChannelPage() {
             <Helmet>
                 <title> Channel | Minimal UI </title>
             </Helmet>
-
 
             <Container>
                 <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
@@ -175,7 +171,7 @@ export default function ChannelPage() {
                                 onSelectAllClick={handleSelectAllClick}
                             />
                             <TableBody>
-                                {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row: ChannelFace) => {
+                                {filteredUsers.map((row: ChannelFace) => {
                                     const selectedUser = selected.indexOf((row.id)) !== -1;
                                     return (
                                         <TableRow hover key={Number(row.id)} tabIndex={-1} role="checkbox" selected={selectedUser}>
@@ -185,7 +181,7 @@ export default function ChannelPage() {
                                             </TableCell>
 
                                             <TableCell align="center"><b>{row.id}</b></TableCell>
-                                            <TableCell align="center">{textStyle(row.name)}</TableCell>
+                                            <TableCell align="center">{(row.name)}</TableCell>
                                             <TableCell align="center">{row.type}</TableCell>
 
                                             <TableCell align="center">
@@ -195,45 +191,16 @@ export default function ChannelPage() {
                                             </TableCell>
                                         </TableRow>
                                     );
-                                })}
-                                {emptyRows > 0 && (
-                                    <TableRow style={{ height: 53 * emptyRows }}>
-                                        <TableCell colSpan={6} />
-                                    </TableRow>
-                                )}
+                                })}                         
                             </TableBody>
-
-                            {isNotFound && (
-                                <TableBody>
-                                    <TableRow>
-                                        <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
-                                            <Paper
-                                                sx={{
-                                                    textAlign: 'center',
-                                                }}
-                                            >
-                                                <Typography variant="h6" paragraph>
-                                                    Not found
-                                                </Typography>
-
-                                                <Typography variant="body2">
-                                                    No results found for &nbsp;
-                                                    <strong>&quot;{filterName}&quot;</strong>.
-                                                    <br /> Try checking for typos or using complete words.
-                                                </Typography>
-                                            </Paper>
-                                        </TableCell>
-                                    </TableRow>
-                                </TableBody>
-                            )}
                         </Table>
                     </TableContainer>
                     {/* </Scrollbar> */}
 
                     <TablePagination
-                        rowsPerPageOptions={channel.length<5? [0,5]:[5, 10, 25]}
+                        rowsPerPageOptions={channellength<5?[channellength]:channellength<10?[5, channellength]:channellength>10?[5, 10, channellength]:[]}
                         component="div"
-                        count={channel.length}
+                        count={channellength}
                         rowsPerPage={rowsPerPage}
                         page={page}
                         onPageChange={handleChangePage}
