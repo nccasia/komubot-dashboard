@@ -20,10 +20,10 @@ export const Login = async (values: Author): Promise<string> => {
     return token;
   } catch (error) {
     if (axios.isAxiosError(error)) {
+      notyf.error(error.response?.data.message);
       const axiosError: AxiosError<ErrorResponse> = error;
       // Axios error - handle as appropriate
       if (axiosError.response) {
-        notyf.error("Login failed");
         // Server responded with an error status code
         throw new Error(axiosError.response.data.error.message);
       } else {
@@ -39,7 +39,7 @@ export const Login = async (values: Author): Promise<string> => {
 export const loginWithGoogle = async (tokenId: string): Promise<string> => {
   try {
     const res = await axios.post(`http://10.10.20.18:3001/auth/google`, {
-     tokenId:tokenId
+     tokenId
     });
     const token = res.data.accessToken;
     setAccessToken(token);
@@ -48,9 +48,13 @@ export const loginWithGoogle = async (tokenId: string): Promise<string> => {
   } catch (error) {
     if (axios.isAxiosError(error)) {
       const axiosError: AxiosError<ErrorResponse> = error;
+      notyf.error(error.response?.data.message);
+
+      
       // Axios error - handle as appropriate
       if (axiosError.response) {
-   
+        
+        
         // Server responded with an error status code
         throw new Error(axiosError.response.data.error.message);
       } else {
