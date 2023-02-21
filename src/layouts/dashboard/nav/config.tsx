@@ -34,7 +34,7 @@ const navConfig = [
   {
     title: "penalty",
     path: "/dashboard/Penalty",
-    icon: icon("ic_user"),
+    icon: icon("ic_penalty"),
   },
   {
     title: "message",

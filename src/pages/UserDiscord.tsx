@@ -57,9 +57,9 @@ interface Iuser{
     userId: string,
     username: string,
     email: string,
-    roles: string|null,
-    roles_discord: string|null
-    deactive: boolean
+    roles: Array<string>|null,
+    roles_discord: Array<string>|null,
+    deactive: boolean,
   
 }
 
@@ -108,6 +108,7 @@ export default function UserDiscord() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const [users, setUsers] = useState<Iuser[]>([]);
+  console.log(users)
 
     // call api 
   useEffect(() => {
@@ -215,7 +216,7 @@ export default function UserDiscord() {
                   {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row:Iuser) => {
                     const { avatar, userId, username, email, roles, roles_discord, deactive } = row;
                     const selectedUser = selected.indexOf((userId)) !== -1;
-
+// roles_discord&&console.log(roles_discord?.[0])
                     return (
                       <TableRow hover key={userId} tabIndex={-1} role="checkbox" selected={selectedUser}>
                         <TableCell padding="checkbox">
@@ -235,8 +236,8 @@ export default function UserDiscord() {
                         <TableCell align="left">{userId}</TableCell>
                         <TableCell align="left">{username}</TableCell>
                         <TableCell align="left">{email}</TableCell>
-                        <TableCell align="left">{roles}</TableCell>
-                        <TableCell align="left">{roles_discord}</TableCell>
+                       {roles&& <TableCell align="left">{roles?.[0]+','+roles?.[1]}</TableCell>}
+                       { roles_discord&&  <TableCell align="left">{roles_discord?.[0]+','+roles_discord?.[1]}</TableCell>}
 
                         {/* <TableCell align="left">{deactive ? 'Yes' : 'No'}</TableCell> */}
 
