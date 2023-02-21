@@ -102,7 +102,7 @@ export default function UserDiscord() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const [users, setUsers] = useState<Iuser[]>([]);
-  console.log(users)
+  // console.log(users)
 
     // call api 
   useEffect(() => {
@@ -250,7 +250,7 @@ export default function UserDiscord() {
                         <TableCell align="left">{userId}</TableCell>
                         <TableCell align="left">{username}</TableCell>
                         <TableCell align="left">{email}</TableCell>
-                       {roles&& <TableCell align="left">{roles?.[0]+','+roles?.[1]}</TableCell>}
+                        <TableCell align="left">{roles?.[0]+','+roles?.[1]}</TableCell>
                        { roles_discord&&  <TableCell align="left">{roles_discord?.[0]+','+roles_discord?.[1]}</TableCell>}
 
                         {/* <TableCell align="left">{deactive ? 'Yes' : 'No'}</TableCell> */}

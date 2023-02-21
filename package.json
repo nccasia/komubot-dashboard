@@ -24,6 +24,7 @@
     "dayjs": "^1.11.7",
     "gapi-script": "^1.2.0",
     "history": "^5.3.0",
+    "jsonwebtoken": "^9.0.0",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",
     "notyf": "^3.10.0",
@@ -69,6 +70,7 @@
   },
   "devDependencies": {
     "@faker-js/faker": "^7.6.0",
+    "@types/jsonwebtoken": "^9.0.1",
     "@types/lodash": "^4.14.191",
     "@types/numeral": "^2.0.2",
     "@types/react-date-range": "^1.4.4"
