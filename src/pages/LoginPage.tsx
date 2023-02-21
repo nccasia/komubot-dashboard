@@ -100,7 +100,7 @@ export default function LoginPage() {
 
         <Container maxWidth="sm">
           <StyledContent>
-            <Typography variant="h4" gutterBottom>
+            <Typography variant="h4" marginBottom={'20px'} gutterBottom>
               Sign in to Komubot
             </Typography>
             <LoginForm />

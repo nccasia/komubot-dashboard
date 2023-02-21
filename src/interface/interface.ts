@@ -37,3 +37,23 @@ export interface ChannelFace{
   name:string,
   type:string,
 }
+
+//dashBoard 
+export interface Report
+{
+  totalUserActive: number,
+  totalDailyOfToday: number,
+  totalMsgOfToday: number,
+  totalMeeting: number,
+  totalChannel: number,
+}
+export interface reportMsgToday {
+  totalMsgVinh: number;
+  totalMsgHaNoi: number;
+  totalMsgHaNoi2: number;
+  totalMsgHaNoi3: number;
+  totalMsgDaNang: number;
+  totalMsgQuyNhon: number;
+  totalMsgSaiGon: number;
+  totalMsgSaiGon2: number;
+}
