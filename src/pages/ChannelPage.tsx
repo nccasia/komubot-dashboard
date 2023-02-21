@@ -150,9 +150,9 @@ export default function ChannelPage() {
                     <Typography variant="h4" gutterBottom>
                         Channel
                     </Typography>
-                    <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
+                    {/* <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
                         New Channel
-                    </Button>
+                    </Button> */}
                 </Stack>
 
                 <Card>

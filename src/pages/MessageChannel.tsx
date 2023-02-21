@@ -105,7 +105,7 @@ export default function Message() {
 
   const [isLoading, setIsLoading] = useState(true);
   const [message, setMessage] = useState<Imessage[]>([]);
-  console.log(message)
+  // console.log(message)
 
     // call api 
   useEffect(() => {
