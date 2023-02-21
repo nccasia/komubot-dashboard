@@ -1,38 +1,22 @@
-import { Helmet } from 'react-helmet-async';
-import axios from 'axios';
 import { filter } from 'lodash';
-import { sentenceCase } from 'change-case';
-import React,{ useEffect, useState, useMemo } from 'react';
+import { useEffect, useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 // @mui
 import {
-  Card,
-  Table,
-  Stack,
-  Paper,
   Avatar,
-  Button,
-  Popover,
-  Checkbox,
-  TableRow,
-  MenuItem,
-  TableBody,
-  TableCell,
-  Container,
-  Typography,
-  IconButton,
-  TableContainer,
-  TablePagination,
+  Button, Card, Checkbox, Container, IconButton, MenuItem, Paper, Popover, Stack, Table, TableBody,
+  TableCell, TableContainer,
+  TablePagination, TableRow, Typography
 } from '@mui/material';
 
 // components
-import Label from '../components/label';
 import Iconify from '../components/iconify';
-import Scrollbar from '../components/scrollbar';
+import Label from '../components/label';
 // sections
-import { UserListHead, UserListToolbar } from '../sections/@dashboard/usediscord';
 import { apiAxios, userLink } from '../axios/apiAxios';
+import { UserListHead, UserListToolbar } from '../sections/@dashboard/usediscord';
 // mock
-import {patchUser} from "../api/userApi/userPatch";
+import { patchUser } from "../api/userApi/userPatch";
 
 // ----------------------------------------------------------------------
 
