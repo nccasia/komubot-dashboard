@@ -21,7 +21,8 @@ import {
     TablePagination,
 } from '@mui/material';
 import Iconify from '../components/iconify';
-import { UserListHead, UserListToolbar } from '../sections/@dashboard/user';
+import ListHead from '../sections/@dashboard/meeting/ListHead';
+import UserToolbar from '../sections/@dashboard/meeting/UserToolbar';
 import { textStyle } from "../utils/textStyles"
 import { useDebounce } from "../utils/useDebounce"
 import { rowPage } from "../utils/rowPage"
@@ -33,7 +34,6 @@ const TABLE_HEAD = [
     { id: 'id', label: 'Id', alignRight: true },
     { id: 'name', label: 'Name', alignRight: true },
     { id: 'type', label: 'Type', alignRight: true },
-    { id: 'action', label: 'Action', alignRight: true  },
 ];
 
 function descendingComparator(a: any, b: any, orderBy: string) {
@@ -63,13 +63,11 @@ function applySortFilter(array: ChannelFace[], comparator: any) {
 }
 
 export default function ChannelPage() {
-    const [open, setOpen] = useState<Element | ((element: Element) => Element) | null | undefined>();
     const [order, setOrder] = useState('asc');
     const [selected, setSelected] = useState<any>([]);
     const [orderBy, setOrderBy] = useState('id');
     
     const [filterName, setFilterName] = useState('');
-    
     const [channel, setChannel] = useState<ChannelFace[]>([]);
     const [channellength, setChannelLength] = useState<number>(0);
     const [page, setPage] = useState<number>(0);
@@ -82,14 +80,6 @@ export default function ChannelPage() {
             setChannelLength(data.pageable.total)
         })
     },[page,rowsPerPage,debounce]);
-
-    const handleOpenMenu = (event: any) => {
-        setOpen(event.currentTarget);
-    };
-
-    const handleCloseMenu = () => {
-        setOpen(null);
-    };
 
     const handleRequestSort = (event: any, property: string) => {
         const isAsc = orderBy === property && order === 'asc';
@@ -105,22 +95,6 @@ export default function ChannelPage() {
         }
         setSelected([]);
     };
-
-    const handleClick = (event: any, index: string) => {
-        const selectedIndex: number = selected.indexOf((index));
-        let newSelected: any = [];
-        if (selectedIndex === -1) {
-            newSelected = newSelected.concat(selected, index);
-        } else if (selectedIndex === 0) {
-            newSelected = newSelected.concat(selected.slice(1));
-        } else if (selectedIndex === selected.length - 1) {
-            newSelected = newSelected.concat(selected.slice(0, -1));
-        } else if (selectedIndex > 0) {
-            newSelected = newSelected.concat(selected.slice(0, selectedIndex), selected.slice(selectedIndex + 1));
-        }
-        setSelected(newSelected);
-    };
-
     const handleChangePage = (event: any, newPage: number) => {
         setPage(newPage);
     };
@@ -148,18 +122,15 @@ export default function ChannelPage() {
                     <Typography variant="h4" gutterBottom>
                         Channel
                     </Typography>
-                    {/* <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
-                        New Channel
-                    </Button> */}
                 </Stack>
 
                 <Card>
-                    <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
+                    <UserToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
 
                     {/* <Scrollbar sx={{}}> */}
                     <TableContainer >
                         <Table>
-                            <UserListHead
+                            <ListHead
                                 order={order}
                                 orderBy={orderBy}
                                 headLabel={TABLE_HEAD}
@@ -172,21 +143,10 @@ export default function ChannelPage() {
                                 {filteredUsers.map((row: ChannelFace) => {
                                     const selectedUser = selected.indexOf((row.id)) !== -1;
                                     return (
-                                        <TableRow hover key={Number(row.id)} tabIndex={-1} role="checkbox" selected={selectedUser}>
-                                            
-                                            <TableCell padding="checkbox">
-                                                <Checkbox checked={selectedUser} onChange={(event) => handleClick(event, row.id)} />
-                                            </TableCell>
-
-                                            <TableCell align="center"><b>{row.id}</b></TableCell>
-                                            <TableCell align="center">{(row.name)}</TableCell>
-                                            <TableCell align="center">{row.type}</TableCell>
-
-                                            <TableCell align="center">
-                                                <IconButton size="large" color="inherit" onClick={handleOpenMenu}>
-                                                    <Iconify icon={'eva:more-vertical-fill'} />
-                                                </IconButton>
-                                            </TableCell>
+                                        <TableRow hover key={Number(row.id)} tabIndex={-1} role="checkbox" selected={selectedUser}>           
+                                            <TableCell align="center">{row.id}</TableCell>
+                                            <TableCell align="center"><b>{(row.name)}</b></TableCell>
+                                            <TableCell align="center">{row.type}</TableCell>                                   
                                         </TableRow>
                                     );
                                 })}                         
@@ -206,35 +166,6 @@ export default function ChannelPage() {
                     />
                 </Card>
             </Container>
-
-            <Popover
-                open={Boolean(open)}
-                anchorEl={open}
-                onClose={handleCloseMenu}
-                anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
-                transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-                PaperProps={{
-                    sx: {
-                        p: 1,
-                        width: 140,
-                        '& .MuiMenuItem-root': {
-                            px: 1,
-                            typography: 'body2',
-                            borderRadius: 0.75,
-                        },
-                    },
-                }}
-            >
-                <MenuItem>
-                    <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
-                    Edit
-                </MenuItem>
-
-                <MenuItem sx={{ color: 'error.main' }}>
-                    <Iconify icon={'eva:trash-2-outline'} sx={{ mr: 2 }} />
-                    Delete
-                </MenuItem>
-            </Popover>
         </>
     );
 }

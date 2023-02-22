@@ -24,6 +24,7 @@ export interface DayTime{
 export interface GetMeeting{
     page:number,
     size:number,
+    task:string,
     to:number,
     from:number,
 }
