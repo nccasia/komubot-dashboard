@@ -41,7 +41,7 @@ import { apiAxios, penaltyLink } from '../axios/apiAxios';
 const TABLE_HEAD = [
   { id: 'ID', label: 'ID', alignRight: false },
   { id: 'Name', label: 'Name', alignRight: false },
-  { id: 'Ammount', label: 'Ammount', alignRight: false },
+  { id: 'Amount', label: 'Amount', alignRight: false },
   { id: 'Reason', label: 'Reason', alignRight: false },
   { id: 'Isreject', label: 'Isreject', alignRight: false },
   { id: 'Channel', label: 'Channel', alignRight: false },
@@ -235,14 +235,13 @@ export default function Penalty() {
                         </TableCell>
                         <TableCell align="left">{channelFullName}</TableCell>
                         
-                        <TableCell align="left">{Moment(Number(createdTimestamp)).format('HH:MM DD/MM/YYYY ')
-}</TableCell>
+                        <TableCell align="left">{Moment(Number(createdTimestamp)).format('HH:MM DD/MM/YYYY ')}</TableCell>
 
-                        <TableCell align="right">
+                        {/* <TableCell align="right">
                           <IconButton size="large" color="inherit" onClick={handleOpenMenu}>
                             <Iconify icon={'eva:more-vertical-fill'} />
                           </IconButton>
-                        </TableCell>
+                        </TableCell> */}
                       </TableRow>
                     );
                   })}
