@@ -4,11 +4,11 @@ import { Helmet } from 'react-helmet-async';
 // @mui
 import {
   Avatar,
-  Button, Card, Checkbox, Container, IconButton, MenuItem, Paper, Popover, Stack, Table, TableBody,
+  Button, Card, Checkbox, Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, MenuItem, Paper, Popover, Stack, Table, TableBody,
   TableCell, TableContainer,
   TablePagination, TableRow, Typography
 } from '@mui/material';
-
+import Deleteimg from '../images/Deleteimg.png'
 // components
 import Iconify from '../components/iconify';
 import Label from '../components/label';
@@ -17,6 +17,7 @@ import { apiAxios, userLink } from '../axios/apiAxios';
 import { UserListHead, UserListToolbar } from '../sections/@dashboard/usediscord';
 // mock
 import { patchUser } from "../api/userApi/userPatch";
+import { AlertTitle } from '@mui/lab';
 
 // ----------------------------------------------------------------------
 
@@ -85,6 +86,7 @@ function applySortFilter(array:any, comparator:any, query:string, main:string) {
   
 }
 
+
 export default function UserDiscord() {
   const [open, setOpen] = useState(null);
   const [openfilter, setOpenFilter] = useState(null);
@@ -102,6 +104,7 @@ export default function UserDiscord() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const [users, setUsers] = useState<Iuser[]>([]);
+  const [select, setSelect] = useState<Iuser>();
   // console.log(users)
 
     // call api 
@@ -182,10 +185,10 @@ export default function UserDiscord() {
           }
       })
       patchUser({index:index,data: list})
+      // console.log(patchUser)
       handleCloseMenu();
   };
 
-  
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - users.length) : 0;
   const [filter, setFilter] = useState<string>('Active');
@@ -232,65 +235,68 @@ export default function UserDiscord() {
                     const selectedUser = selected.indexOf((userId)) !== -1;
                     return (
                       <TableRow hover key={userId} tabIndex={-1} role="checkbox" selected={selectedUser}>
-                        <TableCell padding="checkbox">
+                        {/* <TableCell padding="checkbox">
                           <Checkbox checked={selectedUser} onChange={(event) => handleClick(event, userId)} />
-                        </TableCell>
+                        </TableCell> */}
 
-                        <TableCell component="th" scope="row" padding="none">
+                        <TableCell  component="th" scope="row" padding="none">
                           <Stack direction="row" alignItems="center" spacing={2}>
-                            <Avatar src={avatar} />
+                            <Avatar style={{marginLeft: '10px'}} src={avatar} />
                             <Typography variant="subtitle2" noWrap>
                               {/* {avatar} */}
                             </Typography>
                           </Stack>
                         </TableCell>
-
-
                         <TableCell align="left">{userId}</TableCell>
                         <TableCell align="left">{username}</TableCell>
                         <TableCell align="left">{email}</TableCell>
                         <TableCell align="left">{roles?.[0]+','+roles?.[1]}</TableCell>
                        { roles_discord&&  <TableCell align="left">{roles_discord?.[0]+','+roles_discord?.[1]}</TableCell>}
 
-                        {/* <TableCell align="left">{deactive ? 'Yes' : 'No'}</TableCell> */}
-
                         <TableCell align="left">
                           <Label color = {deactive?'error': 'success'}  disableAnimation={(deactive)} >{String(deactive)}</Label>
                         </TableCell>
-
                         <TableCell align="right">
-                          <IconButton size="large" color="inherit" onClick={handleOpenMenu}>
+                          <IconButton size="large" color="inherit" onClick={(e)=>{
+                            setSelect(row)
+                            handleOpenMenu(e)}}>
                             <Iconify icon={'eva:more-vertical-fill'} />
                           </IconButton>
                         </TableCell>
-                          <Popover
-                            open={Boolean(open)}
-                            anchorEl={open}
-                            onClose={handleCloseMenu}
-                            anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
-                            transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-                            PaperProps={{
-                              sx: {
-                                p: 1,
-                                width: 140,
-                                '& .MuiMenuItem-root': {
-                                  px: 1,
-                                  typography: 'body2',
-                                  borderRadius: 0.75,
-                                },
-                              },
-                            }}
-                          >
-                            <MenuItem>
-                              <Button sx={{color:'gray'}} fullWidth onClick={()=>editUser(userId,deactive)}>
-                                <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
-                                  {!deactive? 'active':'deactive'}
-                              </Button>
-                            </MenuItem>
-                          </Popover>
+                      
                       </TableRow>
                     );
                   })}
+                  
+                      {select &&  <Dialog
+                          open={Boolean(open)}
+                          onClose={handleCloseMenu}
+                            aria-labelledby="alert-dialog-title"
+                            aria-describedby="alert-dialog-description"
+                          >
+                          <DialogTitle id="alert-dialog-title">
+                            <img
+                              alt=""
+                              style={{ height: "200px",marginLeft: '50px' }}
+                              src={`${Deleteimg}`}
+                            />
+                          </DialogTitle>
+                          {/* {!deactive? 'active':'deactive'} */}
+                          <DialogContent sx={{ width: "400px", textAlign: "center" }}>
+                            <DialogContent>Bạn có chắc muốn {!select.deactive ? 'active' : 'deactive'} {select.username}?</DialogContent>
+                          </DialogContent>
+                          <DialogActions>
+                            <Button onClick={handleCloseMenu}>No</Button>
+                            <Button
+                              style={{ backgroundColor: "#7cd1f9", color: "#fff" }}
+                              onClick={() =>editUser(select.userId,select.deactive)}
+                              // {!deactive? 'active':'deactive'}
+                              autoFocus
+                            >
+                              Yes
+                            </Button>
+                          </DialogActions>
+                       </Dialog>}
                   {emptyRows > 0 && (
                     <TableRow style={{ height: 53 * emptyRows }}>
                       <TableCell colSpan={6} />

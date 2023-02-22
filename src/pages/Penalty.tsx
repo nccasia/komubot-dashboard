@@ -222,9 +222,9 @@ export default function Penalty() {
                     // console.log(row)
                     return (
                       <TableRow hover key={userId} tabIndex={-1} role="checkbox" selected={selectedUser}>
-                        <TableCell padding="checkbox">
+                        {/* <TableCell padding="checkbox">
                           <Checkbox checked={selectedUser} onChange={(event) => handleClick(event, userId)} />
-                        </TableCell>
+                        </TableCell> */}
 
                         <TableCell align="left">{userId}</TableCell>
                         <TableCell align="left">{username}</TableCell>
