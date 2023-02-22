@@ -23,9 +23,11 @@ import {
 import Iconify from '../components/iconify';
 import { UserListHead, UserListToolbar } from '../sections/@dashboard/user';
 import { textStyle } from "../utils/textStyles"
-import {apiAxios, channelLink} from '../axios/apiAxios';
+import { useDebounce } from "../utils/useDebounce"
+import { rowPage } from "../utils/rowPage"
 import {ChannelFace} from "../interface/interface"
 import {getChannel} from "../api/channelApi/channelApi"
+
 
 const TABLE_HEAD = [
     { id: 'id', label: 'Id', alignRight: true },
@@ -67,22 +69,19 @@ export default function ChannelPage() {
     const [orderBy, setOrderBy] = useState('id');
     
     const [filterName, setFilterName] = useState('');
-    const [page, setPage] = useState<number>(0);
-    const [rowsPerPage, setRowsPerPage] = useState(5);
+    
     const [channel, setChannel] = useState<ChannelFace[]>([]);
     const [channellength, setChannelLength] = useState<number>(0);
-
-    React.useEffect(()=>{
-        const timeoutId = setTimeout(() => {
-            getChannel({page:page+1, size:rowsPerPage, name:filterName}).then(data=> setChannel(data));
-        }, 800);
-        return () => {
-            clearTimeout(timeoutId);
-        };
-    },[page,rowsPerPage,filterName]);
-    React.useEffect(()=>{
-        getChannel(null).then(data=> setChannelLength(data.length));
-    },[]);
+    const [page, setPage] = useState<number>(0);
+    const [rowsPerPage, setRowsPerPage] = useState(5);
+    const debounce=useDebounce(filterName, 900);
+    React.useEffect(()=>{ 
+        getChannel({page:page+1, size:rowsPerPage, name:debounce})
+        .then(data=> {
+            setChannel(data.content);
+            setChannelLength(data.pageable.total)
+        })
+    },[page,rowsPerPage,debounce]);
 
     const handleOpenMenu = (event: any) => {
         setOpen(event.currentTarget);
@@ -137,7 +136,6 @@ export default function ChannelPage() {
     };
 
     const filteredUsers = applySortFilter(channel, getComparator(order, orderBy));
-    const isNotFound = !filteredUsers.length && !!filterName;
 
     return (
         <>
@@ -198,7 +196,7 @@ export default function ChannelPage() {
                     {/* </Scrollbar> */}
 
                     <TablePagination
-                        rowsPerPageOptions={channellength<5?[channellength]:channellength<10?[5, channellength]:channellength>10?[5, 10, channellength]:[]}
+                        rowsPerPageOptions={rowPage(channellength).main}
                         component="div"
                         count={channellength}
                         rowsPerPage={rowsPerPage}

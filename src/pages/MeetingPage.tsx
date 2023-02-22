@@ -27,11 +27,12 @@ import ListToolbar from '../sections/@dashboard/meeting/ListToolbar';
 import {DayTime,MeetingFace} from "../interface/interface"
 import Moment from "moment";
 import {getMeeting} from "../api/meetingApi/meetingApi"
+import {rowPage} from "../utils/rowPage";
 
 const TABLE_HEAD = [
     { id: 'createdTimestamp', label: 'Created Time', alignRight: true },
-    { id: 'task', label: 'Task', alignRight: true },
     { id: 'repeat', label: 'Repeat', alignRight: true },
+    { id: 'task', label: 'Task', alignRight: true },
     { id: 'repeatTime', label: 'Repeat Time', alignRight: true },
     { id: 'channelFullName', label: 'Channel', alignRight: true },
     { id: 'cancel', label: 'Cancel', alignRight: true },
@@ -81,22 +82,16 @@ export default function MeetingPage() {
     const [daytime, setDayTime] = useState<DayTime>();
 
     React.useEffect(()=>{
-        const timeoutId = setTimeout(() => {
-            getMeeting({
-                page:page+1,
-                size:rowsPerPage,
-                from:daytime?daytime.startDay:0,
-                to:daytime?daytime.endDay:0,
-            }).then(data=>setMeeting(data));
-        }, 800);
-        return () => {
-            clearTimeout(timeoutId);
-        };
+        getMeeting({
+            page:page+1,
+            size:rowsPerPage,
+            from:daytime?daytime.startDay:0,
+            to:daytime?daytime.endDay:0,
+        }).then(data=>{
+            setMeeting(data.content);
+            setLength(data.pageable.total)
+        });
     },[daytime,page,rowsPerPage]);
-
-    React.useEffect(()=>{
-        getMeeting(null).then(data=> setLength(data.length));
-    },[]);
 
     const handleOpenMenu = (event: any) => {
         setOpen(event.currentTarget);
@@ -195,8 +190,8 @@ export default function MeetingPage() {
                                             </TableCell>
 
                                             <TableCell align="center">{Moment(Number(row.createdTimestamp)).format('HH:MM DD/MM/YYYY ')}</TableCell>
-                                            <TableCell align="center"><b>{row.task}</b></TableCell>
                                             <TableCell align="center">{row.repeat}</TableCell>
+                                            <TableCell align="center"><b>{row.task}</b></TableCell>
                                             <TableCell align="center">{row.repeatTime}</TableCell>
                                             <TableCell align="center">{row.channelFullName}</TableCell>
                                             <TableCell align="center" >
@@ -218,7 +213,7 @@ export default function MeetingPage() {
                     {/* </Scrollbar> */}
 
                     <TablePagination
-                        rowsPerPageOptions={[5, 10, length]}
+                        rowsPerPageOptions={rowPage(length).main}
                         component="div"
                         count={length}
                         rowsPerPage={rowsPerPage}

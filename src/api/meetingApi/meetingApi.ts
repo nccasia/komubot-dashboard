@@ -14,7 +14,7 @@ export const getMeeting= async (index:GetMeeting | null) => {
             }
         }
         const res = await apiAxios.get(meetingLink+queryParams);
-        return res.data.content;
+        return res.data;
     } catch (error) {
             console.error(error);
         return [];
