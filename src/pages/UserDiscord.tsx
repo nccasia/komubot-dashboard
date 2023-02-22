@@ -175,7 +175,7 @@ export default function UserDiscord() {
   };
 
   const editUser = (index:string, main:boolean) => {
-      const list:Iuser[]=users;
+      let list:Iuser[]=users;
       list.forEach((item:Iuser)=>{
           if(item.userId===index){
             item.deactive=!main;

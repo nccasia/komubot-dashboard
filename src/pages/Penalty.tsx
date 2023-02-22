@@ -115,6 +115,7 @@ export default function Penalty() {
   useEffect(() => {
     apiAxios.get(penaltyLink)
         .then(function (response) {
+            console.log(response.data)
             setPenal(response.data.content);
         })
         .catch(function (error) {
