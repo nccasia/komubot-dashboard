@@ -230,7 +230,6 @@ export default function UserDiscord() {
                   {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row:Iuser) => {
                     const { avatar, userId, username, email, roles, roles_discord, deactive } = row;
                     const selectedUser = selected.indexOf((userId)) !== -1;
-// roles_discord&&console.log(roles_discord?.[0])
                     return (
                       <TableRow hover key={userId} tabIndex={-1} role="checkbox" selected={selectedUser}>
                         <TableCell padding="checkbox">

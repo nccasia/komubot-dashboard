@@ -54,17 +54,26 @@ export interface Report
   totalChannel: number,
 }
 export interface reportMsgToday {
-  totalMsgVinh: number;
-  totalMsgHaNoi: number;
-  totalMsgHaNoi2: number;
-  totalMsgHaNoi3: number;
-  totalMsgDaNang: number;
-  totalMsgQuyNhon: number;
-  totalMsgSaiGon: number;
-  totalMsgSaiGon2: number;
+  VINH: number;
+  HANOI: number;
+  HANOI2: number;
+  HANOI3: number;
+  DANANG: number;
+  QUYNHON: number;
+  SAIGON: number;
+  SAIGON2: number;
 }
 export interface GetChannel{
   page:number,
   size:number,
   name:string,
+}
+
+  // message 
+export interface Imessage{
+  id: string,
+  email: string,
+  channelFullName: string,
+  createdTimestamp: string,
+  content: string,  
 }

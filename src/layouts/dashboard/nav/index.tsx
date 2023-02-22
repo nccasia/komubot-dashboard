@@ -14,6 +14,7 @@ import Scrollbar from '../../../components/scrollbar';
 import NavSection from '../../../components/nav-section';
 //
 import navConfig from './config';
+import { GetUser } from '../../../api/getUser/getUser';
 
 // ----------------------------------------------------------------------
 
@@ -66,7 +67,7 @@ export default function Nav({ openNav, onCloseNav }: PropTypes.InferProps<typeof
 
               <Box sx={{ ml: 2 }}>
                 <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
-                  {account.displayName}
+                  {GetUser()}
                 </Typography>
 
                 <Typography variant="body2" sx={{ color: 'text.secondary' }}>

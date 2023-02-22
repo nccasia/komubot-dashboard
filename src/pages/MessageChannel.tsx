@@ -34,6 +34,7 @@ import Scrollbar from '../components/scrollbar';
 import { UserListHead, UserListToolbar } from '../sections/@dashboard/usediscord';
 // mock
 import { apiAxios, messageLink } from '../axios/apiAxios';
+import { Imessage } from '../interface/interface';
 
 
 // ----------------------------------------------------------------------
@@ -51,13 +52,7 @@ const TABLE_HEAD = [
 
 
 
-interface Imessage{
-    id: string,
-    email: string,
-    channelFullName: string,
-    createdTimestamp: string,
-    content: string,  
-}
+
 
 function descendingComparator(a:any, b:any, orderBy:string) {
   if (b[orderBy] < a[orderBy]) {
