@@ -69,3 +69,12 @@ export interface GetChannel{
   size:number,
   name:string,
 }
+
+  // message 
+export interface Imessage{
+  id: string,
+  email: string,
+  channelFullName: string,
+  createdTimestamp: string,
+  content: string,  
+}

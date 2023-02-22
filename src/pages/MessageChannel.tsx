@@ -34,6 +34,7 @@ import Scrollbar from '../components/scrollbar';
 import { UserListHead, UserListToolbar } from '../sections/@dashboard/usediscord';
 // mock
 import { apiAxios, messageLink } from '../axios/apiAxios';
+import { Imessage } from '../interface/interface';
 
 
 // ----------------------------------------------------------------------
@@ -51,13 +52,7 @@ const TABLE_HEAD = [
 
 
 
-interface Imessage{
-    id: string,
-    email: string,
-    channelFullName: string,
-    createdTimestamp: string,
-    content: string,  
-}
+
 
 function descendingComparator(a:any, b:any, orderBy:string) {
   if (b[orderBy] < a[orderBy]) {
@@ -233,9 +228,9 @@ export default function Message() {
                     // console.log(row)
                     return (
                       <TableRow hover key={id} tabIndex={-1} role="checkbox" selected={selectedUser}>
-                        <TableCell padding="checkbox">
+                        {/* <TableCell padding="checkbox">
                           <Checkbox checked={selectedUser} onChange={(event) => handleClick(event, id)} />
-                        </TableCell>
+                        </TableCell> */}
 
                         <TableCell align="left">{id}</TableCell>
                         <TableCell align="left">{email}</TableCell>
