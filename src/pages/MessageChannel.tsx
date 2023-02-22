@@ -228,9 +228,9 @@ export default function Message() {
                     // console.log(row)
                     return (
                       <TableRow hover key={id} tabIndex={-1} role="checkbox" selected={selectedUser}>
-                        <TableCell padding="checkbox">
+                        {/* <TableCell padding="checkbox">
                           <Checkbox checked={selectedUser} onChange={(event) => handleClick(event, id)} />
-                        </TableCell>
+                        </TableCell> */}
 
                         <TableCell align="left">{id}</TableCell>
                         <TableCell align="left">{email}</TableCell>
