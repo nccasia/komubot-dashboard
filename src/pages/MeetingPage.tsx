@@ -88,7 +88,6 @@ export default function MeetingPage() {
             from:daytime?daytime.startDay:0,
             to:daytime?daytime.endDay:0,
         }).then(data=>{
-            console.log(data);
             setMeeting(data.content);
             setLength(data.pageable.total)
         });
