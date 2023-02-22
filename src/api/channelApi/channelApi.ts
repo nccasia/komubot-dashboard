@@ -13,8 +13,8 @@ export const getChannel = async (index:GetChannel| null) => {
                 queryParams +=`&name=${index.name}`;
             }
         }
-        const res = await apiAxios.get(channelLink+queryParams);
-        return res.data.content;
+        const res:any = await apiAxios.get(channelLink+queryParams);
+        return res.data;
     } catch (error) {
         return [];
     }
