@@ -273,16 +273,20 @@ export default function UserDiscord() {
                           onClose={handleCloseMenu}
                             aria-labelledby="alert-dialog-title"
                             aria-describedby="alert-dialog-description"
+                            
                           >
-                          <DialogTitle id="alert-dialog-title">
+                            
+                          <DialogTitle id="alert-dialog-title" 
+                            style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}
+                          >
                             <img
                               alt=""
-                              style={{ height: "200px",marginLeft: '50px' }}
+                              style={{ height: "100px" }}
                               src={`${Deleteimg}`}
                             />
                           </DialogTitle>
                           {/* {!deactive? 'active':'deactive'} */}
-                          <DialogContent sx={{ width: "400px", textAlign: "center" }}>
+                          <DialogContent sx={{ textAlign: "center" }}>
                             <DialogContent>Bạn có chắc muốn {!select.deactive ? 'active' : 'deactive'} {select.username}?</DialogContent>
                           </DialogContent>
                           <DialogActions>
