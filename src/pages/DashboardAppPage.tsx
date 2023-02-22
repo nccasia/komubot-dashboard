@@ -24,22 +24,23 @@ export default function DashboardAppPage() {
   "totalMsgOfToday": 0,
   "totalMeeting": 0,
   "totalChannel": 0})
-  const [reportMsgToday,setReportMsgToday] = useState<reportMsgToday>({    "totalMsgVinh": 0,
-  "totalMsgHaNoi": 0,
-  "totalMsgHaNoi2": 0,
-  "totalMsgHaNoi3": 0,
-  "totalMsgDaNang": 0,
-  "totalMsgQuyNhon": 0,
-  "totalMsgSaiGon": 0,
-  "totalMsgSaiGon2": 0})
+  const [reportMsgToday,setReportMsgToday] = useState<reportMsgToday>({ "VINH": 0,
+  "HANOI": 0,
+  "HANOI2": 0,
+  "HANOI3": 0,
+  "DANANG": 0,
+  "QUYNHON": 0,
+  "SAIGON": 0,
+  "SAIGON2": 0})
   useEffect(() => {
-  const isLoggedIn = localStorage.getItem('token');
-  if (!isLoggedIn) {
-    navigate("/login", { replace: true });
-  }
+      const isLoggedIn = localStorage.getItem('token');
+      if (!isLoggedIn) {
+        navigate("/login", { replace: true });
+      }
   const fetch = async () => {
     const data = await getReport();
     const dataToday = await getReportMsgToday();
+    console.log(dataToday);
     setReport(data.result)
     setReportMsgToday(dataToday.result)
   };
@@ -81,14 +82,14 @@ export default function DashboardAppPage() {
             <AppCurrentVisits
               title="Total message today"
               chartData={[
-                { label: 'Vinh', value: reportMsgToday.totalMsgVinh },
-                { label: 'Hà Nội', value: reportMsgToday.totalMsgHaNoi },
-                { label: 'Hà Nội 2', value: reportMsgToday.totalMsgHaNoi2 },
-                { label: 'Hà Nội 3', value: reportMsgToday.totalMsgHaNoi3 },
-                { label: 'Đà Nẵng', value: reportMsgToday.totalMsgDaNang },
-                { label: 'Quỳ Nhơn', value: reportMsgToday.totalMsgQuyNhon },
-                { label: 'Sài Gòn', value: reportMsgToday.totalMsgSaiGon },
-                { label: 'Sài Gòn 2', value: reportMsgToday.totalMsgSaiGon2 },
+                { label: 'Vinh', value: reportMsgToday.VINH },
+                { label: 'Hà Nội', value: reportMsgToday.HANOI },
+                { label: 'Hà Nội 2', value: reportMsgToday.HANOI2 },
+                { label: 'Hà Nội 3', value: reportMsgToday.HANOI3 },
+                { label: 'Đà Nẵng', value: reportMsgToday.DANANG },
+                { label: 'Quỳ Nhơn', value: reportMsgToday.QUYNHON },
+                { label: 'Sài Gòn', value: reportMsgToday.SAIGON },
+                { label: 'Sài Gòn 2', value: reportMsgToday.SAIGON2 },
               ]}
               chartColors={[
                 theme.palette.primary.main,
