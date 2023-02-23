@@ -131,12 +131,12 @@ export default function DashboardAppPage() {
             <AppCurrentVisits
               title="Total message today"
               chartData={[
-                { label: "Vinh", value: reportMsgToday["VINH"] },
+                { label: "Vinh", value: reportMsgToday.VINH },
                 { label: "Hà Nội", value: reportMsgToday.HANOI },
                 { label: "Hà Nội 2", value: reportMsgToday.HANOI2 },
                 { label: "Hà Nội 3", value: reportMsgToday.HANOI3 },
                 { label: "Đà Nẵng", value: reportMsgToday.DANANG },
-                { label: "Quỳ Nhơn", value: reportMsgToday.QUYNHON },
+                { label: "Quy Nhơn", value: reportMsgToday.QUYNHON },
                 { label: "Sài Gòn", value: reportMsgToday.SAIGON },
                 { label: "Sài Gòn 2", value: reportMsgToday.SAIGON2 },
               ]}

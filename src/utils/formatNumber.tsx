@@ -19,7 +19,7 @@ export function fPercent(number: number) {
 }
 
 export function fShortenNumber(number: number) {
-  const format = number ? numeral(number).format("0.00a") : "";
+  const format = (number || number === 0) ? numeral(number).format("0.00a") : "0";
 
   return result(format, ".00");
 }
