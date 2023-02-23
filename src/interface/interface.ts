@@ -78,3 +78,27 @@ export interface Imessage{
   createdTimestamp: string,
   content: string,  
 }
+//Penalty
+export interface Ipenalty{
+  userId: string,
+  username: string,
+  ammount: string,
+  reason: string,
+  isReject: boolean,
+  channelFullName: string,
+  createdTimestamp: string,
+
+}
+export interface GetPenalty{
+  page:number,
+  size:number,
+  username:string,
+  to:number,
+  from:number,
+  // amountStart:number,
+  // amountEnd:number,
+}
+export interface Amount{
+  max:string,
+  min:string,
+}
