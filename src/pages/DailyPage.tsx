@@ -101,7 +101,7 @@ export default function DailyPage() {
             setStartDay={setStartDay}
             setEndDay ={setEndDay}
           />
-          <TableContainer sx={{ minWidth: 800 }}>
+          <TableContainer sx={{ overflowX:'auto'}}>
             <Table>
               <DailyListHead headLabel={TABLE_HEAD}/>
               <TableBody>

@@ -1,4 +1,4 @@
-import { apiAxios, reportLink,reportMsgLink } from "../../axios/apiAxios";
+import { apiAxios, reportLink,reportMsgLink, reportMsgMonthlyLink } from "../../axios/apiAxios";
 
 export const getReport = async () => {
   try {
@@ -13,6 +13,15 @@ export const getReport = async () => {
 export const getReportMsgToday = async () => {
   try {
     const res = await apiAxios.get(reportMsgLink);
+    return res.data;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+};
+export const getReportMsgMonthly = async () => {
+  try {
+    const res = await apiAxios.get(reportMsgMonthlyLink);
     return res.data;
   } catch (error) {
     console.error(error);
