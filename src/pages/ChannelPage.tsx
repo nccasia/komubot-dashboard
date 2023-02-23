@@ -140,7 +140,7 @@ export default function ChannelPage() {
                                 onSelectAllClick={handleSelectAllClick}
                             />
                             <TableBody>
-                                {filteredUsers.map((row: ChannelFace) => {
+                                {filteredUsers?filteredUsers.map((row: ChannelFace) => {
                                     const selectedUser = selected.indexOf((row.id)) !== -1;
                                     return (
                                         <TableRow hover key={Number(row.id)} tabIndex={-1} role="checkbox" selected={selectedUser}>           
@@ -149,7 +149,7 @@ export default function ChannelPage() {
                                             <TableCell align="center">{row.type}</TableCell>                                   
                                         </TableRow>
                                     );
-                                })}                         
+                                }):null}                         
                             </TableBody>
                         </Table>
                     </TableContainer>

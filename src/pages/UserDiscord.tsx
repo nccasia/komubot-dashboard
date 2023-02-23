@@ -64,7 +64,7 @@ function getComparator(order:string, orderBy:string) {
     : (a:any, b:any) => -descendingComparator(a, b, orderBy);
 }
 
-function applySortFilter(array:any, comparator:any, query:string, main:string) {
+function applySortFilter(array:any, comparator:any, query:string) {
   const stabilizedThis = array.map((el:any, index:number) => [el, index]);
   stabilizedThis.sort((a:any, b:any) => {
     const order = comparator(a[0], b[0]);
@@ -74,15 +74,16 @@ function applySortFilter(array:any, comparator:any, query:string, main:string) {
   if (query) {
     return filter(array, (_user:Iuser) => _user.username.toLowerCase().indexOf(query.toLowerCase()) !== -1);
   }
-  if(main==="All"){
-    return stabilizedThis.map((el:any) => el[0]);
-  }
-  if(main==="Active"){
-    return filter(array, (_user:Iuser) => _user.deactive===true);
-  }
-  if(main==="Deactive"){
-    return filter(array, (_user:Iuser) => _user.deactive===false);
-  }
+  return stabilizedThis.map((el:any) => el[0]);
+  // if(main==="All"){
+  //   return stabilizedThis.map((el:any) => el[0]);
+  // }
+  // if(main==="Active"){
+  //   return filter(array, (_user:Iuser) => _user.deactive===true);
+  // }
+  // if(main==="Deactive"){
+  //   return filter(array, (_user:Iuser) => _user.deactive===false);
+  // }
   
 }
 
@@ -102,21 +103,25 @@ export default function UserDiscord() {
   const [filterName, setFilterName] = useState('');
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
-
   const [users, setUsers] = useState<Iuser[]>([]);
   const [select, setSelect] = useState<Iuser>();
   // console.log(users)
-
-    // call api 
+  const [length, setLength] = useState<number>(0);
+  const [filter, setFilter] = useState<boolean | null>(true);
   useEffect(() => {
-    apiAxios.post(userLink)
+    apiAxios.post(userLink,{
+      page:page+1,
+      size:rowsPerPage,
+      deactive:false,
+    })
         .then(function (response) {
             setUsers(response.data.content);
+            setLength(response.data.pageable.total);
         })
         .catch(function (error) {
             console.log(error);
         })
-  }, []);
+  }, [page,rowsPerPage,filter]);
 
   const handleOpenMenu = (event:any) => {
     setOpen(event.currentTarget);
@@ -191,8 +196,7 @@ export default function UserDiscord() {
 
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - users.length) : 0;
-  const [filter, setFilter] = useState<string>('Active');
-  const filteredUsers = applySortFilter(users, getComparator(order, orderBy), filterName, filter)
+  const filteredUsers = applySortFilter(users, getComparator(order, orderBy), filterName)
   // console.log(filterName)
 
   const isNotFound = !filteredUsers.length && !!filterName;
@@ -230,7 +234,7 @@ export default function UserDiscord() {
                 />
                 <TableBody>
                  
-                  {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row:Iuser) => {
+                  {filteredUsers.map((row:Iuser) => {
                     const { avatar, userId, username, email, roles, roles_discord, deactive } = row;
                     const selectedUser = selected.indexOf((userId)) !== -1;
                     return (
@@ -301,11 +305,7 @@ export default function UserDiscord() {
                             </Button>
                           </DialogActions>
                        </Dialog>}
-                  {emptyRows > 0 && (
-                    <TableRow style={{ height: 53 * emptyRows }}>
-                      <TableCell colSpan={6} />
-                    </TableRow>
-                  )}
+                  
                 </TableBody>
 
                 {isNotFound && (
@@ -338,7 +338,7 @@ export default function UserDiscord() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={users.length}
+            count={length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
@@ -365,9 +365,9 @@ export default function UserDiscord() {
               },
             }}
           >
-            <Button sx={{color:'gray', backgroundColor:filter==='Active'?'#b6b1b1':'white'}} fullWidth onClick={()=>setFilter('Active')}>Active</Button>
-            <Button sx={{color:'gray', backgroundColor:filter==='Deactive'?'#b6b1b1':'white'}} fullWidth onClick={()=>setFilter('Deactive')}>Deactive</Button>
-            <Button sx={{color:'gray', backgroundColor:filter==='All'?'#b6b1b1':'white'}} fullWidth onClick={()=>setFilter('All')}>All</Button>
+            <Button sx={{color:'gray', backgroundColor:filter===true?'#b6b1b1':'white'}} fullWidth onClick={()=>setFilter(true)}>Active</Button>
+            <Button sx={{color:'gray', backgroundColor:filter===false?'#b6b1b1':'white'}} fullWidth onClick={()=>setFilter(false)}>Deactive</Button>
+            <Button sx={{color:'gray', backgroundColor:filter===null?'#b6b1b1':'white'}} fullWidth onClick={()=>setFilter(null)}>All</Button>
           </Popover>
     </>
   );

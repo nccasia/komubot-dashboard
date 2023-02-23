@@ -150,7 +150,7 @@ export default function MeetingPage() {
                                 onSelectAllClick={handleSelectAllClick}
                             />
                             <TableBody>
-                                {filteredUsers.map((row: MeetingFace) => {
+                                {filteredUsers?filteredUsers.map((row: MeetingFace) => {
                                     return (
                                         <TableRow hover key={Number(row.id)}>
                                             <TableCell align="center">{Moment(Number(row.createdTimestamp)).format('HH:MM DD/MM/YYYY ')}</TableCell>
@@ -163,12 +163,11 @@ export default function MeetingPage() {
                                             </TableCell>
                                         </TableRow>
                                     );
-                                })}
+                                }):null}
                             </TableBody>
                         </Table>
                     </TableContainer>
                     {/* </Scrollbar> */}
-
                     <TablePagination
                         rowsPerPageOptions={rowPage(length).main}
                         component="div"

@@ -34,6 +34,7 @@ export const channelLink = "channel";
 export const meetingLink = "meeting";
 export const dailyLink = "daily";
 export const penaltyLink = "penalty";
+export const amountLink = "penalty/amount";
 export const messageLink = "message";
 export const userLink = "user";
 export const reportLink = "dashboard"

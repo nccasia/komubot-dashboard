@@ -20,11 +20,12 @@ import {
   Container,
   Typography,
   IconButton,
+  Slider,
   TableContainer,
   TablePagination,
 } from '@mui/material';
 import Moment from 'moment';
-
+import InfoIcon from '@mui/icons-material/Info';
 
 // components
 import Label from '../components/label';
@@ -32,38 +33,25 @@ import Iconify from '../components/iconify';
 import Scrollbar from '../components/scrollbar';
 // sections
 import { UserListHead, UserListToolbar } from '../sections/@dashboard/usediscord';
-// mock
-import { apiAxios, penaltyLink } from '../axios/apiAxios';
-
-
-// ----------------------------------------------------------------------
+import ListToolbar from '../sections/@dashboard/meeting/ListToolbar';
+import ListHead from '../sections/@dashboard/meeting/ListHead';
+import { getPenalty,getAmount} from '../api/penaltyApi/penaltyApi';
+import { useDebounce } from "../utils/useDebounce"
+import {rowPage} from "../utils/rowPage";
+import {DayTime, Ipenalty,Amount} from "../interface/interface"
 
 const TABLE_HEAD = [
-  { id: 'ID', label: 'ID', alignRight: false },
-  { id: 'Name', label: 'Name', alignRight: false },
-  { id: 'Amount', label: 'Amount', alignRight: false },
-  { id: 'Reason', label: 'Reason', alignRight: false },
-  { id: 'Isreject', label: 'Isreject', alignRight: false },
-  { id: 'Channel', label: 'Channel', alignRight: false },
-  { id: 'Time', label: 'Time', alignRight: false },
-  { id: '' },
+  { id: 'ID', label: 'ID', alignRight: true },
+  { id: 'Name', label: 'Name', alignRight: true },
+  { id: 'Amount', label: 'Amount', alignRight: true },
+  { id: 'Reason', label: 'Reason', alignRight: true },
+  { id: 'Isreject', label: 'Isreject', alignRight: true},
+  { id: 'Channel', label: 'Channel', alignRight: true },
+  { id: 'Time', label: 'Time', alignRight: true },
 ];
 
 // ----------------------------------------------------------------------
 
-
-
-interface Ipenalty{
-  
-    userId: string,
-    username: string,
-    ammount: string,
-    reason: string,
-    isReject: boolean,
-    channelFullName: string,
-    createdTimestamp: string,
-  
-}
 
 function descendingComparator(a:any, b:any, orderBy:string) {
   if (b[orderBy] < a[orderBy]) {
@@ -81,16 +69,13 @@ function getComparator(order:string, orderBy:string) {
     : (a:any, b:any) => -descendingComparator(a, b, orderBy);
 }
 
-function applySortFilter(array:any, comparator:any, query:string) {
+function applySortFilter(array:any, comparator:any) {
   const stabilizedThis = array.map((el:any, index:number) => [el, index]);
   stabilizedThis.sort((a:any, b:any) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
     return a[1] - b[1];
   });
-  if (query) {
-    return filter(array, (_user:any) => _user.username.toLowerCase().indexOf(query.toLowerCase()) !== -1);
-  }
   return stabilizedThis.map((el:any) => el[0]);
 }
 
@@ -108,30 +93,54 @@ export default function Penalty() {
   const [filterName, setFilterName] = useState('');
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
-
+  const [daytime, setDayTime] = useState<DayTime>();
   const [penal, setPenal] = useState<Ipenalty[]>([]);
+  const [total, setTotal] = useState<number>(0);
+  const [amount, setAmount] = useState<Amount>();
+  const [amo, setAmo] = useState<number[]>([]);
+  // useEffect(() => {
+  //   getAmount().then(data=>{
+  //     setAmount(data);
+  //     setAmo([data.min, data.max]);
+  //   });
+  // },[])
 
-    // call api 
+  // const minDistance = 1000;
+  // const handleChange1 = (
+  //   event: Event,
+  //   newValue: number | number[],
+  //   activeThumb: number,
+  // ) => {
+  //   if (!Array.isArray(newValue)) {
+  //     return;
+  //   }
+
+  //   if (activeThumb === 0) {
+  //     setAmo([Math.min(newValue[0], amo[1] - minDistance), amo[1]]);
+  //   } else {
+  //     setAmo([amo[0], Math.max(newValue[1], amo[0] + minDistance)]);
+  //   }
+  // };
+  // function valuetext(value: number) {
+  //   return `${value}`;
+  // }
+  const debounce=useDebounce(filterName, 900);
+  const debounceStart=useDebounce(amo[0], 1200);
+  const debounceEnd=useDebounce(amo[1], 1200)
   useEffect(() => {
-    apiAxios.get(penaltyLink)
-        .then(function (response) {
-            console.log(response.data)
-            setPenal(response.data.content);
-        })
-        .catch(function (error) {
-            console.log(error);
-        })
-  }, []);
-//   console.log(penal)
-
-
-  const handleOpenMenu = (event:any) => {
-    setOpen(event.currentTarget);
-  };
-
-  const handleCloseMenu = () => {
-    setOpen(null);
-  };
+    getPenalty({
+      page:page+1, 
+      size:rowsPerPage, 
+      username:debounce,
+      from:daytime?daytime.startDay:0,
+      to:daytime?daytime.endDay:0,
+      //amountStart:debounceStart,
+      //amountEnd:debounceEnd,
+    }).then(data=> {
+            setPenal(data.content);
+            setTotal(data.pageable.total)
+        });
+  }, [page,rowsPerPage,debounce,daytime,debounceStart,debounceEnd]);
 
   const handleRequestSort = (event:any, property:string) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -148,21 +157,6 @@ export default function Penalty() {
     setSelected([]);
   };
 
-  const handleClick = (event:any, name:string) => {
-    const selectedIndex:number= selected.indexOf((name));
-    let newSelected:any = [];
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(selected.slice(0, selectedIndex), selected.slice(selectedIndex + 1));
-    }
-    setSelected(newSelected);
-  };
-
   const handleChangePage = (event:any, newPage:number) => {
     setPage(newPage);
   };
@@ -177,17 +171,12 @@ export default function Penalty() {
     setFilterName(event.target.value);
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - penal.length) : 0;
-
-  const filteredUsers = applySortFilter(penal, getComparator(order, orderBy), filterName)
-  // console.log(filterName)
-
-  const isNotFound = !filteredUsers.length && !!filterName;
+  const filteredUsers = applySortFilter(penal, getComparator(order, orderBy))
 
   return (
     <>
       <Helmet>
-        <title> User | Minimal UI </title>
+        <title> Penalty | Minimal UI </title>
       </Helmet>
 
       <Container>
@@ -195,18 +184,14 @@ export default function Penalty() {
           <Typography variant="h4" gutterBottom>
             Penalty
           </Typography>
-          {/* <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
-            New User
-          </Button> */}
         </Stack>
 
         <Card>
-          <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
-
+          <ListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} setDayTime={setDayTime}/>
           {/* <Scrollbar sx={{}}> */}
-            <TableContainer sx={{ minWidth: 800 }}>
+            <TableContainer>
               <Table>
-                <UserListHead
+                <ListHead
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
@@ -216,110 +201,56 @@ export default function Penalty() {
                   onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
-                  {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row:Ipenalty) => {
-                    const { userId, username, ammount, reason, isReject, channelFullName, createdTimestamp
-                    } = row;
-                    const selectedUser = selected.indexOf((userId)) !== -1;
-                    // console.log(row)
+                  {filteredUsers?filteredUsers.map((row:Ipenalty, index:number) => {
                     return (
-                      <TableRow hover key={userId} tabIndex={-1} role="checkbox" selected={selectedUser}>
-                        {/* <TableCell padding="checkbox">
-                          <Checkbox checked={selectedUser} onChange={(event) => handleClick(event, userId)} />
-                        </TableCell> */}
-
-                        <TableCell align="left">{userId}</TableCell>
-                        <TableCell align="left">{username}</TableCell>
-                        <TableCell align="left">{ammount}</TableCell>
-                        <TableCell align="left">{reason}</TableCell>
-                        <TableCell align="left">
-                          <Label color={isReject?'error': 'success'}  disableAnimation={(isReject)} >{String(isReject)}</Label>
+                      <TableRow key={index}>
+                        <TableCell align="center">{row.userId}</TableCell>
+                        <TableCell align="center"><b>{row.username}</b></TableCell>
+                        <TableCell align="center">{row.ammount}</TableCell>
+                        <TableCell align="center">{row.reason}</TableCell>
+                        <TableCell align="center">
+                          <Label color={row.isReject?'error': 'success'}  disableAnimation={(row.isReject)} >{String(row.isReject)}</Label>
                         </TableCell>
-                        <TableCell align="left">{channelFullName}</TableCell>
-                        
-                        <TableCell align="left">{Moment(Number(createdTimestamp)).format('HH:MM DD/MM/YYYY ')}</TableCell>
-
-                        {/* <TableCell align="right">
-                          <IconButton size="large" color="inherit" onClick={handleOpenMenu}>
-                            <Iconify icon={'eva:more-vertical-fill'} />
-                          </IconButton>
-                        </TableCell> */}
+                        <TableCell align="center">{row.channelFullName}</TableCell> 
+                        <TableCell align="center">{Moment(Number(row.createdTimestamp)).format('HH:MM DD/MM/YYYY ')}</TableCell>                
                       </TableRow>
                     );
-                  })}
-                  {emptyRows > 0 && (
-                    <TableRow style={{ height: 53 * emptyRows }}>
-                      <TableCell colSpan={6} />
-                    </TableRow>
-                  )}
+                  }):null}
                 </TableBody>
-
-                {isNotFound && (
-                  <TableBody>
-                    <TableRow>
-                      <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
-                        <Paper
-                          sx={{
-                            textAlign: 'center',
-                          }}
-                        >
-                          <Typography variant="h6" paragraph>
-                            Not found
-                          </Typography>
-
-                          <Typography variant="body2">
-                            No results found for &nbsp;
-                            <strong>&quot;{filterName}&quot;</strong>.
-                            <br /> Try checking for typos or using complete words.
-                          </Typography>
-                        </Paper>
-                      </TableCell>
-                    </TableRow>
-                  </TableBody>
-                )}
               </Table>
             </TableContainer>
           {/* </Scrollbar> */}
 
-          <TablePagination
-            rowsPerPageOptions={[5, 10, 25]}
-            component="div"
-            count={penal.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
+          <div style={{display:'flex', justifyContent:'space-between'}}>
+              <div style={{padding:0}}>
+                {/* <IconButton sx={{margin:0}}>
+                  <InfoIcon/>
+                </IconButton>
+                <Slider
+                  value={amo}
+                  onChange={handleChange1}
+                  valueLabelDisplay="auto"
+                  getAriaValueText={valuetext}
+                  // disableSwap
+                  //orientation="vertical"
+                  min={Number(amount?amount.min:0)}
+                  max={Number(amount?amount.max:0)}
+                  sx={{width:200, display:'none'}}
+                /> */}
+              </div>
+              <TablePagination
+                  rowsPerPageOptions={rowPage(total).main}
+                  component="div"
+                  count={total}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  onPageChange={handleChangePage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                />
+          </div>
+          
         </Card>
-      </Container>
-
-      <Popover
-        open={Boolean(open)}
-        anchorEl={open}
-        onClose={handleCloseMenu}
-        anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-        PaperProps={{
-          sx: {
-            p: 1,
-            width: 140,
-            '& .MuiMenuItem-root': {
-              px: 1,
-              typography: 'body2',
-              borderRadius: 0.75,
-            },
-          },
-        }}
-      >
-        <MenuItem>
-          <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
-          Edit
-        </MenuItem>
-
-        {/* <MenuItem sx={{ color: 'error.main' }}>
-          <Iconify icon={'eva:trash-2-outline'} sx={{ mr: 2 }} />
-          Delete
-        </MenuItem> */}
-      </Popover>
+      </Container>      
     </>
   );
 }
