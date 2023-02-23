@@ -159,9 +159,9 @@ export default function MeetingPage() {
                     <Typography variant="h4" gutterBottom>
                         Meeting
                     </Typography>
-                    <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
+                    {/* <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
                         New  Meeting
-                    </Button>
+                    </Button> */}
                 </Stack>
 
                 <Card>
@@ -185,9 +185,9 @@ export default function MeetingPage() {
                                     return (
                                         <TableRow hover key={Number(row.id)} tabIndex={-1} role="checkbox" selected={selectedUser}>
                                             
-                                            <TableCell padding="checkbox">
+                                            {/* <TableCell padding="checkbox">
                                                 <Checkbox checked={selectedUser} onChange={(event) => handleClick(event, row.id)} />
-                                            </TableCell>
+                                            </TableCell> */}
 
                                             <TableCell align="center">{Moment(Number(row.createdTimestamp)).format('HH:MM DD/MM/YYYY ')}</TableCell>
                                             <TableCell align="center">{row.repeat}</TableCell>

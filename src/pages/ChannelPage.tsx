@@ -174,9 +174,9 @@ export default function ChannelPage() {
                                     return (
                                         <TableRow hover key={Number(row.id)} tabIndex={-1} role="checkbox" selected={selectedUser}>
                                             
-                                            <TableCell padding="checkbox">
+                                            {/* <TableCell padding="checkbox">
                                                 <Checkbox checked={selectedUser} onChange={(event) => handleClick(event, row.id)} />
-                                            </TableCell>
+                                            </TableCell> */}
 
                                             <TableCell align="center"><b>{row.id}</b></TableCell>
                                             <TableCell align="center">{(row.name)}</TableCell>

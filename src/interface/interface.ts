@@ -66,7 +66,8 @@ export interface reportMsgToday {
 export interface GetChannel{
   page:number,
   size:number,
-  name:string,
+  name?:string,
+  deactive?: boolean | null,
 }
 
   // message 
@@ -76,4 +77,16 @@ export interface Imessage{
   channelFullName: string,
   createdTimestamp: string,
   content: string,  
+}
+
+ export interface Iuser{
+  
+  avatar: string,
+  userId: string,
+  username: string,
+  email: string,
+  roles: Array<string>|null,
+  roles_discord: Array<string>|null,
+  deactive: boolean,
+
 }
