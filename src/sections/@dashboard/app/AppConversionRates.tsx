@@ -52,7 +52,7 @@ export default function AppConversionRates({
             type="bar"
             series={[{ data: chartSeries }]}
             options={chartOptions}
-            height={364}
+            height={397}
           />
         </Box>
       )}

@@ -4,62 +4,27 @@ import { Container, Grid, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 // components
 // sections
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router";
-import { getReport, getReportMsgToday } from "../api/appApi/appApi";
-import { Report } from "../interface/interface";
-import { AppConversionRates, AppCurrentVisits, AppWidgetSummary } from "../sections/@dashboard/app";
-import { getReportMsgMonthly } from './../api/appApi/appApi';
-import { reportMsgToday } from "./../interface/interface";
+import {
+  AppConversionRates,
+  AppCurrentVisits,
+  AppWidgetSummary
+} from "../sections/@dashboard/app";
+import { useFetchDashboard } from "./../hooks/useFetchDashboard";
 
 // ----------------------------------------------------------------------
 
 export default function DashboardAppPage() {
   const theme: any = useTheme();
   const navigate = useNavigate();
-  const [report, setReport] = useState<Report>({
-    totalUserActive: 0,
-    totalDailyOfToday: 0,
-    totalMsgOfToday: 0,
-    totalMeeting: 0,
-    totalChannel: 0,
-  });
-  const [reportMsgToday, setReportMsgToday] = useState<reportMsgToday>({
-    VINH: 0,
-    HANOI: 0,
-    HANOI2: 0,
-    HANOI3: 0,
-    DANANG: 0,
-    QUYNHON: 0,
-    SAIGON: 0,
-    SAIGON2: 0,
-  });
-  const [reportMsgMonthly, setReportMsgMonthly] = useState<reportMsgToday>({
-    VINH: 0,
-    HANOI: 0,
-    HANOI2: 0,
-    HANOI3: 0,
-    DANANG: 0,
-    QUYNHON: 0,
-    SAIGON: 0,
-    SAIGON2: 0,
-  });
+  const { report, reportMsgMonthly, reportMsgToday } = useFetchDashboard();
+
   useEffect(() => {
     const isLoggedIn = localStorage.getItem("token");
     if (!isLoggedIn) {
       navigate("/login", { replace: true });
     }
-    const fetch = async () => {
-      const data = await getReport();
-      const dataToday = await getReportMsgToday();
-      const dataMonthly = await getReportMsgMonthly()
-      if (data && data.result && dataToday && dataToday.result) {
-        setReport(data.result);
-        setReportMsgMonthly(dataMonthly.result)
-        setReportMsgToday(dataToday.result);
-      }
-    };
-    fetch();
   }, []);
 
   return (
@@ -165,15 +130,14 @@ export default function DashboardAppPage() {
             <AppConversionRates
               title="Total message of monthly"
               chartData={[
-                { label: 'Vinh', value: reportMsgMonthly.VINH },
-                { label: 'Đà Nẵng', value: reportMsgMonthly.DANANG },
-                { label: 'Hà Nội', value: reportMsgMonthly.HANOI },
-                { label: 'Hà Nội 2', value: reportMsgMonthly.HANOI2 },
-                { label: 'Hà Nội 3', value: reportMsgMonthly.HANOI3 },
-                { label: 'Quy Nhơn', value: reportMsgMonthly.QUYNHON },
-                { label: 'Sài Gòn', value: reportMsgMonthly.SAIGON },
-                { label: 'Sài Gòn 2', value: reportMsgMonthly.SAIGON2 },
-             
+                { label: "Vinh", value: reportMsgMonthly.VINH },
+                { label: "Đà Nẵng", value: reportMsgMonthly.DANANG },
+                { label: "Hà Nội", value: reportMsgMonthly.HANOI },
+                { label: "Hà Nội 2", value: reportMsgMonthly.HANOI2 },
+                { label: "Hà Nội 3", value: reportMsgMonthly.HANOI3 },
+                { label: "Quy Nhơn", value: reportMsgMonthly.QUYNHON },
+                { label: "Sài Gòn", value: reportMsgMonthly.SAIGON },
+                { label: "Sài Gòn 2", value: reportMsgMonthly.SAIGON2 },
               ]}
             />
           </Grid>
