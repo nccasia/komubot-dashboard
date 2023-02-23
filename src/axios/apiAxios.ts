@@ -38,3 +38,4 @@ export const messageLink = "message";
 export const userLink = "user";
 export const reportLink = "dashboard"
 export const reportMsgLink = "dashboard/reportMsg"
+export const reportMsgMonthlyLink = "dashboard/reportMsgMonthly"

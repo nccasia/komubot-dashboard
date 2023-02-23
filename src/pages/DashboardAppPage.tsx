@@ -6,9 +6,10 @@ import { useTheme } from "@mui/material/styles";
 // sections
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
+import { getReport, getReportMsgToday } from "../api/appApi/appApi";
 import { Report } from "../interface/interface";
 import { AppConversionRates, AppCurrentVisits, AppWidgetSummary } from "../sections/@dashboard/app";
-import { getReport, getReportMsgToday } from "../api/appApi/appApi";
+import { getReportMsgMonthly } from './../api/appApi/appApi';
 import { reportMsgToday } from "./../interface/interface";
 
 // ----------------------------------------------------------------------
@@ -33,6 +34,16 @@ export default function DashboardAppPage() {
     SAIGON: 0,
     SAIGON2: 0,
   });
+  const [reportMsgMonthly, setReportMsgMonthly] = useState<reportMsgToday>({
+    VINH: 0,
+    HANOI: 0,
+    HANOI2: 0,
+    HANOI3: 0,
+    DANANG: 0,
+    QUYNHON: 0,
+    SAIGON: 0,
+    SAIGON2: 0,
+  });
   useEffect(() => {
     const isLoggedIn = localStorage.getItem("token");
     if (!isLoggedIn) {
@@ -41,9 +52,10 @@ export default function DashboardAppPage() {
     const fetch = async () => {
       const data = await getReport();
       const dataToday = await getReportMsgToday();
+      const dataMonthly = await getReportMsgMonthly()
       if (data && data.result && dataToday && dataToday.result) {
         setReport(data.result);
-
+        setReportMsgMonthly(dataMonthly.result)
         setReportMsgToday(dataToday.result);
       }
     };
@@ -131,10 +143,10 @@ export default function DashboardAppPage() {
             <AppCurrentVisits
               title="Total message today"
               chartData={[
-                { label: "Vinh", value: reportMsgToday.VINH },
                 { label: "Hà Nội", value: reportMsgToday.HANOI },
                 { label: "Hà Nội 2", value: reportMsgToday.HANOI2 },
                 { label: "Hà Nội 3", value: reportMsgToday.HANOI3 },
+                { label: "Vinh", value: reportMsgToday.VINH },
                 { label: "Đà Nẵng", value: reportMsgToday.DANANG },
                 { label: "Quy Nhơn", value: reportMsgToday.QUYNHON },
                 { label: "Sài Gòn", value: reportMsgToday.SAIGON },
@@ -151,19 +163,17 @@ export default function DashboardAppPage() {
 
           <Grid item xs={12} md={6} lg={8}>
             <AppConversionRates
-              title="Conversion Rates"
-              subheader="(+43%) than last year"
+              title="Total message of monthly"
               chartData={[
-                { label: 'Italy', value: 400 },
-                { label: 'Japan', value: 430 },
-                { label: 'China', value: 448 },
-                { label: 'Canada', value: 470 },
-                { label: 'France', value: 540 },
-                { label: 'Germany', value: 580 },
-                { label: 'South Korea', value: 690 },
-                { label: 'Netherlands', value: 1100 },
-                { label: 'United States', value: 1200 },
-                { label: 'United Kingdom', value: 1380 },
+                { label: 'Vinh', value: reportMsgMonthly.VINH },
+                { label: 'Đà Nẵng', value: reportMsgMonthly.DANANG },
+                { label: 'Hà Nội', value: reportMsgMonthly.HANOI },
+                { label: 'Hà Nội 2', value: reportMsgMonthly.HANOI2 },
+                { label: 'Hà Nội 3', value: reportMsgMonthly.HANOI3 },
+                { label: 'Quy Nhơn', value: reportMsgMonthly.QUYNHON },
+                { label: 'Sài Gòn', value: reportMsgMonthly.SAIGON },
+                { label: 'Sài Gòn 2', value: reportMsgMonthly.SAIGON2 },
+             
               ]}
             />
           </Grid>
