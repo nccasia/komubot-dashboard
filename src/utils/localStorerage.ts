@@ -10,5 +10,5 @@ export const getAccessToken = () => {
 };
 
 export const removeAccessToken = () => {
-  // return localStorage.removeItem(token);
+  return localStorage.removeItem(token);
 };
