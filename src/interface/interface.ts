@@ -24,6 +24,7 @@ export interface DayTime{
 export interface GetMeeting{
     page:number,
     size:number,
+    task:string,
     to:number,
     from:number,
 }
@@ -89,4 +90,28 @@ export interface Imessage{
   roles_discord: Array<string>|null,
   deactive: boolean,
 
+}
+//Penalty
+export interface Ipenalty{
+  userId: string,
+  username: string,
+  ammount: string,
+  reason: string,
+  isReject: boolean,
+  channelFullName: string,
+  createdTimestamp: string,
+
+}
+export interface GetPenalty{
+  page:number,
+  size:number,
+  username:string,
+  to:number,
+  from:number,
+  // amountStart:number,
+  // amountEnd:number,
+}
+export interface Amount{
+  max:string,
+  min:string,
 }

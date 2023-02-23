@@ -14,9 +14,9 @@ import Iconify from "../../../components/iconify";
 
 import { endOfDay, startOfDay } from "date-fns";
 import React from "react";
-import { DateRangePicker } from "rsuite";
+import { DateRangePicker} from "rsuite";
 import { DateRange } from "rsuite/esm/DateRangePicker/types";
-// ----------------------------------------------------------------------
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 
 const StyledRoot = styled(Toolbar)(({ theme }) => ({
   height: 96,
@@ -41,6 +41,9 @@ const StyledSearch = styled(OutlinedInput)(({ theme }: any) => ({
   },
 }));
 
+const StyledDateRangePicker = styled(DateRangePicker)(({ theme }) => ({
+    width:250,
+}));
 
 ListToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
@@ -68,6 +71,7 @@ export default function ListToolbar({
       setDayTime(null);
     }
   }
+  
   return (
     <StyledRoot
       sx={{
@@ -77,11 +81,7 @@ export default function ListToolbar({
         }),
       }}
     >
-      {numSelected > 0 ? (
-        <Typography component="div" variant="subtitle1">
-          {numSelected} selected
-        </Typography>
-      ) : (
+      
         <StyledSearch
           value={filterName}
           onChange={onFilterName}
@@ -95,14 +95,14 @@ export default function ListToolbar({
             </InputAdornment>
           }
         />
-      )}
-
-      <DateRangePicker
-        placeholder="Select date..."
+        
+      <StyledDateRangePicker
+        placeholder="Select date-date..."
         format="dd/MM/yyyy"
         onChange={handleSelect}
+        style={{ textAlign: 'right' }}
+        caretAs={()=><CalendarMonthIcon sx={{color:"gray", fontSize:21}}/>}
         showOneCalendar
-        style={{width:250, display:'flex', alignItems: 'center'}}
       />
     </StyledRoot>
   );

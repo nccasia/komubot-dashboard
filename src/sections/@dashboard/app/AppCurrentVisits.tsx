@@ -48,11 +48,12 @@ export default function AppCurrentVisits({ title, subheader, chartColors, chartD
   const chartOptions = useChart({
     colors: chartColors,
     labels: chartLabels,
+    
     stroke: { colors: [theme.palette.background.paper] },
     legend: { floating: true, horizontalAlign: 'center' },
-    dataLabels: { enabled: true, dropShadow: { enabled: false } },
+    dataLabels: { enabled: true, dropShadow: { enabled: true } },
     tooltip: {
-      fillSeriesColor: false,
+      fillSeriesColor: true,
       y: {
         formatter: (seriesName:any) => fNumber(seriesName),
         title: {

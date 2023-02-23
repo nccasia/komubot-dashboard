@@ -113,6 +113,7 @@ export default function LoginPage() {
               <GoogleLogin
                 clientId={clientId}
                 buttonText="Login"
+                
                 onSuccess={handleGoogleLoginSuccess}
                 onFailure={handleGoogleLoginFailure}
                 cookiePolicy={"single_host_origin"}
