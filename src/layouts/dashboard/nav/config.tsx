@@ -46,16 +46,7 @@ const navConfig = [
     path: "/dashboard/daily",
     icon: icon("ic_daily"),
   },
-  // {
-  //   title: "product",
-  //   path: "/dashboard/products",
-  //   icon: icon("ic_cart"),
-  // },
-  // {
-  //   title: "blog",
-  //   path: "/dashboard/blog",
-  //   icon: icon("ic_blog"),
-  // },
+
 ];
 
 export default navConfig;
