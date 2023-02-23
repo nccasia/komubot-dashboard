@@ -24,18 +24,17 @@ import {
   TablePagination,
 } from '@mui/material';
 import Moment from 'moment';
-
+import { useDebounce } from 'use-debounce';
 
 // components
 import Label from '../components/label';
 import Iconify from '../components/iconify';
-import Scrollbar from '../components/scrollbar';
 // sections
 import { UserListHead, UserListToolbar } from '../sections/@dashboard/usediscord';
 // mock
-import { apiAxios, messageLink } from '../axios/apiAxios';
 import { Imessage } from '../interface/interface';
-
+import { filterMessages } from '../api/messageApi/messageApi';
+import { endOfDay, startOfDay } from "date-fns";
 
 // ----------------------------------------------------------------------
 
@@ -95,39 +94,32 @@ export default function Message() {
   const [orderBy, setOrderBy] = useState('name');
 
   const [filterName, setFilterName] = useState('');
-
   const [rowsPerPage, setRowsPerPage] = useState(5);
-
+  const [debounce] = useDebounce(filterName, 1000);
+  const [fromDay,setStartDay] =useState(0);
+  const [totalPage, setTotalPage] = useState<number>(0)
+  const [toDay,setEndDay] =useState(endOfDay(new Date()).getTime());
   const [isLoading, setIsLoading] = useState(true);
   const [message, setMessage] = useState<Imessage[]>([]);
+ 
   // console.log(message)
 
     // call api 
-  useEffect(() => {
-    fetchData();
-  },[]);
+    useEffect(() => {
+      const fetch = async () => {
+        // console.log(fromDay,'sa')
+        const messageData = await filterMessages({ size: rowsPerPage, page:page+1, email: debounce,fromDay,toDay });
+        const { content, pageable } = messageData
+        setTotalPage(pageable.total)
+        setIsLoading(true);
+       
+        setMessage(content);
+        setIsLoading(false);
+      };
+      fetch();
+    }, [page, rowsPerPage, debounce,fromDay,toDay]);
 
-  async function fetchData() {
-    try {
-      // Cập nhật giá trị biến trạng thái để hiển thị Loading...
-      setIsLoading(true);
-
-      // Gọi API để lấy dữ liệu từ server
-      const response = await apiAxios.get(messageLink);
-
-      // Cập nhật giá trị biến trạng thái để ẩn Loading...
-      setIsLoading(false);
-
-      // Lưu trữ dữ liệu vào biến trạng thái data
-      setMessage(response.data.content);
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-//   console.log(penal)
-
-
+  
   const handleOpenMenu = (event:any) => {
     setOpen(event.currentTarget);
   };
@@ -219,39 +211,26 @@ export default function Message() {
                   onSelectAllClick={handleSelectAllClick}
                 />
                 {isLoading ? (
-                  <p style={{textAlign: 'center', fontSize: 20, color: 'red'}}>Loading...</p>
+                  <p style={{ fontSize: 20, color: 'red'}}>Loading...</p>
                 ) : (
                   <TableBody>
-                  {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row:Imessage) => {
+                  {filteredUsers.map((row:Imessage) => {
                     const {id, email, channelFullName, createdTimestamp, content,} = row;
                     const selectedUser = selected.indexOf((id)) !== -1;
                     // console.log(row)
                     return (
                       <TableRow hover key={id} tabIndex={-1} role="checkbox" selected={selectedUser}>
-                        {/* <TableCell padding="checkbox">
-                          <Checkbox checked={selectedUser} onChange={(event) => handleClick(event, id)} />
-                        </TableCell> */}
 
                         <TableCell align="left">{id}</TableCell>
                         <TableCell align="left">{email}</TableCell>
                         <TableCell align="left">{channelFullName}</TableCell>
                         <TableCell align="left">{Moment(Number(createdTimestamp)).format('HH:MM DD/MM/YYYY ')}</TableCell>
                         <TableCell align="left">{content}</TableCell>                      
-                       
-
-                        <TableCell align="right">
-                          <IconButton size="large" color="inherit" onClick={handleOpenMenu}>
-                            <Iconify icon={'eva:more-vertical-fill'} />
-                          </IconButton>
-                        </TableCell>
+                      
                       </TableRow>
                     );
                   })}
-                  {emptyRows > 0 && (
-                    <TableRow style={{ height: 53 * emptyRows }}>
-                      <TableCell colSpan={6} />
-                    </TableRow>
-                  )}
+                  
                 </TableBody>
                 )}
                 
@@ -286,7 +265,7 @@ export default function Message() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={message.length}
+            count={totalPage}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}

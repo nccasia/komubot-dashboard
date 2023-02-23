@@ -1,5 +1,6 @@
 import {apiAxios, userLink} from '../../axios/apiAxios';
-import {Iuser} from "../../pages/UserDiscord"
+import { Iuser } from '../../interface/interface';
+
 export interface PacthUser{
     index:string,
     data:Iuser[],
