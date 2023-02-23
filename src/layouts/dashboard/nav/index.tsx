@@ -58,7 +58,7 @@ export default function Nav({ openNav, onCloseNav }: PropTypes.InferProps<typeof
               <Avatar src={account.photoURL} alt="photoURL" />
 
               <Box sx={{ ml: 2 }}>
-                <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
+                <Typography variant="subtitle2" sx={{ color: 'text.primary', wordBreak:'break-word'}}>
                   {GetUser()}
                 </Typography>
 
