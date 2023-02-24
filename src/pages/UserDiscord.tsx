@@ -298,7 +298,7 @@ export default function UserDiscord() {
                           color={deactive ? "success" : "error"}
                           disableAnimation={deactive}
                         >
-                          {String(deactive)}
+                          {deactive? "deactive":"active"}
                         </Label>
                       </TableCell>
                       <TableCell align="right">
@@ -310,7 +310,7 @@ export default function UserDiscord() {
                             handleOpenMenu(e);
                           }}
                         >
-                          {deactive ? <Iconify  icon={"ic:outline-clear"} /> : <Iconify  icon={"material-symbols:check-small"} />}
+                          {deactive ? <Iconify  icon={"material-symbols:check-small"} /> : <Iconify  icon={"ic:outline-clear"} />}
                           {/* <Iconify  icon={"eva:more-vertical-fill"} /> */}
                         </IconButton>
                       </TableCell>          
@@ -344,7 +344,7 @@ export default function UserDiscord() {
                     <DialogContent sx={{ width: "400px", textAlign: "center" }}>
                       <DialogContent>
                         <b style={{ fontSize: "30px" }}>Are you sure?</b> <br />
-                        {!select.deactive ? "deactive" : "active"}
+                        {!select.deactive ? "Deactive" : "Active"}
                         {": "}"{select.username}"?
                       </DialogContent>
                     </DialogContent>
