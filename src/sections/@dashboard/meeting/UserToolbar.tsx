@@ -53,11 +53,11 @@ export default function UserToolbar({ numSelected, filterName, onFilterName }:Pr
             </InputAdornment>
           }
         />
-        <Tooltip title="">
+        {/* <Tooltip title="">
           <IconButton>
             <Iconify icon="ic:round-filter-list" />
           </IconButton>
-        </Tooltip>
+        </Tooltip> */}
 
     </StyledRoot>
   );

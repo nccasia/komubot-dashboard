@@ -1,38 +1,22 @@
 import { Helmet } from 'react-helmet-async';
-import axios from 'axios';
-import { filter } from 'lodash';
-import { sentenceCase } from 'change-case';
-import React,{ useEffect, useState, useMemo } from 'react';
+import React,{ useEffect, useState} from 'react';
 // @mui
 import {
   Card,
   Table,
   Stack,
-  Paper,
-  Avatar,
-  Button,
-  Popover,
-  Checkbox,
   TableRow,
-  MenuItem,
   TableBody,
   TableCell,
   Container,
   Typography,
-  IconButton,
-  Slider,
   TableContainer,
   TablePagination,
+  CircularProgress
 } from '@mui/material';
 import Moment from 'moment';
-import InfoIcon from '@mui/icons-material/Info';
-
-// components
 import Label from '../components/label';
-import Iconify from '../components/iconify';
 import Scrollbar from '../components/scrollbar';
-// sections
-import { UserListHead, UserListToolbar } from '../sections/@dashboard/usediscord';
 import ListToolbar from '../sections/@dashboard/meeting/ListToolbar';
 import ListHead from '../sections/@dashboard/meeting/ListHead';
 import { getPenalty,getAmount} from '../api/penaltyApi/penaltyApi';
@@ -49,9 +33,6 @@ const TABLE_HEAD = [
   { id: 'Channel', label: 'Channel', alignRight: true },
   { id: 'Time', label: 'Time', alignRight: true },
 ];
-
-// ----------------------------------------------------------------------
-
 
 function descendingComparator(a:any, b:any, orderBy:string) {
   if (b[orderBy] < a[orderBy]) {
@@ -80,8 +61,6 @@ function applySortFilter(array:any, comparator:any) {
 }
 
 export default function Penalty() {
-  const [open, setOpen] = useState(null);
-
   const [page, setPage] = useState(0);
 
   const [order, setOrder] = useState('asc');
@@ -125,8 +104,9 @@ export default function Penalty() {
   //   return `${value}`;
   // }
   const debounce=useDebounce(filterName, 900);
-  const debounceStart=useDebounce(amo[0], 1200);
-  const debounceEnd=useDebounce(amo[1], 1200)
+  // const debounceStart=useDebounce(amo[0], 1200);
+  // const debounceEnd=useDebounce(amo[1], 1200)
+  const [loading, setLoading] = useState<boolean>(false);
   useEffect(() => {
     getPenalty({
       page:page+1, 
@@ -136,11 +116,12 @@ export default function Penalty() {
       to:daytime?daytime.endDay:0,
       //amountStart:debounceStart,
       //amountEnd:debounceEnd,
-    }).then(data=> {
+    },setLoading)
+    .then(data=> {
             setPenal(data.content);
             setTotal(data.pageable.total)
-        });
-  }, [page,rowsPerPage,debounce,daytime,debounceStart,debounceEnd]);
+    });
+  }, [page,rowsPerPage,debounce,daytime]);
 
   const handleRequestSort = (event:any, property:string) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -188,7 +169,7 @@ export default function Penalty() {
 
         <Card>
           <ListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} setDayTime={setDayTime}/>
-          {/* <Scrollbar sx={{}}> */}
+          <Scrollbar>
             <TableContainer>
               <Table>
                 <ListHead
@@ -201,7 +182,15 @@ export default function Penalty() {
                   onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
-                  {filteredUsers?filteredUsers.map((row:Ipenalty, index:number) => {
+                  {loading?                                  
+                      <TableRow >
+                          <TableCell align="center" colSpan={TABLE_HEAD.length}>  
+                              <CircularProgress sx={{color:'#80808085'}}/>
+                          </TableCell>  
+                      </TableRow>                             
+                  :null}
+
+                  {filteredUsers &&!loading?filteredUsers.map((row:Ipenalty, index:number) => {
                     return (
                       <TableRow key={index}>
                         <TableCell align="center">{row.userId}</TableCell>
@@ -219,7 +208,7 @@ export default function Penalty() {
                 </TableBody>
               </Table>
             </TableContainer>
-          {/* </Scrollbar> */}
+          </Scrollbar>
 
           <div style={{display:'flex', justifyContent:'space-between'}}>
               <div style={{padding:0}}>

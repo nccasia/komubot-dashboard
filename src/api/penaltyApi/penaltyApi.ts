@@ -1,10 +1,12 @@
 import { apiAxios, penaltyLink,amountLink } from "../../axios/apiAxios";
 import {GetPenalty} from "../../interface/interface";
+import { notyf } from "../../utils/notif"
 
-export const getPenalty = async (index:GetPenalty) => {
+export const getPenalty = async (index:GetPenalty,setLoading: (isLoading: boolean) => void) => {
     try {
         // let queryParams = "";
         //if(index.amountStart && index.amountEnd){
+            setLoading(true); 
             let queryParams = `?&page=${index.page}&size=${index.size}`;
             //&amountStart=${index.amountStart}&amountEnd=${index.amountEnd}
             if (index.to && index.from) {
@@ -14,10 +16,11 @@ export const getPenalty = async (index:GetPenalty) => {
                 queryParams +=`&username=${index.username}`;
             }
             const res:any = await apiAxios.get(penaltyLink+queryParams);
+            setLoading(false);
             return res.data;
-        //}
-        
+        //}  
     } catch (error) {
+        notyf.error(String(error));
         return [];
     }
 };

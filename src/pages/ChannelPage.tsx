@@ -1,29 +1,22 @@
 import { Helmet } from 'react-helmet-async';
-import { filter } from 'lodash';
 import React from 'react';
 import { useState } from 'react';
 import {
     Card,
     Table,
     Stack,
-    Paper,
-    Button,
-    Popover,
-    Checkbox,
     TableRow,
-    MenuItem,
     TableBody,
     TableCell,
     Container,
     Typography,
-    IconButton,
     TableContainer,
     TablePagination,
+    CircularProgress,
 } from '@mui/material';
-import Iconify from '../components/iconify';
+import Scrollbar from '../components/scrollbar';
 import ListHead from '../sections/@dashboard/meeting/ListHead';
 import UserToolbar from '../sections/@dashboard/meeting/UserToolbar';
-import { textStyle } from "../utils/textStyles"
 import { useDebounce } from "../utils/useDebounce"
 import { rowPage } from "../utils/rowPage"
 import {ChannelFace} from "../interface/interface"
@@ -73,8 +66,9 @@ export default function ChannelPage() {
     const [page, setPage] = useState<number>(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const debounce=useDebounce(filterName, 900);
+    const [loading, setLoading] = useState<boolean>(false);
     React.useEffect(()=>{ 
-        getChannel({page:page+1, size:rowsPerPage, name:debounce})
+        getChannel({page:page+1, size:rowsPerPage, name:debounce},setLoading)
         .then(data=> {
             setChannel(data.content);
             setChannelLength(data.pageable.total)
@@ -127,33 +121,40 @@ export default function ChannelPage() {
                 <Card>
                     <UserToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
 
-                    {/* <Scrollbar sx={{}}> */}
-                    <TableContainer >
-                        <Table>
-                            <ListHead
-                                order={order}
-                                orderBy={orderBy}
-                                headLabel={TABLE_HEAD}
-                                rowCount={channel.length}
-                                numSelected={selected.length}
-                                onRequestSort={handleRequestSort}
-                                onSelectAllClick={handleSelectAllClick}
-                            />
-                            <TableBody>
-                                {filteredUsers?filteredUsers.map((row: ChannelFace) => {
-                                    const selectedUser = selected.indexOf((row.id)) !== -1;
-                                    return (
-                                        <TableRow hover key={Number(row.id)} tabIndex={-1} role="checkbox" selected={selectedUser}>           
-                                            <TableCell align="center">{row.id}</TableCell>
-                                            <TableCell align="center"><b>{(row.name)}</b></TableCell>
-                                            <TableCell align="center">{row.type}</TableCell>                                   
-                                        </TableRow>
-                                    );
-                                }):null}                         
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                    {/* </Scrollbar> */}
+                    <Scrollbar>
+                        <TableContainer >
+                            <Table>
+                                <ListHead
+                                    order={order}
+                                    orderBy={orderBy}
+                                    headLabel={TABLE_HEAD}
+                                    rowCount={channel.length}
+                                    numSelected={selected.length}
+                                    onRequestSort={handleRequestSort}
+                                    onSelectAllClick={handleSelectAllClick}
+                                />
+                                <TableBody >  
+                                    {loading?                                  
+                                        <TableRow >
+                                            <TableCell align="center" colSpan={TABLE_HEAD.length}>  
+                                                <CircularProgress sx={{color:'#80808085'}}/>
+                                            </TableCell>  
+                                        </TableRow>                             
+                                    :null}
+
+                                    {filteredUsers && !loading?filteredUsers.map((row: ChannelFace) => {
+                                        return (
+                                            <TableRow key={Number(row.id)}>           
+                                                <TableCell align="center">{row.id}</TableCell>
+                                                <TableCell align="center"><b>{(row.name)}</b></TableCell>
+                                                <TableCell align="center">{row.type}</TableCell>                                   
+                                            </TableRow>
+                                        );
+                                    }):null}                         
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                    </Scrollbar>
 
                     <TablePagination
                         rowsPerPageOptions={rowPage(channellength).main}
