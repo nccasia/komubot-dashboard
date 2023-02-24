@@ -38,22 +38,25 @@ import {
 } from "../sections/@dashboard/usediscord";
 // mock
 import { patchUser } from "../api/userApi/userPatch";
-import { AlertTitle } from "@mui/lab";
+import { Alert, AlertTitle } from "@mui/lab";
 import { Iuser } from "../interface/interface";
 import { getUser } from "../api/user/userApi";
 import { useDebounce } from "../utils/useDebounce";
 import { rowPage } from "../utils/rowPage";
+import Snackbar from "@mui/material/Snackbar";
+import { notyf } from "../utils/notif";
+import axios from "axios";
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: "Avatar", label: "Avatar", alignRight: false },
-  { id: "UserId", label: "UserId", alignRight: false },
-  { id: "Username", label: "Username", alignRight: false },
-  { id: "Email", label: "Email", alignRight: false },
-  { id: "Roles", label: "Roles", alignRight: false },
-  { id: "Roles_discord", label: "Roles_discord", alignRight: false },
-  { id: "Status", label: "Status", alignRight: false },
+  { id: "Avatar", label: "Avatar", alignCenter: true },
+  { id: "UserId", label: "UserId", alignRight: true },
+  { id: "Username", label: "Username", alignRight: true },
+  { id: "Email", label: "Email", alignRight: true },
+  { id: "Roles", label: "Roles", alignRight: true },
+  { id: "Roles_discord", label: "Roles_discord", alignRight: true },
+  { id: "Status", label: "Status", alignRight: true },
   { id: "" },
 ];
 
@@ -75,10 +78,7 @@ function getComparator(order: string, orderBy: string) {
     : (a: any, b: any) => -descendingComparator(a, b, orderBy);
 }
 
-function applySortFilter(
-  array: any,
-  comparator: any,
-) {
+function applySortFilter(array: any, comparator: any) {
   const stabilizedThis = array.map((el: any, index: number) => [el, index]);
   stabilizedThis.sort((a: any, b: any) => {
     const order = comparator(a[0], b[0]);
@@ -110,7 +110,7 @@ export default function UserDiscord() {
   // console.log(users)
 
   // call api
-  const [filter, setFilter] = useState<boolean |null>(true);
+  const [filter, setFilter] = useState<boolean | null>(null);
   useEffect(() => {
     getUser({
       page: page + 1,
@@ -186,24 +186,28 @@ export default function UserDiscord() {
   };
 
   const editUser = (index: string, main: boolean) => {
-    const list: Iuser[] = users;
-    list.forEach((item: Iuser) => {
-      if (item.userId === index) {
-        item.deactive = !main;
+    try {
+      const list: Iuser[] = users;
+      list.forEach((item: Iuser) => {
+        if (item.userId === index) {
+          item.deactive = !main;
+        }
+      });
+      patchUser({ index: index, data: list });
+      // console.log(patchUser)
+      notyf.success("Successfully");
+      handleCloseMenu();
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        notyf.error(error.response?.data.message);
       }
-    });
-    patchUser({ index: index, data: list });
-    // console.log(patchUser)
-    handleCloseMenu();
+    }
   };
 
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - users.length) : 0;
-  
-  const filteredUsers = applySortFilter(
-    users,
-    getComparator(order, orderBy),
-  );
+
+  const filteredUsers = applySortFilter(users, getComparator(order, orderBy));
   // console.log(filterName)
 
   const isNotFound = !filteredUsers.length && !!filterName;
@@ -281,15 +285,15 @@ export default function UserDiscord() {
                           </Typography>
                         </Stack>
                       </TableCell>
-                      <TableCell align="left">{userId}</TableCell>
-                      <TableCell align="left">{username}</TableCell>
-                      <TableCell align="left">{email}</TableCell>
-                      <TableCell align="left">{roles?.join(", ")}</TableCell>
-                      <TableCell align="left">
+                      <TableCell align="center">{userId}</TableCell>
+                      <TableCell align="center">{username}</TableCell>
+                      <TableCell align="center">{email}</TableCell>
+                      <TableCell align="center">{roles?.join(", ")}</TableCell>
+                      <TableCell align="center">
                         {roles_discord?.join(", ")}
                       </TableCell>
 
-                      <TableCell align="left">
+                      <TableCell align="center">
                         <Label
                           color={deactive ? "success" : "error"}
                           disableAnimation={deactive}
@@ -306,9 +310,10 @@ export default function UserDiscord() {
                             handleOpenMenu(e);
                           }}
                         >
-                          <Iconify icon={"eva:more-vertical-fill"} />
+                          {deactive ? <Iconify  icon={"ic:outline-clear"} /> : <Iconify  icon={"material-symbols:check-small"} />}
+                          {/* <Iconify  icon={"eva:more-vertical-fill"} /> */}
                         </IconButton>
-                      </TableCell>
+                      </TableCell>          
                     </TableRow>
                   );
                 })}
@@ -432,7 +437,7 @@ export default function UserDiscord() {
         <Button
           sx={{
             color: "gray",
-            backgroundColor: filter ===null? "#b6b1b1" : "white",
+            backgroundColor: filter === null ? "#b6b1b1" : "white",
           }}
           fullWidth
           onClick={() => {

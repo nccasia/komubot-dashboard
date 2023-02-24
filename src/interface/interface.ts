@@ -95,7 +95,7 @@ export interface Imessage{
 export interface Ipenalty{
   userId: string,
   username: string,
-  ammount: string,
+  // ammount: string,
   reason: string,
   isReject: boolean,
   channelFullName: string,
