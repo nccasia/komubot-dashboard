@@ -1,22 +1,19 @@
 import PropTypes from "prop-types";
-// @mui
 import { alpha, styled } from "@mui/material/styles";
-
 import {
   InputAdornment,
   OutlinedInput,
   Toolbar,
   Typography
 } from "@mui/material";
-// component
 import "rsuite/dist/rsuite.min.css";
 import Iconify from "../../../components/iconify";
-
 import { endOfDay, startOfDay } from "date-fns";
 import React from "react";
 import { DateRangePicker} from "rsuite";
 import { DateRange } from "rsuite/esm/DateRangePicker/types";
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+
 
 const StyledRoot = styled(Toolbar)(({ theme }) => ({
   height: 96,
@@ -43,6 +40,7 @@ const StyledSearch = styled(OutlinedInput)(({ theme }: any) => ({
 
 const StyledDateRangePicker = styled(DateRangePicker)(({ theme }) => ({
     width:250,
+    minWidth:20,
 }));
 
 ListToolbar.propTypes = {
@@ -52,12 +50,7 @@ ListToolbar.propTypes = {
   setDayTime: PropTypes.func.isRequired,
 };
 
-export default function ListToolbar({
-  numSelected,
-  filterName,
-  onFilterName,
-  setDayTime,
-}: PropTypes.InferProps<typeof ListToolbar.propTypes>) {
+export default function ListToolbar({numSelected,filterName,onFilterName,setDayTime,}: PropTypes.InferProps<typeof ListToolbar.propTypes>) {
   async function handleSelect(
     value: DateRange | null,
     event: React.SyntheticEvent<Element, Event>

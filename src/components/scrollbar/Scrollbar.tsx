@@ -1,38 +1,26 @@
 import PropTypes from 'prop-types';
-import { memo } from 'react';
-// @mui
-import { Box } from '@mui/material';
-//
-import { StyledRootScrollbar, StyledScrollbar } from './styles';
-
-// ----------------------------------------------------------------------
+import { Box,styled, } from '@mui/material';
 
 Scrollbar.propTypes = {
-  sx: PropTypes.object.isRequired,
   children: PropTypes.node.isRequired,
 };
 
-function Scrollbar({ children, sx, ...other }:PropTypes.InferProps<typeof Scrollbar.propTypes>) {
-  const userAgent = typeof navigator === 'undefined' ? 'SSR' : navigator.userAgent;
-
-  const isMobile = /Android|IPad Air|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
-
-  if (isMobile) {
-    return (
-      <Box sx={{overflowX: 'auto', ...sx }} {...other}>
-        {children}
-      </Box>
-    );
-  }
+function Scrollbar({ children}:PropTypes.InferProps<typeof Scrollbar.propTypes>) {
   
 
   return (
-    <StyledRootScrollbar>
-      <StyledScrollbar  clickOnTrack={false} sx={sx} {...other}>
+      <StyledBox>
         {children}
-      </StyledScrollbar>
-    </StyledRootScrollbar>
+      </StyledBox>
   );
 }
 
-export default memo(Scrollbar);
+export default (Scrollbar);
+
+const StyledBox = styled(Box)(({ theme }) => ({
+    overflow:'auto',
+    '& ::-webkit-scrollbar': {
+      height:'1px',
+      width:'1px',
+    },
+}));

@@ -1,26 +1,20 @@
 import { Helmet } from 'react-helmet-async';
-import { filter } from 'lodash';
 import React from 'react';
 import { useState } from 'react';
 import {
     Card,
     Table,
     Stack,
-    Paper,
-    Button,
-    Popover,
-    Checkbox,
     TableRow,
-    MenuItem,
     TableBody,
     TableCell,
     Container,
     Typography,
-    IconButton,
     TableContainer,
     TablePagination,
+    CircularProgress,
 } from '@mui/material';
-import Iconify from '../components/iconify';
+import Scrollbar from '../components/scrollbar';
 import Label from '../components/label';
 import ListHead from '../sections/@dashboard/meeting/ListHead';
 import ListToolbar from '../sections/@dashboard/meeting/ListToolbar';
@@ -77,7 +71,8 @@ export default function MeetingPage() {
     const [length, setLength] = useState<number>(0);
     const [daytime, setDayTime] = useState<DayTime>();
     const debounce=useDebounce(filterName, 900);
-    
+    const [loading, setLoading] = useState<boolean>(true);
+
     React.useEffect(()=>{
         getMeeting({
             page:page+1,
@@ -85,7 +80,8 @@ export default function MeetingPage() {
             task:debounce,
             from:daytime?daytime.startDay:0,
             to:daytime?daytime.endDay:0,
-        }).then(data=>{
+        },setLoading)
+        .then(data=>{
             setMeeting(data.content);
             setLength(data.pageable.total)
         });
@@ -137,37 +133,45 @@ export default function MeetingPage() {
                 <Card>
                     <ListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} setDayTime={setDayTime} />
 
-                    {/* <Scrollbar sx={{}}> */}
-                    <TableContainer >
-                        <Table>
-                            <ListHead
-                                order={order}
-                                orderBy={orderBy}
-                                headLabel={TABLE_HEAD}
-                                rowCount={meeting.length}
-                                numSelected={selected.length}
-                                onRequestSort={handleRequestSort}
-                                onSelectAllClick={handleSelectAllClick}
-                            />
-                            <TableBody>
-                                {filteredUsers?filteredUsers.map((row: MeetingFace) => {
-                                    return (
-                                        <TableRow hover key={Number(row.id)}>
-                                            <TableCell align="center">{Moment(Number(row.createdTimestamp)).format('HH:MM DD/MM/YYYY ')}</TableCell>
-                                            <TableCell align="center"><b>{row.task}</b></TableCell>
-                                            <TableCell align="center">{row.repeat}</TableCell>
-                                            <TableCell align="center">{row.repeatTime}</TableCell>
-                                            <TableCell align="center">{row.channelFullName}</TableCell>
-                                            <TableCell align="center" >
-                                                <Label color={row.cancel?'success':'error'}>{String(row.cancel)}</Label>
-                                            </TableCell>
-                                        </TableRow>
-                                    );
-                                }):null}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                    {/* </Scrollbar> */}
+                    <Scrollbar>
+                        <TableContainer >
+                            <Table>
+                                <ListHead
+                                    order={order}
+                                    orderBy={orderBy}
+                                    headLabel={TABLE_HEAD}
+                                    rowCount={meeting.length}
+                                    numSelected={selected.length}
+                                    onRequestSort={handleRequestSort}
+                                    onSelectAllClick={handleSelectAllClick}
+                                />
+                                <TableBody>
+                                    {loading?                                  
+                                        <TableRow >
+                                            <TableCell align="center" colSpan={TABLE_HEAD.length}>  
+                                                <CircularProgress sx={{color:'#80808085'}}/>
+                                            </TableCell>  
+                                        </TableRow>                             
+                                    :null}
+
+                                    {filteredUsers && !loading?filteredUsers.map((row: MeetingFace) => {
+                                        return (
+                                            <TableRow hover key={Number(row.id)}>
+                                                <TableCell align="center">{Moment(Number(row.createdTimestamp)).format('HH:MM DD/MM/YYYY ')}</TableCell>
+                                                <TableCell align="center"><b>{row.task}</b></TableCell>
+                                                <TableCell align="center">{row.repeat}</TableCell>
+                                                <TableCell align="center">{row.repeatTime}</TableCell>
+                                                <TableCell align="center">{row.channelFullName}</TableCell>
+                                                <TableCell align="center" >
+                                                    <Label color={row.cancel?'success':'error'}>{String(row.cancel)}</Label>
+                                                </TableCell>
+                                            </TableRow>
+                                        );
+                                    }):null}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                    </Scrollbar>
                     <TablePagination
                         rowsPerPageOptions={rowPage(length).main}
                         component="div"
