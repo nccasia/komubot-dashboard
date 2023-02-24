@@ -43,7 +43,7 @@ import {DayTime, Ipenalty,Amount} from "../interface/interface"
 const TABLE_HEAD = [
   { id: 'ID', label: 'ID', alignRight: true },
   { id: 'Name', label: 'Name', alignRight: true },
-  { id: 'Amount', label: 'Amount', alignRight: true },
+  // { id: 'Amount', label: 'Amount', alignRight: true },
   { id: 'Reason', label: 'Reason', alignRight: true },
   { id: 'Isreject', label: 'Isreject', alignRight: true},
   { id: 'Channel', label: 'Channel', alignRight: true },
@@ -206,7 +206,7 @@ export default function Penalty() {
                       <TableRow key={index}>
                         <TableCell align="center">{row.userId}</TableCell>
                         <TableCell align="center"><b>{row.username}</b></TableCell>
-                        <TableCell align="center">{row.ammount}</TableCell>
+                        {/* <TableCell align="center">{row.ammount}</TableCell> */}
                         <TableCell align="center">{row.reason}</TableCell>
                         <TableCell align="center">
                           <Label color={row.isReject?'error': 'success'}  disableAnimation={(row.isReject)} >{String(row.isReject)}</Label>
