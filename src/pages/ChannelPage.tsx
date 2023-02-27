@@ -24,9 +24,9 @@ import {getChannel} from "../api/channelApi/channelApi"
 
 
 const TABLE_HEAD = [
-    { id: 'id', label: 'Id', alignRight: true },
-    { id: 'name', label: 'Name', alignRight: true },
-    { id: 'type', label: 'Type', alignRight: true },
+    { id: 'id', label: 'Id', alignRight: false },
+    { id: 'name', label: 'Name', alignRight: false },
+    { id: 'type', label: 'Type', alignRight: false },
 ];
 
 function descendingComparator(a: any, b: any, orderBy: string) {
@@ -145,9 +145,9 @@ export default function ChannelPage() {
                                     {filteredUsers && !loading?filteredUsers.map((row: ChannelFace) => {
                                         return (
                                             <TableRow key={Number(row.id)}>           
-                                                <TableCell align="center">{row.id}</TableCell>
-                                                <TableCell align="center"><b>{(row.name)}</b></TableCell>
-                                                <TableCell align="center">{row.type}</TableCell>                                   
+                                                <TableCell align="left">{row.id}</TableCell>
+                                                <TableCell align="left"><b>{(row.name)}</b></TableCell>
+                                                <TableCell align="left">{row.type}</TableCell>                                   
                                             </TableRow>
                                         );
                                     }):null}                         
