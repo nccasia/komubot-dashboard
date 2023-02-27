@@ -52,7 +52,7 @@ export default function Nav({ openNav, onCloseNav }: PropTypes.InferProps<typeof
           <Logo />
         </Box>
 
-        {/* <Box sx={{ mb: 5, mx: 2.5 }}>
+        <Box sx={{ mb: 5, mx: 2.5 }}>
           <Link underline="none">
             <StyledAccount>
               <Avatar src={account.photoURL} alt="photoURL" />
@@ -68,7 +68,7 @@ export default function Nav({ openNav, onCloseNav }: PropTypes.InferProps<typeof
               </Box>
             </StyledAccount>
           </Link>
-        </Box> */}
+        </Box>
         <Box sx={{marginTop:4}}></Box>
         <NavSection data={navConfig} />
     </>
