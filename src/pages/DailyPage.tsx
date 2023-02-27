@@ -43,7 +43,7 @@ export default function DailyPage() {
 
   const [totalPage, setTotalPage] = useState<number>(0)
 
-  const [rowsPerPage, setRowsPerPage] = useState<number>(10);
+  const [rowsPerPage, setRowsPerPage] = useState<number>(5);
 
   const [debounce] = useDebounce(filterName, 1000);
 

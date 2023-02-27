@@ -50,13 +50,13 @@ import axios from "axios";
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: "Avatar", label: "Avatar", alignCenter: true },
-  { id: "UserId", label: "UserId", alignRight: true },
-  { id: "Username", label: "Username", alignRight: true },
-  { id: "Email", label: "Email", alignRight: true },
-  { id: "Roles", label: "Roles", alignRight: true },
-  { id: "Roles_discord", label: "Roles_discord", alignRight: true },
-  { id: "Status", label: "Status", alignRight: true },
+  { id: "Avatar", label: "Avatar", alignCenter: false },
+  { id: "UserId", label: "UserId", alignRight: false },
+  { id: "Username", label: "Username", alignRight: false },
+  { id: "Email", label: "Email", alignRight: false },
+  { id: "Roles", label: "Roles", alignRight: false },
+  { id: "Roles_discord", label: "Roles_discord", alignRight: false },
+  { id: "Status", label: "Status", alignRight: false },
   { id: "" },
 ];
 
@@ -285,15 +285,15 @@ export default function UserDiscord() {
                           </Typography>
                         </Stack>
                       </TableCell>
-                      <TableCell align="center">{userId}</TableCell>
-                      <TableCell align="center">{username}</TableCell>
-                      <TableCell align="center">{email}</TableCell>
-                      <TableCell align="center">{roles?.join(", ")}</TableCell>
-                      <TableCell align="center">
+                      <TableCell align="left">{userId}</TableCell>
+                      <TableCell align="left">{username}</TableCell>
+                      <TableCell align="left">{email}</TableCell>
+                      <TableCell align="left">{roles?.join(", ")}</TableCell>
+                      <TableCell align="left">
                         {roles_discord?.join(", ")}
                       </TableCell>
 
-                      <TableCell align="center">
+                      <TableCell align="left">
                         <Label
                           color={deactive ? "success" : "error"}
                           disableAnimation={deactive}

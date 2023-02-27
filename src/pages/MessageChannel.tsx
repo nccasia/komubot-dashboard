@@ -40,11 +40,11 @@ import { endOfDay, startOfDay } from "date-fns";
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'ID', label: 'ID', alignRight: true },
-  { id: 'Email', label: 'Email', alignRight: true },
-  { id: 'Channel', label: 'Channel', alignRight: true },
-  { id: 'Time', label: 'Time', alignRight: true },
-  { id: 'Content', label: 'Content', alignRight: true },
+  { id: 'ID', label: 'ID', alignRight: false },
+  { id: 'Email', label: 'Email', alignRight: false },
+  { id: 'Channel', label: 'Channel', alignRight: false },
+  { id: 'Time', label: 'Time', alignRight: false },
+  { id: 'Content', label: 'Content', alignRight: false },
   { id: '' },
 ];
 
@@ -83,7 +83,7 @@ function applySortFilter(array:any, comparator:any, query:string) {
   return stabilizedThis.map((el:any) => el[0]);
 }
 
-export default function Message() {
+ function Message() {
   const [open, setOpen] = useState(null);
 
   const [page, setPage] = useState(0);
@@ -211,33 +211,32 @@ export default function Message() {
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
                 />
-                {isLoading ? (
+                  <TableBody>
+                  {isLoading ? 
                     <TableRow >
                     <TableCell align="center" colSpan={TABLE_HEAD.length}>
                         <CircularProgress sx={{color:'#80808085'}}/>
                     </TableCell>
                 </TableRow>
-                ) : (
-                  <TableBody>
-                  {filteredUsers.map((row:Imessage) => {
-                    const {id, email, channelFullName, createdTimestamp, content,} = row;
+                 :null}
+                  {filteredUsers && !isLoading?filteredUsers.map((row:Imessage) => {
+                    const {id, email, channelFullName, createdTimestamp, content} = row;
                     const selectedUser = selected.indexOf((id)) !== -1;
                     // console.log(row)
                     return (
                       <TableRow hover key={id} tabIndex={-1} role="checkbox" selected={selectedUser}>
 
-                        <TableCell align="center">{id}</TableCell>
-                        <TableCell align="center">{email}</TableCell>
-                        <TableCell align="center">{channelFullName}</TableCell>
-                        <TableCell align="center">{createdTimestamp?Moment(Number(createdTimestamp)).format('HH:MM DD/MM/YYYY '):null}</TableCell>
-                        <TableCell align="center">{content}</TableCell>                      
+                        <TableCell align="left">{id}</TableCell>
+                        <TableCell align="left">{email}</TableCell>
+                        <TableCell align="left">{channelFullName}</TableCell>
+                        <TableCell align="left">{createdTimestamp?Moment(Number(createdTimestamp)).format('HH:MM DD/MM/YYYY '):null}</TableCell>
+                        <TableCell align="left">{content}</TableCell>                      
                       
                       </TableRow>
                     );
-                  })}
+                  }):null}
                   
                 </TableBody>
-                )}
                 
 
                 {isNotFound && (
@@ -310,3 +309,4 @@ export default function Message() {
     </>
   );
 }
+export default React.memo(Message)

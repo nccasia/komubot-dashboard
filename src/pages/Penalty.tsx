@@ -25,13 +25,13 @@ import {rowPage} from "../utils/rowPage";
 import {DayTime, Ipenalty,Amount} from "../interface/interface"
 
 const TABLE_HEAD = [
-  { id: 'ID', label: 'ID', alignRight: true },
-  { id: 'Name', label: 'Name', alignRight: true },
-  // { id: 'Amount', label: 'Amount', alignRight: true },
-  { id: 'Reason', label: 'Reason', alignRight: true },
-  { id: 'Isreject', label: 'Isreject', alignRight: true},
-  { id: 'Channel', label: 'Channel', alignRight: true },
-  { id: 'Time', label: 'Time', alignRight: true },
+  { id: 'ID', label: 'ID', alignRight: false },
+  { id: 'Name', label: 'Name', alignRight: false },
+  // { id: 'Amount', label: 'Amount', alignRight: false },
+  { id: 'Reason', label: 'Reason', alignRight: false },
+  { id: 'Isreject', label: 'Isreject', alignRight: false},
+  { id: 'Channel', label: 'Channel', alignRight: false },
+  { id: 'Time', label: 'Time', alignRight: false },
 ];
 
 function descendingComparator(a:any, b:any, orderBy:string) {
@@ -193,15 +193,15 @@ export default function Penalty() {
                   {filteredUsers &&!loading?filteredUsers.map((row:Ipenalty, index:number) => {
                     return (
                       <TableRow key={index}>
-                        <TableCell align="center">{row.userId}</TableCell>
-                        <TableCell align="center"><b>{row.username}</b></TableCell>
-                        {/* <TableCell align="center">{row.ammount}</TableCell> */}
-                        <TableCell align="center">{row.reason}</TableCell>
-                        <TableCell align="center">
+                        <TableCell align="left">{row.userId}</TableCell>
+                        <TableCell align="left"><b>{row.username}</b></TableCell>
+                        {/* <TableCell align="left">{row.ammount}</TableCell> */}
+                        <TableCell align="left">{row.reason}</TableCell>
+                        <TableCell align="left">
                           <Label color={row.isReject?'error': 'success'}  disableAnimation={(row.isReject)} >{String(row.isReject)}</Label>
                         </TableCell>
-                        <TableCell align="center">{row.channelFullName}</TableCell> 
-                        <TableCell align="center">{Moment(Number(row.createdTimestamp)).format('HH:MM DD/MM/YYYY ')}</TableCell>                
+                        <TableCell align="left">{row.channelFullName}</TableCell> 
+                        <TableCell align="left">{Moment(Number(row.createdTimestamp)).format('HH:MM DD/MM/YYYY ')}</TableCell>                
                       </TableRow>
                     );
                   }):null}
