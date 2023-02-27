@@ -229,7 +229,7 @@ export default function Message() {
                         <TableCell align="center">{id}</TableCell>
                         <TableCell align="center">{email}</TableCell>
                         <TableCell align="center">{channelFullName}</TableCell>
-                        <TableCell align="center">{Moment(Number(createdTimestamp)).format('HH:MM DD/MM/YYYY ')}</TableCell>
+                        <TableCell align="center">{createdTimestamp?Moment(Number(createdTimestamp)).format('HH:MM DD/MM/YYYY '):null}</TableCell>
                         <TableCell align="center">{content}</TableCell>                      
                       
                       </TableRow>
