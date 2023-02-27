@@ -25,12 +25,12 @@ import {rowPage} from "../utils/rowPage";
 import { useDebounce } from "../utils/useDebounce"
 
 const TABLE_HEAD = [
-    { id: 'createdTimestamp', label: 'Created Time', alignRight: true },
-    { id: 'task', label: 'Task', alignRight: true },
-    { id: 'repeat', label: 'Repeat', alignRight: true },
-    { id: 'repeatTime', label: 'Repeat Time', alignRight: true },
-    { id: 'channelFullName', label: 'Channel', alignRight: true },
-    { id: 'cancel', label: 'Cancel', alignRight: true },
+    { id: 'createdTimestamp', label: 'Created Time', alignRight: false },
+    { id: 'task', label: 'Task', alignRight: false },
+    { id: 'repeat', label: 'Repeat', alignRight: false },
+    { id: 'repeatTime', label: 'Repeat Time', alignRight: false },
+    { id: 'channelFullName', label: 'Channel', alignRight: false },
+    { id: 'cancel', label: 'Cancel', alignRight: false },
 ];
 
 function descendingComparator(a: any, b: any, orderBy: string) {
@@ -157,12 +157,12 @@ export default function MeetingPage() {
                                     {filteredUsers && !loading?filteredUsers.map((row: MeetingFace) => {
                                         return (
                                             <TableRow hover key={Number(row.id)}>
-                                                <TableCell align="center">{Moment(Number(row.createdTimestamp)).format('HH:MM DD/MM/YYYY ')}</TableCell>
-                                                <TableCell align="center"><b>{row.task}</b></TableCell>
-                                                <TableCell align="center">{row.repeat}</TableCell>
-                                                <TableCell align="center">{row.repeatTime}</TableCell>
-                                                <TableCell align="center">{row.channelFullName}</TableCell>
-                                                <TableCell align="center" >
+                                                <TableCell align="left">{Moment(Number(row.createdTimestamp)).format('HH:MM DD/MM/YYYY ')}</TableCell>
+                                                <TableCell align="left"><b>{row.task}</b></TableCell>
+                                                <TableCell align="left">{row.repeat}</TableCell>
+                                                <TableCell align="left">{row.repeatTime}</TableCell>
+                                                <TableCell align="left">{row.channelFullName}</TableCell>
+                                                <TableCell align="left">
                                                     <Label color={row.cancel?'success':'error'}>{String(row.cancel)}</Label>
                                                 </TableCell>
                                             </TableRow>
