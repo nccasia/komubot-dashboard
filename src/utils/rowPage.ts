@@ -26,3 +26,16 @@ export function rowPage(index:number):RowPage{
         return {id:index, main:[index]};
     }
 }
+export function rowPageMessage(lengthData:number):number[]{
+    if(lengthData<=50){
+        return [5,10,20,30]
+    }
+    if(lengthData<=100&&lengthData>50)
+    return [5,Math.ceil(lengthData/6),Math.ceil(lengthData*2/6),Math.ceil(lengthData*3/6)]
+    if(lengthData>100&&lengthData<=1000){
+        return [5,Math.ceil(lengthData/10),Math.ceil(lengthData*4/10),Math.ceil(lengthData*5/10)]
+    }
+    return [5,100,400,lengthData-450]
+
+    
+}
