@@ -14,6 +14,6 @@ export const getUser = async (index: GetChannel) => {
     const res: any = await apiAxios.post(userLink, { page, size, email,deactive });
     return res.data;
   } catch (error) {
-    return [];
+    //return [];
   }
 };

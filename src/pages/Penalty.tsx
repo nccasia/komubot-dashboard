@@ -72,7 +72,10 @@ export default function Penalty() {
   const [filterName, setFilterName] = useState('');
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [daytime, setDayTime] = useState<DayTime>();
+  const [daytime, setDayTime] = useState<DayTime>({
+      startDay:Number(new Date()),
+      endDay :Number(new Date()),
+  });
   const [penal, setPenal] = useState<Ipenalty[]>([]);
   const [total, setTotal] = useState<number>(0);
   const [amount, setAmount] = useState<Amount>();

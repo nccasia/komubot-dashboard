@@ -19,9 +19,9 @@ export const getPenalty = async (index:GetPenalty,setLoading: (isLoading: boolea
             setLoading(false);
             return res.data;
         //}  
-    } catch (error) {
-        notyf.error(String(error));
-        return [];
+    } catch (error:any) {
+        notyf.error(String(error.message));
+        setLoading(false);
     }
 };
 
