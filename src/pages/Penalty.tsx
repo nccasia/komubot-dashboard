@@ -23,6 +23,7 @@ import { getPenalty,getAmount} from '../api/penaltyApi/penaltyApi';
 import { useDebounce } from "../utils/useDebounce"
 import {rowPage} from "../utils/rowPage";
 import {DayTime, Ipenalty,Amount} from "../interface/interface"
+import { endOfDay, startOfDay } from "date-fns";
 
 const TABLE_HEAD = [
   { id: 'ID', label: 'ID', alignRight: false },
@@ -73,8 +74,8 @@ export default function Penalty() {
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [daytime, setDayTime] = useState<DayTime>({
-      startDay:Number(new Date()),
-      endDay :Number(new Date()),
+      startDay:Number(startOfDay(new Date())),
+      endDay :Number(endOfDay(new Date())),
   });
   const [penal, setPenal] = useState<Ipenalty[]>([]);
   const [total, setTotal] = useState<number>(0);
