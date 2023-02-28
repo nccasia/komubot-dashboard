@@ -36,15 +36,16 @@ import { UserListHead, UserListToolbar } from '../sections/@dashboard/usediscord
 import { Imessage } from '../interface/interface';
 import { filterMessages } from '../api/messageApi/messageApi';
 import { endOfDay, startOfDay } from "date-fns";
+import { rowPageMessage } from '../utils/rowPage';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'ID', label: 'ID', alignRight: true },
-  { id: 'Email', label: 'Email', alignRight: true },
-  { id: 'Channel', label: 'Channel', alignRight: true },
-  { id: 'Time', label: 'Time', alignRight: true },
-  { id: 'Content', label: 'Content', alignRight: true },
+  { id: 'ID', label: 'ID', alignRight: false },
+  { id: 'Email', label: 'Email', alignRight: false },
+  { id: 'Channel', label: 'Channel', alignRight: false },
+  { id: 'Time', label: 'Time', alignRight: false },
+  { id: 'Content', label: 'Content', alignRight: false },
   { id: '' },
 ];
 
@@ -113,7 +114,6 @@ export default function Message() {
         const { content, pageable } = messageData
         setTotalPage(pageable.total)
         setIsLoading(true);
-       
         setMessage(content);
         setIsLoading(false);
       };
@@ -164,6 +164,7 @@ export default function Message() {
   };
 
   const handleChangeRowsPerPage = (event:any) => {
+    setIsLoading(true)
     setPage(0);
     setRowsPerPage(parseInt(event.target.value, 10));
   };
@@ -226,11 +227,11 @@ export default function Message() {
                     return (
                       <TableRow hover key={id} tabIndex={-1} role="checkbox" selected={selectedUser}>
 
-                        <TableCell align="center">{id}</TableCell>
-                        <TableCell align="center">{email}</TableCell>
-                        <TableCell align="center">{channelFullName}</TableCell>
-                        <TableCell align="center">{createdTimestamp?Moment(Number(createdTimestamp)).format('HH:MM DD/MM/YYYY '):null}</TableCell>
-                        <TableCell align="center">{content}</TableCell>                      
+                        <TableCell align="left">{id}</TableCell>
+                        <TableCell align="left">{email}</TableCell>
+                        <TableCell align="left">{channelFullName}</TableCell>
+                        <TableCell align="left">{createdTimestamp?Moment(Number(createdTimestamp)).format('HH:MM DD/MM/YYYY '):null}</TableCell>
+                        <TableCell align="left">{content}</TableCell>                      
                       
                       </TableRow>
                     );
@@ -268,6 +269,7 @@ export default function Message() {
           {/* </Scrollbar> */}
 
           <TablePagination
+            // rowsPerPageOptions={rowPageMessage(totalPage)}
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
             count={totalPage}
