@@ -102,6 +102,7 @@ export default function ListToolbar({numSelected,filterName,onFilterName,setDayT
         onChange={handleSelect}
         style={{ textAlign: 'right', paddingRight:0}}
         caretAs={()=><CalendarMonthIcon sx={{color:"gray", fontSize:21}}/>}
+        defaultValue={[startOfDay(new Date()), endOfDay(new Date())]}
         caretPlacement="right"
         showOneCalendar
       />

@@ -12,8 +12,8 @@ export const getChannel = async (index:GetChannel,setLoading: (isLoading: boolea
         const res:any = await apiAxios.get(channelLink+queryParams);
         setLoading(false);
         return res.data;
-    } catch (error) {
-        notyf.error(String(error));
-        return [];
+    } catch (error:any) {
+        notyf.error(String(error.message));
+        setLoading(false);
     }
 };

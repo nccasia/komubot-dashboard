@@ -69,10 +69,12 @@ export default function MeetingPage() {
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [meeting, setMeeting] = useState<MeetingFace[]>([]);
     const [length, setLength] = useState<number>(0);
-    const [daytime, setDayTime] = useState<DayTime>();
+    const [daytime, setDayTime] = useState<DayTime>({
+        startDay:Number(new Date()),
+        endDay :Number(new Date()),
+    });
     const debounce=useDebounce(filterName, 900);
     const [loading, setLoading] = useState<boolean>(true);
-
     React.useEffect(()=>{
         getMeeting({
             page:page+1,

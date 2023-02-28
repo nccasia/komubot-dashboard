@@ -2,7 +2,7 @@ import {apiAxios, meetingLink} from '../../axios/apiAxios';
 import {GetMeeting} from "../../interface/interface"
 import { notyf } from "../../utils/notif"
 
-export const getMeeting= async (index:GetMeeting,setLoading: (isLoading: boolean) => void) => {
+export const getMeeting= async (index:GetMeeting, setLoading: (isLoading: boolean) => void) => {
     try {   
         setLoading(true); 
         let queryParams = `?&page=${index.page}&size=${index.size}`;
@@ -15,8 +15,8 @@ export const getMeeting= async (index:GetMeeting,setLoading: (isLoading: boolean
         const res = await apiAxios.get(meetingLink+queryParams);
         setLoading(false);
         return res.data;
-    } catch (error) {
-        notyf.error(String(error));
-        return [];
+    } catch (error:any) {
+        setLoading(false);
+        notyf.error(String(error.message));
     }
 };
