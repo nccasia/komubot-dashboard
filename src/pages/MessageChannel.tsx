@@ -36,6 +36,7 @@ import { UserListHead, UserListToolbar } from '../sections/@dashboard/usediscord
 import { Imessage } from '../interface/interface';
 import { filterMessages } from '../api/messageApi/messageApi';
 import { endOfDay, startOfDay } from "date-fns";
+import { rowPageMessage } from '../utils/rowPage';
 
 // ----------------------------------------------------------------------
 
@@ -83,7 +84,7 @@ function applySortFilter(array:any, comparator:any, query:string) {
   return stabilizedThis.map((el:any) => el[0]);
 }
 
- function Message() {
+export default function Message() {
   const [open, setOpen] = useState(null);
 
   const [page, setPage] = useState(0);
@@ -113,7 +114,6 @@ function applySortFilter(array:any, comparator:any, query:string) {
         const { content, pageable } = messageData
         setTotalPage(pageable.total)
         setIsLoading(true);
-       
         setMessage(content);
         setIsLoading(false);
       };
@@ -164,6 +164,7 @@ function applySortFilter(array:any, comparator:any, query:string) {
   };
 
   const handleChangeRowsPerPage = (event:any) => {
+    setIsLoading(true)
     setPage(0);
     setRowsPerPage(parseInt(event.target.value, 10));
   };
@@ -211,16 +212,16 @@ function applySortFilter(array:any, comparator:any, query:string) {
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
                 />
-                  <TableBody>
-                  {isLoading ? 
+                {isLoading ? (
                     <TableRow >
                     <TableCell align="center" colSpan={TABLE_HEAD.length}>
                         <CircularProgress sx={{color:'#80808085'}}/>
                     </TableCell>
                 </TableRow>
-                 :null}
-                  {filteredUsers && !isLoading?filteredUsers.map((row:Imessage) => {
-                    const {id, email, channelFullName, createdTimestamp, content} = row;
+                ) : (
+                  <TableBody>
+                  {filteredUsers.map((row:Imessage) => {
+                    const {id, email, channelFullName, createdTimestamp, content,} = row;
                     const selectedUser = selected.indexOf((id)) !== -1;
                     // console.log(row)
                     return (
@@ -234,9 +235,10 @@ function applySortFilter(array:any, comparator:any, query:string) {
                       
                       </TableRow>
                     );
-                  }):null}
+                  })}
                   
                 </TableBody>
+                )}
                 
 
                 {isNotFound && (
@@ -267,6 +269,7 @@ function applySortFilter(array:any, comparator:any, query:string) {
           {/* </Scrollbar> */}
 
           <TablePagination
+            // rowsPerPageOptions={rowPageMessage(totalPage)}
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
             count={totalPage}
@@ -309,4 +312,3 @@ function applySortFilter(array:any, comparator:any, query:string) {
     </>
   );
 }
-export default React.memo(Message)

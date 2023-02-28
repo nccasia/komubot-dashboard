@@ -41,6 +41,13 @@ const StyledSearch = styled(OutlinedInput)(({ theme }: any) => ({
 const StyledDateRangePicker = styled(DateRangePicker)(({ theme }) => ({
     width:250,
     minWidth:20,
+    '& rs-stack':{
+      padding:0,
+      '& rs-stack-item':{
+        padding:0,
+      },
+    },
+    
 }));
 
 ListToolbar.propTypes = {
@@ -93,8 +100,9 @@ export default function ListToolbar({numSelected,filterName,onFilterName,setDayT
         placeholder="Select date-date..."
         format="dd/MM/yyyy"
         onChange={handleSelect}
-        style={{ textAlign: 'right' }}
+        style={{ textAlign: 'right', paddingRight:0}}
         caretAs={()=><CalendarMonthIcon sx={{color:"gray", fontSize:21}}/>}
+        caretPlacement="right"
         showOneCalendar
       />
     </StyledRoot>
