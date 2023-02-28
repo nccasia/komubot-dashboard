@@ -23,6 +23,7 @@ import Moment from "moment";
 import {getMeeting} from "../api/meetingApi/meetingApi"
 import {rowPage} from "../utils/rowPage";
 import { useDebounce } from "../utils/useDebounce"
+import { endOfDay, startOfDay } from "date-fns";
 
 const TABLE_HEAD = [
     { id: 'createdTimestamp', label: 'Created Time', alignRight: false },
@@ -70,8 +71,8 @@ export default function MeetingPage() {
     const [meeting, setMeeting] = useState<MeetingFace[]>([]);
     const [length, setLength] = useState<number>(0);
     const [daytime, setDayTime] = useState<DayTime>({
-        startDay:Number(new Date()),
-        endDay :Number(new Date()),
+        startDay:Number(startOfDay(new Date())),
+        endDay :Number(endOfDay(new Date())),
     });
     const debounce=useDebounce(filterName, 900);
     const [loading, setLoading] = useState<boolean>(true);
