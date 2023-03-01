@@ -101,7 +101,7 @@ export default function MeetingPage() {
     return (
         <>
             <Helmet>
-                <title>  Meeting | Minimal UI </title>
+                <title>  Meeting | Komu Dashboard </title>
             </Helmet>
             <Container>
                 <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>

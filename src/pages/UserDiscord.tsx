@@ -189,7 +189,7 @@ export default function UserDiscord() {
   return (
     <>
       <Helmet>
-        <title> User | Minimal UI </title>
+        <title> User | Komu Dashboard </title>
       </Helmet>
 
       <Container>

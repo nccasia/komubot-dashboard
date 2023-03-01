@@ -151,7 +151,7 @@ export default function Message() {
   return (
     <>
       <Helmet>
-        <title> User | Minimal UI </title>
+        <title> Message | Komu Dashboard </title>
       </Helmet>
 
       <Container>

@@ -18,6 +18,7 @@ import UserDetailsModal from "../sections/@dashboard/daily/DailyDetailsModal";
 import { formatDateTime } from './../utils/formatDateTime';
 import { endOfDay, startOfDay } from "date-fns";
 import {rowPage} from "../utils/rowPage"
+import { Helmet } from "react-helmet-async";
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
@@ -80,6 +81,9 @@ export default function DailyPage() {
 
   return (
     <>
+    <Helmet>
+        <title> Daily | Komu Dashboard  </title>
+      </Helmet>
       <Container>
         <Stack
           direction="row"

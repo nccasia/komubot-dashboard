@@ -13,6 +13,7 @@ import { useEffect } from "react";
 import { GoogleLogin } from "react-google-login";
 import { loginWithGoogle } from "../api/authApi/authApi";
 import { LoginForm } from "../sections/auth/login";
+import { Helmet } from "react-helmet-async";
 // ----------------------------------------------------------------------
 
 const StyledRoot = styled("div")(({ theme }) => ({
@@ -73,9 +74,9 @@ export default function LoginPage() {
 
   return (
     <>
-      {/* <Helmet>
-        <title> Login | Komubot </title>
-      </Helmet> */}
+      <Helmet>
+        <title> Login | Komu Dashboard </title>
+      </Helmet>
 
       <StyledRoot>
         <Logo
