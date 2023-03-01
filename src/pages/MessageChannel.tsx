@@ -36,7 +36,7 @@ import { UserListHead, UserListToolbar } from '../sections/@dashboard/usediscord
 import { Imessage } from '../interface/interface';
 import { filterMessages } from '../api/messageApi/messageApi';
 import { endOfDay, startOfDay } from "date-fns";
-import { rowPageMessage } from '../utils/rowPage';
+import { rowPage, rowPageMessage } from '../utils/rowPage';
 import {getComparator,applySortFilter} from "../utils/applySortFilter"
 // ----------------------------------------------------------------------
 
@@ -236,7 +236,7 @@ export default function Message() {
           {/* </Scrollbar> */}
 
           <TablePagination
-            rowsPerPageOptions={rowPageMessage(totalPage)}
+            rowsPerPageOptions={rowPage(totalPage)}
             // rowsPerPageOptions={[5, 10, 25]}
             component="div"
             count={totalPage}
