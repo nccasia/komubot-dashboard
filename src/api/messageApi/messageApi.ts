@@ -28,7 +28,8 @@ export const filterMessages = async (filters?: FilterParams) => {
       if (toDay && fromDay != 0) queryParams += `&to=${toDay}`;
       if (queryParams) queryParams = `?${queryParams.substr(1)}`;
     }
-    const res = await apiAxios.get(messageLink + queryParams);
+    const res = await apiAxios.get(messageLink+queryParams);
+    console.log(res.data.content);
     return res.data;
   } catch (error) {
     console.error(error);

@@ -37,7 +37,7 @@ import { Imessage } from '../interface/interface';
 import { filterMessages } from '../api/messageApi/messageApi';
 import { endOfDay, startOfDay } from "date-fns";
 import { rowPageMessage } from '../utils/rowPage';
-
+import {getComparator,applySortFilter} from "../utils/applySortFilter"
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
@@ -50,39 +50,6 @@ const TABLE_HEAD = [
 ];
 
 // ----------------------------------------------------------------------
-
-
-
-
-
-function descendingComparator(a:any, b:any, orderBy:string) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
-
-function getComparator(order:string, orderBy:string) {
-  return order === 'desc'
-    ? (a:any, b:any) => descendingComparator(a, b, orderBy)
-    : (a:any, b:any) => -descendingComparator(a, b, orderBy);
-}
-
-function applySortFilter(array:any, comparator:any, query:string) {
-  const stabilizedThis = array.map((el:any, index:number) => [el, index]);
-  stabilizedThis.sort((a:any, b:any) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-  if (query) {
-    return filter(array, (_user:any) => _user.email.toLowerCase().indexOf(query.toLowerCase()) !== -1);
-  }
-  return stabilizedThis.map((el:any) => el[0]);
-}
 
 export default function Message() {
   const [open, setOpen] = useState(null);
@@ -176,7 +143,7 @@ export default function Message() {
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - message.length) : 0;
 
-  const filteredUsers = applySortFilter(message, getComparator(order, orderBy), filterName)
+  const filteredUsers = applySortFilter(message, getComparator(order, orderBy))
   // console.log(filterName)
 
   const isNotFound = !filteredUsers.length && !!filterName;
