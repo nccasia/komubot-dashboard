@@ -13,6 +13,9 @@ export function rowPage(index:number){
     if(index>=1000 &&index<10000){
         return [5,10,25,50,100,500];
     }
+    if(index>10000){
+        return [5,10,25,50,100,500];
+    }
 }
 
 

@@ -177,7 +177,7 @@ export default function Penalty() {
               filterName={filterName} 
               onFilterName={handleFilterByName} 
               setDayTime={setDayTime}
-              searchText="Search by Name"
+              searchText="Search by Name..."
           />
           <Scrollbar>
             <TableContainer>
