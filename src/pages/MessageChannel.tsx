@@ -79,7 +79,7 @@ function applySortFilter(array:any, comparator:any, query:string) {
     return a[1] - b[1];
   });
   if (query) {
-    return filter(array, (_user:any) => _user.id.toLowerCase().indexOf(query.toLowerCase()) !== -1);
+    return filter(array, (_user:any) => _user.email.toLowerCase().indexOf(query.toLowerCase()) !== -1);
   }
   return stabilizedThis.map((el:any) => el[0]);
 }

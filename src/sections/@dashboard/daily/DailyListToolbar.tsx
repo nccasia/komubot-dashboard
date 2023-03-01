@@ -87,7 +87,7 @@ export default function DailyListToolbar({
       <StyledSearch
         value={filterName}
         onChange={onFilterName}
-        placeholder="Search Daily..."
+        placeholder="Search by name..."
         startAdornment={
           <InputAdornment position="start">
             <Iconify

@@ -21,7 +21,7 @@ import ListToolbar from '../sections/@dashboard/meeting/ListToolbar';
 import ListHead from '../sections/@dashboard/meeting/ListHead';
 import { getPenalty,getAmount} from '../api/penaltyApi/penaltyApi';
 import { useDebounce } from "../utils/useDebounce"
-import {rowPage} from "../utils/rowPage";
+import {rowPage, rowPageMessage} from "../utils/rowPage";
 import {DayTime, Ipenalty,Amount} from "../interface/interface"
 import { endOfDay, startOfDay } from "date-fns";
 
