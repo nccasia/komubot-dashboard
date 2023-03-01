@@ -12,7 +12,8 @@ import {
   Typography,
   TableContainer,
   TablePagination,
-  CircularProgress
+  CircularProgress,
+  Paper,
 } from '@mui/material';
 import Moment from 'moment';
 import Label from '../components/label';
@@ -21,9 +22,10 @@ import ListToolbar from '../sections/@dashboard/meeting/ListToolbar';
 import ListHead from '../sections/@dashboard/meeting/ListHead';
 import { getPenalty,getAmount} from '../api/penaltyApi/penaltyApi';
 import { useDebounce } from "../utils/useDebounce"
-import {rowPage, rowPageMessage} from "../utils/rowPage";
+import {rowPage} from "../utils/rowPage";
 import {DayTime, Ipenalty,Amount} from "../interface/interface"
 import { endOfDay, startOfDay } from "date-fns";
+import {getComparator,applySortFilter} from "../utils/applySortFilter"
 
 const TABLE_HEAD = [
   { id: 'ID', label: 'ID', alignRight: false },
@@ -34,32 +36,6 @@ const TABLE_HEAD = [
   { id: 'Channel', label: 'Channel', alignRight: false },
   { id: 'Time', label: 'Time', alignRight: false },
 ];
-
-function descendingComparator(a:any, b:any, orderBy:string) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
-
-function getComparator(order:string, orderBy:string) {
-  return order === 'desc'
-    ? (a:any, b:any) => descendingComparator(a, b, orderBy)
-    : (a:any, b:any) => -descendingComparator(a, b, orderBy);
-}
-
-function applySortFilter(array:any, comparator:any) {
-  const stabilizedThis = array.map((el:any, index:number) => [el, index]);
-  stabilizedThis.sort((a:any, b:any) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-  return stabilizedThis.map((el:any) => el[0]);
-}
 
 export default function Penalty() {
   const [page, setPage] = useState(0);
@@ -107,7 +83,7 @@ export default function Penalty() {
   // function valuetext(value: number) {
   //   return `${value}`;
   // }
-  const debounce=useDebounce(filterName, 900);
+  const debounce=useDebounce(filterName.trim(), 900);
   // const debounceStart=useDebounce(amo[0], 1200);
   // const debounceEnd=useDebounce(amo[1], 1200)
   const [loading, setLoading] = useState<boolean>(false);
@@ -157,6 +133,7 @@ export default function Penalty() {
   };
 
   const filteredUsers = applySortFilter(penal, getComparator(order, orderBy))
+  const isNotFound = !filteredUsers.length && !!filterName;
 
   return (
     <>
@@ -216,6 +193,29 @@ export default function Penalty() {
                     );
                   }):null}
                 </TableBody>
+                {isNotFound && (
+                  <TableBody>
+                    <TableRow>
+                        <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
+                        <Paper
+                            sx={{
+                            textAlign: "center",
+                            }}
+                        >
+                            <Typography variant="h6" paragraph>
+                            Not found
+                            </Typography>
+
+                            <Typography variant="body2">
+                            No results found for &nbsp;
+                            <strong>&quot;{filterName}&quot;</strong>.
+                            <br /> Try checking for typos or using complete words.
+                            </Typography>
+                        </Paper>
+                        </TableCell>
+                    </TableRow>
+                  </TableBody>
+                )}
               </Table>
             </TableContainer>
           </Scrollbar>

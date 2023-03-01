@@ -48,17 +48,17 @@ export default function AccountPopover() {
         onClick={handleOpen}
         sx={{
           p: 0,
-          // ...(open && {
-          //   '&:before': {
-          //     zIndex: 1,
-          //     content: "''",
-          //     width: '100%',
-          //     height: '100%',
-          //     borderRadius: '50%',
-          //     position: 'absolute',
-          //     bgcolor: (theme) => alpha(theme.palette.grey[900], 0.8),
-          //   },
-          // }),
+          ...(Boolean(open) && {
+            '&:before': {
+              zIndex: 1,
+              content: "''",
+              width: '100%',
+              height: '100%',
+              borderRadius: '50%',
+              position: 'absolute',
+              bgcolor: (theme) => alpha(theme.palette.grey[900], 0.3),
+            },
+          }),
         }}
       >
         <Avatar src={account.photoURL} alt="photoURL" />
@@ -92,13 +92,13 @@ export default function AccountPopover() {
 
         <Divider sx={{ borderStyle: 'dashed' }} />
 
-        <Stack sx={{ p: 1 }}>
+        {/* <Stack sx={{ p: 1 }}>
           {MENU_OPTIONS.map((option) => (
             <MenuItem key={option.label} onClick={handleClose}>
               {option.label}
             </MenuItem>
           ))}
-        </Stack>
+        </Stack> */}
 
         <Divider sx={{ borderStyle: 'dashed' }} />
 

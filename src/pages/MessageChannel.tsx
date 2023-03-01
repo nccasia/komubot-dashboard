@@ -97,7 +97,7 @@ export default function Message() {
 
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [debounce] = useDebounce(filterName, 1000);
+  const [debounce] = useDebounce(filterName.trim(), 1000);
   const [fromDay,setStartDay] =useState(0);
   const [totalPage, setTotalPage] = useState<number>(0)
   const [toDay,setEndDay] =useState(endOfDay(new Date()).getTime());
