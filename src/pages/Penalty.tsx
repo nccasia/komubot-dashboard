@@ -138,7 +138,7 @@ export default function Penalty() {
   return (
     <>
       <Helmet>
-        <title> Penalty | Minimal UI </title>
+        <title> Penalty | Komu Dashboard </title>
       </Helmet>
 
       <Container>

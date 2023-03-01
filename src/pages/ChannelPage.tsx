@@ -84,7 +84,7 @@ export default function ChannelPage() {
     return (
         <>
             <Helmet>
-                <title> Channel | Minimal UI </title>
+                <title> Channel | Komu Dashboard </title>
             </Helmet>
 
             <Container>
