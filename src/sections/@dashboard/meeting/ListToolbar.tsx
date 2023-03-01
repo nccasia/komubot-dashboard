@@ -55,9 +55,10 @@ ListToolbar.propTypes = {
   filterName: PropTypes.string.isRequired,
   onFilterName: PropTypes.func.isRequired,
   setDayTime: PropTypes.func.isRequired,
+  searchText:PropTypes.string.isRequired,
 };
 
-export default function ListToolbar({numSelected,filterName,onFilterName,setDayTime,}: PropTypes.InferProps<typeof ListToolbar.propTypes>) {
+export default function ListToolbar({numSelected,filterName,onFilterName,setDayTime,searchText}: PropTypes.InferProps<typeof ListToolbar.propTypes>) {
   async function handleSelect(
     value: DateRange | null,
     event: React.SyntheticEvent<Element, Event>
@@ -85,7 +86,7 @@ export default function ListToolbar({numSelected,filterName,onFilterName,setDayT
         <StyledSearch
           value={filterName}
           onChange={onFilterName}
-          placeholder="Search..."
+          placeholder={searchText}
           startAdornment={
             <InputAdornment position="start">
               <Iconify

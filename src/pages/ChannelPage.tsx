@@ -119,7 +119,11 @@ export default function ChannelPage() {
                 </Stack>
 
                 <Card>
-                    <UserToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
+                    <UserToolbar 
+                        numSelected={selected.length} 
+                        filterName={filterName} 
+                        onFilterName={handleFilterByName} 
+                    />
 
                     <Scrollbar>
                         <TableContainer >
@@ -157,7 +161,7 @@ export default function ChannelPage() {
                     </Scrollbar>
 
                     <TablePagination
-                        rowsPerPageOptions={rowPage(channellength).main}
+                        rowsPerPageOptions={rowPage(channellength)}
                         component="div"
                         count={channellength}
                         rowsPerPage={rowsPerPage}

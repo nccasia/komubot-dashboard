@@ -172,7 +172,13 @@ export default function Penalty() {
         </Stack>
 
         <Card>
-          <ListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} setDayTime={setDayTime}/>
+          <ListToolbar 
+              numSelected={selected.length} 
+              filterName={filterName} 
+              onFilterName={handleFilterByName} 
+              setDayTime={setDayTime}
+              searchText="Search by Name"
+          />
           <Scrollbar>
             <TableContainer>
               <Table>
@@ -232,7 +238,7 @@ export default function Penalty() {
                 /> */}
               </div>
               <TablePagination
-                  rowsPerPageOptions={rowPage(total).main}
+                  rowsPerPageOptions={rowPage(total)}
                   component="div"
                   count={total}
                   rowsPerPage={rowsPerPage}
