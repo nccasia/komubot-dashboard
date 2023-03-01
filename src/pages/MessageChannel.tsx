@@ -236,8 +236,8 @@ export default function Message() {
           {/* </Scrollbar> */}
 
           <TablePagination
-            // rowsPerPageOptions={rowPageMessage(totalPage)}
-            rowsPerPageOptions={[5, 10, 25]}
+            rowsPerPageOptions={rowPageMessage(totalPage)}
+            // rowsPerPageOptions={[5, 10, 25]}
             component="div"
             count={totalPage}
             rowsPerPage={rowsPerPage}
