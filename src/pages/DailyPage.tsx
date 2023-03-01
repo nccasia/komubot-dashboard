@@ -17,7 +17,7 @@ import { dailystype } from "../interface/interface";
 import UserDetailsModal from "../sections/@dashboard/daily/DailyDetailsModal";
 import { formatDateTime } from './../utils/formatDateTime';
 import { endOfDay, startOfDay } from "date-fns";
-
+import {rowPage} from "../utils/rowPage"
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
@@ -200,7 +200,7 @@ export default function DailyPage() {
           {/* </Scrollbar> */}
 
           <TablePagination
-            rowsPerPageOptions={[5, 10, 25]}
+            rowsPerPageOptions={rowPage(totalPage)}
             component="div"
             count={totalPage}
             rowsPerPage={rowsPerPage}
