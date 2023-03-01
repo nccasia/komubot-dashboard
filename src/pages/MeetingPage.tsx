@@ -139,7 +139,7 @@ export default function MeetingPage() {
                         filterName={filterName} 
                         onFilterName={handleFilterByName} 
                         setDayTime={setDayTime} 
-                        searchText="Search by Task"
+                        searchText="Search by Task..."
                     />
 
                     <Scrollbar>
