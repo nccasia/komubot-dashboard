@@ -14,7 +14,6 @@ import { DateRangePicker} from "rsuite";
 import { DateRange } from "rsuite/esm/DateRangePicker/types";
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 
-
 const StyledRoot = styled(Toolbar)(({ theme }) => ({
   height: 96,
   display: "flex",
@@ -41,12 +40,12 @@ const StyledSearch = styled(OutlinedInput)(({ theme }: any) => ({
 const StyledDateRangePicker = styled(DateRangePicker)(({ theme }) => ({
     width:250,
     minWidth:20,
-    '& rs-stack':{
-      padding:0,
-      '& rs-stack-item':{
-        padding:0,
-      },
-    },
+    '& span': {
+      '& svg': {
+        marginTop:10,
+        fontSize:16,
+      }
+    }
     
 }));
 
@@ -101,11 +100,15 @@ export default function ListToolbar({numSelected,filterName,onFilterName,setDayT
         placeholder="Select date-date..."
         format="dd/MM/yyyy"
         onChange={handleSelect}
-        style={{ textAlign: 'right', paddingRight:0}}
         caretAs={()=><CalendarMonthIcon sx={{color:"gray", fontSize:21}}/>}
         defaultValue={[startOfDay(new Date()), endOfDay(new Date())]}
         caretPlacement="right"
         showOneCalendar
+        style={{ 
+          textAlign: 'right', 
+          paddingRight:0,
+          fontSize:18,
+        }}
       />
     </StyledRoot>
   );

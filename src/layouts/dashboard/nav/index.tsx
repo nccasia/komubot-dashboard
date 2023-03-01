@@ -69,7 +69,6 @@ export default function Nav({ openNav, onCloseNav }: PropTypes.InferProps<typeof
             </StyledAccount>
           </Link>
         </Box>
-        <Box sx={{marginTop:4}}></Box>
         <NavSection data={navConfig} />
     </>
   );
