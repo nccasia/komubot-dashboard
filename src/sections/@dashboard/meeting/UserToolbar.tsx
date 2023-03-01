@@ -46,7 +46,7 @@ export default function UserToolbar({ numSelected, filterName, onFilterName }:Pr
         <StyledSearch
           value={filterName}
           onChange={onFilterName}
-          placeholder="Search user..."
+          placeholder="Search by Name"
           startAdornment={
             <InputAdornment position="start">
               <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled', width: 20, height: 20 }} />

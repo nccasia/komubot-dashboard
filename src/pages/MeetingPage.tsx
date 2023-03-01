@@ -134,7 +134,13 @@ export default function MeetingPage() {
                 </Stack>
 
                 <Card>
-                    <ListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} setDayTime={setDayTime} />
+                    <ListToolbar 
+                        numSelected={selected.length} 
+                        filterName={filterName} 
+                        onFilterName={handleFilterByName} 
+                        setDayTime={setDayTime} 
+                        searchText="Search by Task"
+                    />
 
                     <Scrollbar>
                         <TableContainer >
@@ -176,7 +182,7 @@ export default function MeetingPage() {
                         </TableContainer>
                     </Scrollbar>
                     <TablePagination
-                        rowsPerPageOptions={rowPage(length).main}
+                        rowsPerPageOptions={rowPage(length)}
                         component="div"
                         count={length}
                         rowsPerPage={rowsPerPage}
