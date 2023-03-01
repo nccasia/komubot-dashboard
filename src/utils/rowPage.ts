@@ -28,7 +28,7 @@ export function rowPage(index:number):RowPage{
 }
 export function rowPageMessage(lengthData:number):number[]{
     if(lengthData<=50){
-        return [5,10,20,30]
+        return [5, 10, 20, 25, 30, 50]
     }
     if(lengthData<=100&&lengthData>50)
     return [5,Math.ceil(lengthData/6),Math.ceil(lengthData*2/6),Math.ceil(lengthData*3/6)]
