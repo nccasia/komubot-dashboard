@@ -57,7 +57,7 @@ const TABLE_HEAD = [
   { id: "Roles", label: "Roles", alignRight: false },
   { id: "Roles_discord", label: "Roles_discord", alignRight: false },
   { id: "Status", label: "Status", alignRight: false },
-  { id: "" },
+  { id: "Action", label: "Action", alignRight: true },
 ];
 
 // ----------------------------------------------------------------------
@@ -275,7 +275,7 @@ export default function UserDiscord() {
                           {deactive? "deactive":"active"}
                         </Label>
                       </TableCell>
-                      <TableCell align="right">
+                      <TableCell align="center">
                         <IconButton
                           size="large"
                           color="inherit"
@@ -284,7 +284,7 @@ export default function UserDiscord() {
                             handleOpenMenu(e);
                           }}
                         >
-                          {deactive ? <Iconify  icon={"material-symbols:check-small"} /> : <Iconify  icon={"ic:outline-clear"} />}
+                          {deactive ? <Iconify color={"green"}  width={25} icon={"material-symbols:check-small"} /> : <Iconify color={"red"} width={20} icon={"ic:outline-clear"} />}
                           {/* <Iconify  icon={"eva:more-vertical-fill"} /> */}
                         </IconButton>
                       </TableCell>          
