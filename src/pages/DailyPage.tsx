@@ -45,7 +45,7 @@ export default function DailyPage() {
 
   const [rowsPerPage, setRowsPerPage] = useState<number>(5);
 
-  const [debounce] = useDebounce(filterName, 1000);
+  const [debounce] = useDebounce(filterName.trim(), 1000);
 
   const [selectedUser, setSelectedUser] = useState<dailystype | null>(null);
 

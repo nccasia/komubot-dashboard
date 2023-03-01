@@ -13,6 +13,7 @@ import {
     TableContainer,
     TablePagination,
     CircularProgress,
+    Paper,
 } from '@mui/material';
 import Scrollbar from '../components/scrollbar';
 import Label from '../components/label';
@@ -21,9 +22,10 @@ import ListToolbar from '../sections/@dashboard/meeting/ListToolbar';
 import {DayTime,MeetingFace} from "../interface/interface"
 import Moment from "moment";
 import {getMeeting} from "../api/meetingApi/meetingApi"
-import {rowPage, rowPageMessage} from "../utils/rowPage";
+import {rowPage} from "../utils/rowPage";
 import { useDebounce } from "../utils/useDebounce"
 import { endOfDay, startOfDay } from "date-fns";
+import {getComparator,applySortFilter} from "../utils/applySortFilter"
 
 const TABLE_HEAD = [
     { id: 'createdTimestamp', label: 'Created Time', alignRight: false },
@@ -33,32 +35,6 @@ const TABLE_HEAD = [
     { id: 'channelFullName', label: 'Channel', alignRight: false },
     { id: 'cancel', label: 'Cancel', alignRight: false },
 ];
-
-function descendingComparator(a: any, b: any, orderBy: string) {
-    if (b[orderBy] < a[orderBy]) {
-        return -1;
-    }
-    if (b[orderBy] > a[orderBy]) {
-        return 1;
-    }
-    return 0;
-}
-
-function getComparator(order: string, orderBy: string) {
-    return order === 'desc'
-        ? (a: any, b: any) => descendingComparator(a, b, orderBy)
-        : (a: any, b: any) => -descendingComparator(a, b, orderBy);
-}
-
-function applySortFilter(array: any, comparator: any) {
-    const stabilizedThis = array.map((el: any, index: number) => [el, index]);
-    stabilizedThis.sort((a: any, b: any) => {
-        const order = comparator(a[0], b[0]);
-        if (order !== 0) return order;
-        return a[0] - b[0];
-    });
-    return stabilizedThis.map((el: any) => el[0]);
-}
 
 export default function MeetingPage() {
     const [order, setOrder] = useState('asc');
@@ -74,7 +50,7 @@ export default function MeetingPage() {
         startDay:Number(startOfDay(new Date())),
         endDay :Number(endOfDay(new Date())),
     });
-    const debounce=useDebounce(filterName, 900);
+    const debounce=useDebounce(filterName.trim(), 900);
     const [loading, setLoading] = useState<boolean>(true);
     React.useEffect(()=>{
         getMeeting({
@@ -120,6 +96,7 @@ export default function MeetingPage() {
     };
 
     const filteredUsers = applySortFilter(meeting, getComparator(order, orderBy));
+    const isNotFound = !filteredUsers.length && !!filterName;
 
     return (
         <>
@@ -178,6 +155,29 @@ export default function MeetingPage() {
                                         );
                                     }):null}
                                 </TableBody>
+                                {isNotFound && (
+                                    <TableBody>
+                                    <TableRow>
+                                        <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
+                                        <Paper
+                                            sx={{
+                                            textAlign: "center",
+                                            }}
+                                        >
+                                            <Typography variant="h6" paragraph>
+                                            Not found
+                                            </Typography>
+
+                                            <Typography variant="body2">
+                                            No results found for &nbsp;
+                                            <strong>&quot;{filterName}&quot;</strong>.
+                                            <br /> Try checking for typos or using complete words.
+                                            </Typography>
+                                        </Paper>
+                                        </TableCell>
+                                    </TableRow>
+                                    </TableBody>
+                                )}
                             </Table>
                         </TableContainer>
                     </Scrollbar>

@@ -46,7 +46,7 @@ import { rowPage } from "../utils/rowPage";
 import Snackbar from "@mui/material/Snackbar";
 import { notyf } from "../utils/notif";
 import axios from "axios";
-
+import {getComparator,applySortFilter} from "../utils/applySortFilter"
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
@@ -62,32 +62,6 @@ const TABLE_HEAD = [
 
 // ----------------------------------------------------------------------
 
-function descendingComparator(a: any, b: any, orderBy: string) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
-
-function getComparator(order: string, orderBy: string) {
-  return order === "desc"
-    ? (a: any, b: any) => descendingComparator(a, b, orderBy)
-    : (a: any, b: any) => -descendingComparator(a, b, orderBy);
-}
-
-function applySortFilter(array: any, comparator: any) {
-  const stabilizedThis = array.map((el: any, index: number) => [el, index]);
-  stabilizedThis.sort((a: any, b: any) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-  return stabilizedThis.map((el: any) => el[0]);
-}
-
 export default function UserDiscord() {
   const [open, setOpen] = useState(null);
   const [openfilter, setOpenFilter] = useState(null);
@@ -98,14 +72,14 @@ export default function UserDiscord() {
 
   const [selected, setSelected] = useState<string[]>([]);
 
-  const [orderBy, setOrderBy] = useState("name");
+  const [orderBy, setOrderBy] = useState("email");
 
   const [filterName, setFilterName] = useState("");
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [users, setUsers] = useState<Iuser[]>([]);
   const [select, setSelect] = useState<Iuser>();
-  const debounce = useDebounce(filterName, 900);
+  const debounce = useDebounce(filterName.trim(), 900);
   const [userllength, setUerLength] = useState<number>(0);
   // console.log(users)
 
