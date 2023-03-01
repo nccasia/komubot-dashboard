@@ -32,6 +32,12 @@ const StyledRoot = styled(Toolbar)(({ theme }) => ({
 }));
 const StyledDateRangePicker = styled(DateRangePicker)(({ theme }) => ({
   // styles for larger screens
+  '& span': {
+    '& svg': {
+      marginTop:10,
+      fontSize:16,
+    }
+  },
 
   [theme.breakpoints.down(490)]: {
     // styles for smaller screens
