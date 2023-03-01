@@ -405,7 +405,7 @@ export default function UserDiscord() {
             //       : `  `
             //   }`
             // }
-            rowsPerPageOptions={rowPage(userllength).main}
+            rowsPerPageOptions={rowPage(userllength)}
             component="div"
             count={userllength}
             rowsPerPage={rowsPerPage}
