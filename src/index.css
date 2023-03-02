@@ -24,5 +24,9 @@ code {
   width: 242px !important;
 }
 .rs-picker-toggle-textbox{
-  padding:0 34px !important;
+  padding:0 34px 0 25px!important
+}
+.rs-picker-daterange-header{
+  padding-left: 26px !important;
+    text-align: left !important;
 }
