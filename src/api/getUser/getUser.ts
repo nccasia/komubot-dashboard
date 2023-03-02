@@ -3,8 +3,8 @@ import * as _jsonwebtoken from "jsonwebtoken";
 import jwt_decode from "jwt-decode";
 
 export const GetUser = () => {
+  
   const token = getAccessToken();
-
   // Giải mã token và lấy thông tin user và email
   try {
     const decodedToken: { [key: string]: any } = jwt_decode(token ? token : "");

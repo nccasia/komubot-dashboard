@@ -19,6 +19,11 @@ const StyledRoot = styled(Toolbar)(({ theme }) => ({
   display: "flex",
   justifyContent: "space-between",
   padding: theme.spacing(0, 1, 0, 3),
+  [theme.breakpoints.down(490)]: {
+    flexDirection: "column",
+    height: "max-content",
+    padding: "11px 0"
+  }
 }));
 
 const StyledSearch = styled(OutlinedInput)(({ theme }: any) => ({
@@ -49,6 +54,9 @@ const StyledDateRangePicker = styled(DateRangePicker)(({ theme }) => ({
     '& svg': {
       marginTop:5,
       fontSize:16,
+    },
+    [theme.breakpoints.down(490)]: {
+        marginTop: "10px"
     }
     
 }));
