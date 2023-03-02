@@ -40,11 +40,15 @@ const StyledSearch = styled(OutlinedInput)(({ theme }: any) => ({
 const StyledDateRangePicker = styled(DateRangePicker)(({ theme }) => ({
     width:250,
     minWidth:20,
-    '& span': {
+     '& span': {
       '& svg': {
         marginTop:10,
         fontSize:16,
       }
+    },
+    '& svg': {
+      marginTop:5,
+      fontSize:16,
     }
     
 }));
@@ -100,7 +104,7 @@ export default function ListToolbar({numSelected,filterName,onFilterName,setDayT
         placeholder="Select date-date..."
         format="dd/MM/yyyy"
         onChange={handleSelect}
-        caretAs={()=><CalendarMonthIcon sx={{color:"gray", fontSize:21}}/>}
+        //caretAs={()=><CalendarMonthIcon sx={{color:"gray", fontSize:21}}/>}
         defaultValue={[startOfDay(new Date()), endOfDay(new Date())]}
         caretPlacement="right"
         showOneCalendar
