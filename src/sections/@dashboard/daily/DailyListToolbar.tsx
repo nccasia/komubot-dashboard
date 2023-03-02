@@ -31,14 +31,10 @@ const StyledRoot = styled(Toolbar)(({ theme }) => ({
   }
 }));
 const StyledDateRangePicker = styled(DateRangePicker)(({ theme }) => ({
-  // styles for larger screens
-  '& span': {
     '& svg': {
-      marginTop:10,
+      marginTop:5,
       fontSize:16,
-    }
-  },
-
+    },
   [theme.breakpoints.down(490)]: {
     // styles for smaller screens
       marginTop: "10px"
@@ -108,6 +104,7 @@ export default function DailyListToolbar({
         format="dd/MM/yyyy"
         onChange={handleSelect}
         showOneCalendar
+        cleanable={false}
         defaultValue={[startOfDay(new Date()), endOfDay(new Date())]}
     
       />
