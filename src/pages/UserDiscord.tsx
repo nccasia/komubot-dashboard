@@ -269,7 +269,7 @@ export default function UserDiscord() {
 
                       <TableCell align="left">
                         <Label
-                          color={deactive ? "success" : "error"}
+                          color={deactive ? "error" : "success"}
                           disableAnimation={deactive}
                         >
                           {deactive? "deactive":"active"}
