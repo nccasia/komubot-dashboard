@@ -38,6 +38,7 @@ import { filterMessages } from '../api/messageApi/messageApi';
 import { endOfDay, startOfDay } from "date-fns";
 import { rowPage, rowPageMessage } from '../utils/rowPage';
 import {getComparator,applySortFilter} from "../utils/applySortFilter"
+import UserToolbar from '../sections/@dashboard/meeting/UserToolbar';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
@@ -165,7 +166,7 @@ export default function Message() {
         </Stack>
 
         <Card>
-          <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
+          <UserToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
 
           {/* <Scrollbar sx={{}}> */}
             <TableContainer sx={{ minWidth: 800 }}>
