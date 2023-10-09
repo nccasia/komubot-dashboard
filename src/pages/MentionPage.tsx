@@ -101,7 +101,7 @@ export default function MentionPage() {
                         setFilter={setType}
                         setDayTime={setDayTime}
                         label="Type"
-                        placeholder="Search by email..."
+                        placeholder="Search by author, mention..."
                     />
                     <Scrollbar>                    
                         <Table>
