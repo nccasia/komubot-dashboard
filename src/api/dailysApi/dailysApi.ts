@@ -1,36 +1,27 @@
 import { apiAxios, dailyLink } from "../../axios/apiAxios";
-type FilterParams = {
-  page?: number;
-  size?: number;
-  email?: string;
-  startDay?:number;
-  endDay?:number;
-};
-export const getDailys = async () => {
+import { FilterParams } from "../../interface/interface";
+
+export const filterDailys = async (index: FilterParams, setLoading: (isLoading: boolean) => void) => {
   try {
-    const res = await apiAxios.get(dailyLink);
-    return res.data.content;
-  } catch (error) {
-    console.error(error);
-    return [];
-  }
-};
-export const filterDailys = async (filters?: FilterParams) => {
-  try {
-    let queryParams = "";
-    if (filters) {
-      const { page, size, email,endDay,startDay } = filters;
-      if (page) queryParams += `&page=${page}`;
-      if (size) queryParams += `&size=${size}`;
-      if (email) queryParams += `&email=${email}`;
-      if (startDay) queryParams += `&from=${startDay}`;
-      if (endDay) queryParams += `&to=${endDay}`;
-      if (queryParams) queryParams = `?${queryParams.substr(1)}`;
+    setLoading(true); 
+    let queryParams = `?&page=${index.page}&size=${index.size}`;
+    if (index.to && index.from) {
+      queryParams += `&from=${index.from}&to=${index.to}`;
     }
+    if(index.email){
+      queryParams +=`&email=${index.email}`;
+    }  
+    if(index.filter){
+      queryParams +=`&filter=${index.filter}`;
+    } 
+    if(index.sort){
+      queryParams +=`&sort=${index.sort}`;
+    }  
     const res = await apiAxios.get(dailyLink + queryParams);
+    setLoading(false); 
     return res.data;
   } catch (error) {
-    console.error(error);
+    setLoading(false); 
     return [];
   }
 };

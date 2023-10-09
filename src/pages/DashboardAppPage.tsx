@@ -13,19 +13,17 @@ import {
 } from "../sections/@dashboard/app";
 import { useFetchDashboard } from "./../hooks/useFetchDashboard";
 
-// ----------------------------------------------------------------------
-
 export default function DashboardAppPage() {
   const theme: any = useTheme();
   const navigate = useNavigate();
-  const { report, reportMsgMonthly, reportMsgToday } = useFetchDashboard();
+  const { report, reportMsgMonthly, reportMsgToday, reportRoleType, reportRoomType } = useFetchDashboard();
 
   useEffect(() => {
     const isLoggedIn = localStorage.getItem("token");
     if (!isLoggedIn) {
       navigate("/login", { replace: true });
     }
-  }, []);
+  }, [navigate]);
 
   return (
     <>
@@ -37,6 +35,15 @@ export default function DashboardAppPage() {
           Hi, Welcome back
         </Typography>
 
+        <p 
+          style={{ 
+            margin: "15px 0 15px 10px",
+            fontWeight: 600,
+            textDecoration: "underline",
+          }}
+        >
+          Dashboard
+        </p>
         <Grid container spacing={3}>
           <Grid
             onClick={() =>
@@ -103,7 +110,68 @@ export default function DashboardAppPage() {
               icon={"fluent:channel-alert-16-filled"}
             />
           </Grid>
+        </Grid>
 
+        <p 
+          style={{ 
+            margin: "15px 0 15px 10px",
+            fontWeight: 600,
+            textDecoration: "underline",
+          }}
+        > 
+          Role
+        </p>
+        <Grid container spacing={3}>
+            {reportRoomType ? reportRoomType.map((item: any, index: number) => {
+              return(
+                <Grid item xs={12} sm={6} md={3} lg={4} key={index}>
+                  <AppWidgetSummary
+                    sx={{ cursor: "pointer" }}
+                    title={item?.name}
+                    total={item?.total}
+                    color={item?.name ==="PM" ? "error" : item?.name === "STAFF" ?"warning" : "info"}
+                    icon={"mdi:account-circle"}
+                  />
+                </Grid >
+              )
+            }): null}
+        </Grid>
+
+        <p 
+          style={{ 
+            margin: "15px 0 15px 10px",
+            fontWeight: 600,
+            textDecoration: "underline",
+          }}
+        > 
+          Room
+        </p>
+        <Grid container spacing={4}>
+            {reportRoleType ? reportRoleType.map((item: any, index: number) => {
+              return(
+                <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+                  <AppWidgetSummary
+                    sx={{ cursor: "pointer" }}
+                    title={item?.name}
+                    total={item?.total}
+                    color={ index% 3 ===0  ? "warning" : index % 3 === 1? "error" : "info"}
+                    icon={"mdi:bank"}
+                  />
+                </Grid >
+              )
+            }): null}
+        </Grid>
+
+        <p  
+          style={{ 
+            margin: "15px 0 15px 10px",
+            fontWeight: 600,
+            textDecoration: "underline",
+          }}
+        >
+          Active
+        </p>
+        <Grid container spacing={3}>
           <Grid item xs={12} md={6} lg={4}>
             <AppCurrentVisits
               title="Total message today"

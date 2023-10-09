@@ -7,15 +7,11 @@ import {
   InputAdornment, Link,
   Stack, TextField
 } from "@mui/material";
-import { KeyboardEvent } from "react";
 import FormControlLabel from "@mui/material/FormControlLabel";
 // components
 import Iconify from "../../../components/iconify";
 import { Author } from "./../../../interface/interface";
-import { setAccessToken } from './../../../utils/localStorerage';
 import { Login } from "../../../api/authApi/authApi";
-
-// ----------------------------------------------------------------------
 
 export default function LoginForm() {
   const navigate = useNavigate();

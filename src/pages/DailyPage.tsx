@@ -1,46 +1,43 @@
 import { useEffect, useState } from "react";
 // @mui
 import {
-  Avatar, Card, Container, IconButton, Paper, Stack, Table, TableBody,
-  TableCell, TableContainer,
+  Avatar, Card, CircularProgress, Container, IconButton, Paper, Stack, Table, TableBody,
+  TableCell,
   TablePagination, TableRow, Tooltip, Typography
 } from "@mui/material";
-// components
 import Iconify from "../components/iconify";
-// sections
-import { DailyListHead, DailyListToolbar } from "../sections/@dashboard/daily";
-// mock
-// import DailyListHead from './../sections/@dashboard/daily/DailyListHead';
+import { DailyListToolbar } from "../sections/@dashboard/daily";
 import { useDebounce } from 'use-debounce';
 import { filterDailys } from "../api/dailysApi/dailysApi";
-import { dailystype } from "../interface/interface";
+import { DayTime, dailystype } from "../interface/interface";
 import UserDetailsModal from "../sections/@dashboard/daily/DailyDetailsModal";
 import { formatDateTime } from './../utils/formatDateTime';
 import { endOfDay, startOfDay } from "date-fns";
 import {rowPage} from "../utils/rowPage"
 import { Helmet } from "react-helmet-async";
-// ----------------------------------------------------------------------
+import TableHeader from '../components/table/TableHeader';
+import Scrollbar from "../components/scrollbar/Scrollbar";
 
 const TABLE_HEAD = [
   { id: "name", label: "Name", alignRight: false },
   { id: "Daily", label: "Daily", alignRight: false },
   { id: "Channel", label: "Channel", alignRight: false },
-  { id: "Time", label: "Time", alignRight: false },
+  { id: "Time", label: "Time", alignRight: false, sort: true },
   { id: "Detail", label: "Detail", alignRight: false },
 
 ];
-
-// ----------------------------------------------------------------------
 
 export default function DailyPage() {
 
   const [page, setPage] = useState<number>(0);
 
-  const [startDay,setStartDay] =useState(startOfDay(new Date()).getTime());
-
-  const [endDay,setEndDay] =useState(endOfDay(new Date()).getTime());
+  const [daytime, setDayTime] = useState<DayTime>({
+    startDay:Number(startOfDay(new Date())),
+    endDay :Number(endOfDay(new Date())),
+  });
 
   const [filterName, setFilterName] = useState<string>('');
+  const [filterDaily, setFilterDaily] = useState<string>('All');
 
   const [totalPage, setTotalPage] = useState<number>(0)
 
@@ -67,17 +64,25 @@ export default function DailyPage() {
   };
 
   const isNotFound = !dailys.length && !!filterName;
-
-  //call api
+  const [sort, setSort] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
   useEffect(() => {
     const fetch = async () => {
-      const dailysData = await filterDailys({ size: rowsPerPage, page:page+1, email: debounce,startDay,endDay });
+      const dailysData = await filterDailys({ 
+        size: rowsPerPage, 
+        page:page+1, 
+        email: debounce,
+        from:daytime? daytime.startDay : 0,
+        to:daytime? daytime.endDay : 0,
+        filter: filterDaily,
+        sort: sort ? "DESC" : "ASC", 
+      }, setLoading);
       const { content, pageable } = dailysData
       setTotalPage(pageable.total)
       setDailys(content);
     };
     fetch();
-  }, [page, rowsPerPage, debounce,startDay,endDay]);
+  }, [page, rowsPerPage, debounce, daytime, filterDaily, sort]);
 
   return (
     <>
@@ -101,26 +106,32 @@ export default function DailyPage() {
           <DailyListToolbar
             filterName={filterName}
             onFilterName={handleFilterByName}
-            setPage={setPage}
-            setStartDay={setStartDay}
-            setEndDay ={setEndDay}
+            setDayTime={setDayTime}
+            filter={filterDaily}
+            setFilter={setFilterDaily}
+            label="Daily"
+            placeholder="Search by name..."
           />
-          <TableContainer sx={{ overflowX:'auto'}}>
+          <Scrollbar>
             <Table>
-              <DailyListHead headLabel={TABLE_HEAD}/>
+              <TableHeader 
+                headLabel={TABLE_HEAD}
+                sort={sort}
+                setSort={setSort}
+              />
               <TableBody>
-                {dailys.map((row: dailystype) => {
-                  const {
-                    daily,
-                    email,
-                    channelFullName,
-                    createdAt,
-                    id } = row;
-
+                {loading?                                  
+                  <TableRow >
+                      <TableCell align="center" colSpan={TABLE_HEAD.length}>  
+                          <CircularProgress sx={{color:'#80808085'}}/>
+                      </TableCell>  
+                  </TableRow>                             
+                :null}
+                {!loading && dailys ? dailys.map((row: dailystype, index: number) => {
                   return (
                     <TableRow
                       hover
-                      key={id}
+                      key={index}
                       tabIndex={-1}
                      
                     >
@@ -130,9 +141,9 @@ export default function DailyPage() {
                           alignItems="center"
                           spacing={2}
                         >
-                          <Avatar alt={email} src={email} />
+                          <Avatar alt={row?.email} src={`https://cdn.discordapp.com/avatars/${ row?.userid}/${row?.avatar}`} />
                           <Typography variant="subtitle2" noWrap>
-                            {email}
+                            {row?.email}
                           </Typography>
                         </Stack>
                       </TableCell>
@@ -151,29 +162,30 @@ export default function DailyPage() {
                               textOverflow: 'ellipsis',
                             }}
                           >
-                            {daily}
+                            {row?.daily}
                           </Typography>
                         </TableCell>
                       </Tooltip>
-                      <TableCell align="left">{channelFullName}</TableCell>
+                      <TableCell align="left">{row?.channelFullName}</TableCell>
 
-                      <TableCell align="left">{formatDateTime(createdAt)}</TableCell>
+                      <TableCell align="left">{filterDaily !== 'Not' ? formatDateTime(row?.createdAt) : null}</TableCell>
 
                       <TableCell align="right">
-                        <IconButton
-                          size="large"
+                        {filterDaily !== 'Not' && (
+                          <IconButton
+                            size="large"
 
-                          color="inherit"
-                          onClick={() => setSelectedUser(row)}
-                        >
-                          <Iconify icon={"bi:info-circle-fill"} />
-                        </IconButton>
+                            color="inherit"
+                            onClick={() => setSelectedUser(row)}
+                          >
+                            <Iconify icon={"bi:info-circle-fill"} />
+                          </IconButton>
+                        )}
                       </TableCell>
 
                     </TableRow>
                   );
-                })}
-
+                }): null}
               </TableBody>
 
               {isNotFound && (
@@ -200,8 +212,7 @@ export default function DailyPage() {
                 </TableBody>
               )}
             </Table>
-          </TableContainer>
-          {/* </Scrollbar> */}
+          </Scrollbar>
 
           <TablePagination
             rowsPerPageOptions={rowPage(totalPage)}
@@ -214,8 +225,6 @@ export default function DailyPage() {
           />
         </Card>
       </Container>
-
-
       <UserDetailsModal user={selectedUser} onClose={() => setSelectedUser(null)} />
     </>
   );

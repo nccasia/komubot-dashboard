@@ -1,7 +1,3 @@
-type RowPage = {
-    id: number;
-    main: number[];
-  };
 export function rowPage(index:number){
 
     if(index<100){

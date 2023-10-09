@@ -1,5 +1,4 @@
 import axios, { AxiosError } from "axios";
-import { apiAxios } from "../../axios/apiAxios";
 import { Author } from "../../interface/interface";
 import { setAccessToken } from "../../utils/localStorerage";
 import { notyf } from "../../utils/notif";
@@ -11,7 +10,7 @@ interface ErrorResponse {
 }
 export const Login = async (values: Author): Promise<string> => {
   try {
-    const res = await axios.post(`http://10.10.20.18:3001/auth/login`, {
+    const res = await axios.post(`${process.env.REACT_APP_API_URL}auth/login`, {
       ...values,
     });
     const token = res.data.accessToken;
@@ -38,7 +37,7 @@ export const Login = async (values: Author): Promise<string> => {
 };
 export const loginWithGoogle = async (tokenId: string): Promise<string> => {
   try {
-    const res = await axios.post(`http://10.10.20.18:3001/auth/google`, {
+    const res = await axios.post(`${process.env.REACT_APP_API_URL}auth/google`, {
      tokenId
     });
     const token = res.data.accessToken;

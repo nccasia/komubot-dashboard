@@ -1,113 +1,90 @@
 import PropTypes from "prop-types";
-// @mui
-import { alpha, styled } from "@mui/material/styles";
-
-import {
-  InputAdornment,
-  OutlinedInput,
-  Toolbar,
-} from "@mui/material";
-// component
-import "rsuite/dist/rsuite.min.css";
-import Iconify from "../../../components/iconify";
-
+import { styled } from "@mui/material/styles";
+import { Grid, Toolbar } from "@mui/material";
 import { endOfDay, startOfDay } from "date-fns";
 import React from "react";
-import { DateRangePicker } from "rsuite";
-import { DateRange } from "rsuite/esm/DateRangePicker/types";
-// ----------------------------------------------------------------------
+import { TextDatePicker, TextInputMenu, TextInputSearch,  } from "../../../components/input";
 
 const StyledRoot = styled(Toolbar)(({ theme }) => ({
-  height: 96,
-  display: "flex",
-  justifyContent: "space-between",
-  padding: theme.spacing(0, 1, 0, 3),
-  
-  // Add media query for screen width less than 490px
-  [theme.breakpoints.down(490)]: {
-    flexDirection: "column",
-    height: "max-content",
-    padding: "11px 0"
-  }
+  padding: 25,
 }));
-const StyledDateRangePicker = styled(DateRangePicker)(({ theme }) => ({
-    '& svg': {
-      marginTop:5,
-      fontSize:16,
-    },
-  [theme.breakpoints.down(490)]: {
-    // styles for smaller screens
-      marginTop: "10px"
-  }
-}));
-const StyledSearch = styled(OutlinedInput)(({ theme }: any) => ({
-  width: 240,
-  transition: theme.transitions.create(["box-shadow", "width"], {
-    easing: theme.transitions.easing.easeInOut,
-    duration: theme.transitions.duration.shorter,
-  }),
-  "&.Mui-focused": {
-    width: 320,
-    boxShadow: theme.customShadows.z8,
-  },
-  "& fieldset": {
-    borderWidth: `1px !important`,
-    borderColor: `${alpha(theme.palette.grey[500], 0.32)} !important`,
-  },
-}));
-
-// ----------------------------------------------------------------------
 
 DailyListToolbar.propTypes = {
   filterName: PropTypes.string.isRequired,
   onFilterName: PropTypes.func.isRequired,
-  setPage: PropTypes.func.isRequired,
-  setStartDay: PropTypes.func.isRequired,
-  setEndDay: PropTypes.func.isRequired,
+  setDayTime: PropTypes.func.isRequired,
+  setFilter:PropTypes.func.isRequired,
+  filter: PropTypes.string.isRequired,
+  placeholder: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
 };
+
+const listFilterDaily = [
+  {
+    value: 'All',
+    label: 'All',
+  },
+  {
+    value: 'Early',
+    label: 'Early Daily, before 7:30 AM',
+  },
+  {
+    value: 'Late',
+    label: 'Late Daily, before 5:00 PM',
+  },
+  {
+    value: 'Not',
+    label: 'Not Daily',
+  },
+];
 
 export default function DailyListToolbar({
   filterName,
   onFilterName,
-  setPage,
-  setStartDay,
-  setEndDay,
+  setDayTime,
+  filter,
+  setFilter,
+  placeholder,
+  label
 }: PropTypes.InferProps<typeof DailyListToolbar.propTypes>) {
   async function handleSelect(
-    value: DateRange | null,
+    value: Date | null,
     event: React.SyntheticEvent<Element, Event>
   ) {
     if (value) {
-      setStartDay(startOfDay(value?.[0]).getTime());
-      setEndDay(endOfDay(value?.[1]).getTime());
-      setPage(0);
+      const startDay = startOfDay(value).getTime();
+      const endDay = endOfDay(value).getTime();
+      setDayTime({startDay:startDay, endDay:endDay});
+    }
+    else{
+      setDayTime(null);
     }
   }
 
   return (
     <StyledRoot>
-      <StyledSearch
-        value={filterName}
-        onChange={onFilterName}
-        placeholder="Search by name..."
-        startAdornment={
-          <InputAdornment position="start">
-            <Iconify
-              icon="eva:search-fill"
-              sx={{ color: "text.disabled", width: 20, height: 20 }}
-            />
-          </InputAdornment>
-        }
-      />
-
-      <StyledDateRangePicker
-        format="dd/MM/yyyy"
-        onChange={handleSelect}
-        showOneCalendar
-        cleanable={false}
-        defaultValue={[startOfDay(new Date()), endOfDay(new Date())]}
-    
-      />
+      <Grid container spacing={3} >
+        <Grid item xs={12} sm={12} md={4}>
+          <TextInputSearch
+            filterName={filterName}
+            onFilterName={onFilterName}
+            placeholder={placeholder}
+          />
+        </Grid>
+        <Grid item xs={12} sm={12} md={4}>
+          <TextInputMenu
+            filterDaily={filter}
+            setFilterDaily={setFilter}
+            list={listFilterDaily}
+            label={label}
+          />
+        </Grid>
+        <Grid item xs={12} sm={12} md={4}>
+          <TextDatePicker
+            handleSelect={handleSelect}
+          />
+        </Grid>
+      </Grid>
     </StyledRoot>
   );
 }

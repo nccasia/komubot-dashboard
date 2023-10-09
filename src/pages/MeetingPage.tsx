@@ -10,25 +10,23 @@ import {
     TableCell,
     Container,
     Typography,
-    TableContainer,
     TablePagination,
     CircularProgress,
     Paper,
 } from '@mui/material';
 import Scrollbar from '../components/scrollbar';
 import Label from '../components/label';
-import ListHead from '../sections/@dashboard/meeting/ListHead';
-import ListToolbar from '../sections/@dashboard/meeting/ListToolbar';
 import {DayTime,MeetingFace} from "../interface/interface"
-import Moment from "moment";
 import {getMeeting} from "../api/meetingApi/meetingApi"
 import {rowPage} from "../utils/rowPage";
 import { useDebounce } from "../utils/useDebounce"
 import { endOfDay, startOfDay } from "date-fns";
-import {getComparator,applySortFilter} from "../utils/applySortFilter"
+import TableHeader from '../components/table/TableHeader';
+import { formatDateTime } from '../utils/formatDateTime';
+import TableTool from '../components/table/TableTool';
 
 const TABLE_HEAD = [
-    { id: 'createdTimestamp', label: 'Created Time', alignRight: false },
+    { id: 'createdTimestamp', label: 'Time', alignRight: false, sort: true },
     { id: 'task', label: 'Task', alignRight: false },
     { id: 'repeat', label: 'Repeat', alignRight: false },
     { id: 'repeatTime', label: 'Repeat Time', alignRight: false },
@@ -37,10 +35,6 @@ const TABLE_HEAD = [
 ];
 
 export default function MeetingPage() {
-    const [order, setOrder] = useState('asc');
-    const [selected, setSelected] = useState<any>([]);
-    const [orderBy, setOrderBy] = useState('id');
-
     const [filterName, setFilterName] = useState('');
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -52,34 +46,21 @@ export default function MeetingPage() {
     });
     const debounce=useDebounce(filterName.trim(), 900);
     const [loading, setLoading] = useState<boolean>(true);
+    const [sort, setSort] = useState<boolean>(false);
     React.useEffect(()=>{
         getMeeting({
-            page:page+1,
-            size:rowsPerPage,
-            task:debounce,
-            from:daytime?daytime.startDay:0,
-            to:daytime?daytime.endDay:0,
+            page: page+1,
+            size: rowsPerPage,
+            task: debounce,
+            from: daytime ? daytime.startDay : 0,
+            to: daytime ? daytime.endDay : 0,
+            sort: sort ? "DESC" : "ASC", 
         },setLoading)
         .then(data=>{
             setMeeting(data.content);
             setLength(data.pageable.total)
         });
-    },[daytime,page,rowsPerPage,debounce]);
-
-    const handleRequestSort = (event: any, property: string) => {
-        const isAsc = orderBy === property && order === 'asc';
-        setOrder(isAsc ? 'desc' : 'asc');
-        setOrderBy(property);
-    };
-
-    const handleSelectAllClick = (event: any) => {
-        if (event.target.checked) {
-            const newSelecteds: any = meeting.map((n: MeetingFace) => n.id);
-            setSelected(newSelecteds);
-            return;
-        }
-        setSelected([]);
-    };
+    },[daytime, page, rowsPerPage, debounce, sort]);
 
     const handleChangePage = (event: any, newPage: number) => {
         setPage(newPage);
@@ -94,9 +75,7 @@ export default function MeetingPage() {
         setPage(0);
         setFilterName(event.target.value);
     };
-
-    const filteredUsers = applySortFilter(meeting, getComparator(order, orderBy));
-    const isNotFound = !filteredUsers.length && !!filterName;
+    const isNotFound = !meeting.length && !!filterName;
 
     return (
         <>
@@ -111,75 +90,68 @@ export default function MeetingPage() {
                 </Stack>
 
                 <Card>
-                    <ListToolbar 
-                        numSelected={selected.length} 
+                    <TableTool
                         filterName={filterName} 
                         onFilterName={handleFilterByName} 
                         setDayTime={setDayTime} 
-                        searchText="Search by Task..."
+                        searchText="Search by task..."
                     />
 
                     <Scrollbar>
-                        <TableContainer >
-                            <Table>
-                                <ListHead
-                                    order={order}
-                                    orderBy={orderBy}
-                                    headLabel={TABLE_HEAD}
-                                    rowCount={meeting.length}
-                                    numSelected={selected.length}
-                                    onRequestSort={handleRequestSort}
-                                    onSelectAllClick={handleSelectAllClick}
-                                />
+                        <Table>
+                            <TableHeader 
+                                headLabel={TABLE_HEAD}
+                                sort={sort}
+                                setSort={setSort}
+                            />
+                            <TableBody>
+                                {loading?                                  
+                                    <TableRow >
+                                        <TableCell align="center" colSpan={TABLE_HEAD.length}>  
+                                            <CircularProgress sx={{color:'#80808085'}}/>
+                                        </TableCell>  
+                                    </TableRow>                             
+                                :null}
+
+                                {meeting && !loading ? meeting.map((row: MeetingFace) => {
+                                    return (
+                                        <TableRow hover key={Number(row.id)}>
+                                            <TableCell align="left">{formatDateTime(String(row.createdTimestamp))}</TableCell>
+                                            <TableCell align="left"><b>{row.task}</b></TableCell>
+                                            <TableCell align="left">{row.repeat}</TableCell>
+                                            <TableCell align="left">{row.repeatTime}</TableCell>
+                                            <TableCell align="left">{row.channelFullName}</TableCell>
+                                            <TableCell align="left">
+                                                <Label color={row.cancel?'success':'error'}>{String(row.cancel)}</Label>
+                                            </TableCell>
+                                        </TableRow>
+                                    );
+                                }):null}
+                            </TableBody>
+                            {isNotFound && (
                                 <TableBody>
-                                    {loading?                                  
-                                        <TableRow >
-                                            <TableCell align="center" colSpan={TABLE_HEAD.length}>  
-                                                <CircularProgress sx={{color:'#80808085'}}/>
-                                            </TableCell>  
-                                        </TableRow>                             
-                                    :null}
+                                <TableRow>
+                                    <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
+                                    <Paper
+                                        sx={{
+                                        textAlign: "center",
+                                        }}
+                                    >
+                                        <Typography variant="h6" paragraph>
+                                        Not found
+                                        </Typography>
 
-                                    {filteredUsers && !loading?filteredUsers.map((row: MeetingFace) => {
-                                        return (
-                                            <TableRow hover key={Number(row.id)}>
-                                                <TableCell align="left">{Moment(Number(row.createdTimestamp)).format('HH:MM DD/MM/YYYY ')}</TableCell>
-                                                <TableCell align="left"><b>{row.task}</b></TableCell>
-                                                <TableCell align="left">{row.repeat}</TableCell>
-                                                <TableCell align="left">{row.repeatTime}</TableCell>
-                                                <TableCell align="left">{row.channelFullName}</TableCell>
-                                                <TableCell align="left">
-                                                    <Label color={row.cancel?'success':'error'}>{String(row.cancel)}</Label>
-                                                </TableCell>
-                                            </TableRow>
-                                        );
-                                    }):null}
+                                        <Typography variant="body2">
+                                        No results found for &nbsp;
+                                        <strong>&quot;{filterName}&quot;</strong>.
+                                        <br /> Try checking for typos or using complete words.
+                                        </Typography>
+                                    </Paper>
+                                    </TableCell>
+                                </TableRow>
                                 </TableBody>
-                                {isNotFound && (
-                                    <TableBody>
-                                    <TableRow>
-                                        <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
-                                        <Paper
-                                            sx={{
-                                            textAlign: "center",
-                                            }}
-                                        >
-                                            <Typography variant="h6" paragraph>
-                                            Not found
-                                            </Typography>
-
-                                            <Typography variant="body2">
-                                            No results found for &nbsp;
-                                            <strong>&quot;{filterName}&quot;</strong>.
-                                            <br /> Try checking for typos or using complete words.
-                                            </Typography>
-                                        </Paper>
-                                        </TableCell>
-                                    </TableRow>
-                                    </TableBody>
-                                )}
-                            </Table>
-                        </TableContainer>
+                            )}
+                        </Table>
                     </Scrollbar>
                     <TablePagination
                         rowsPerPageOptions={rowPage(length)}

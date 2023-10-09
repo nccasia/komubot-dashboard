@@ -1,22 +1,16 @@
 import { Navigate, useRoutes } from 'react-router-dom';
-// layouts
 import DashboardLayout from './layouts/dashboard';
 import SimpleLayout from './layouts/simple';
-//
-import BlogPage from './pages/BlogPage';
-import UserPage from './pages/UserPage';
 import ChannelPage from './pages/ChannelPage';
 import LoginPage from './pages/LoginPage';
 import MeetingPage from './pages/MeetingPage';
 import Page404 from './pages/Page404';
-import ProductsPage from './pages/ProductsPage';
 import DashboardAppPage from './pages/DashboardAppPage';
 import UserDiscord from './pages/UserDiscord';
 import DailyPage from './pages/DailyPage';
 import Penalty from './pages/Penalty';
 import Message from './pages/MessageChannel';
-
-// ----------------------------------------------------------------------
+import MentionPage from './pages/MentionPage';
 
 export default function Router() {
   const token = localStorage.getItem('token');
@@ -28,15 +22,13 @@ export default function Router() {
       children: [
         { element: <Navigate to="/dashboard/app" />, index: true },
         { path: 'app', element: <DashboardAppPage /> },
-        { path: 'user', element: <UserPage /> },
         { path: 'channel', element: <ChannelPage /> },
         { path: 'meeting', element: <MeetingPage /> },
-        { path: 'userdiscord', element: <UserDiscord /> },
+        { path: 'users', element: <UserDiscord /> },
         { path: 'penalty', element: <Penalty /> },
         { path: 'message', element: <Message /> },
-        { path: 'products', element: <ProductsPage /> },
-        { path: 'blog', element: <BlogPage /> },
         { path: 'daily', element: <DailyPage /> },
+        { path: 'mention', element: <MentionPage /> },
       ],
     },
     {

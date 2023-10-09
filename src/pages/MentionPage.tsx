@@ -13,49 +13,57 @@ import {
     TablePagination,
     CircularProgress,
     Paper,
-    Button,
-    Menu,
-    MenuItem,
 } from '@mui/material';
 import Scrollbar from '../components/scrollbar';
 import { useDebounce } from "../utils/useDebounce"
 import { rowPage } from "../utils/rowPage"
-import {ChannelFace} from "../interface/interface"
-import {getChannel} from "../api/channelApi/channelApi"
-import { DialogView, ToolHeader } from "../sections/@dashboard/channel";
+import { DayTime, MentionFace } from "../interface/interface"
+import { getMention } from "../api/mentionApi/appApi";
 import TableHeader from '../components/table/TableHeader';
-import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
+import { formatDateTime } from '../utils/formatDateTime';
+import Label from "../components/label";
+import { endOfDay, startOfDay } from "date-fns";
+import { DailyListToolbar } from '../sections/@dashboard/daily';
 
 const TABLE_HEAD = [
     { id: 'id', label: 'Id', alignRight: false },
-    { id: 'name', label: 'Name', alignRight: false, sort: true },
+    { id: 'author', label: 'Author', alignRight: false },
+    { id: 'mention', label: 'Mention', alignRight: false },
+    { id: 'channel', label: 'Channel', alignRight: false },
+    { id: 'time', label: 'Time', alignRight: false, sort: true },
+    { id: 'reaction', label: 'Reaction', alignRight: false },
     { id: 'type', label: 'Type', alignRight: false },
-    { id: 'action', label: 'Action', alignRight: false },
 ];
 
-export default function ChannelPage() {
+export default function MentionPage() {
     const [filterName, setFilterName] = useState('');
-    const [channel, setChannel] = useState<ChannelFace[]>([]);
-    const [channellength, setChannelLength] = useState<number>(0);
+    const [mention, setMention] = useState<MentionFace[]>([]);
+    const [mentionlength, setMentionLength] = useState<number>(0);
     const [page, setPage] = useState<number>(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const debounce=useDebounce(filterName.trim(), 900);
     const [loading, setLoading] = useState<boolean>(false);
     const [type, setType] = useState<string>("All");
+    const [daytime, setDayTime] = useState<DayTime>({
+        startDay:Number(startOfDay(new Date())),
+        endDay :Number(endOfDay(new Date())),
+    });
     const [sort, setSort] = useState<boolean>(false);
     React.useEffect(()=>{ 
-        getChannel({
+        getMention({
             page:page+1, 
-            size:rowsPerPage, 
-            name:debounce, 
-            type: type,
+            size:rowsPerPage,
             sort: sort ? "DESC" : "ASC", 
+            type: type === "All" ? "" : type === "Punish" ? false : true,
+            from:daytime? daytime.startDay : null,
+            to:daytime? daytime.endDay : null,
+            name: debounce,
         },setLoading)
         .then(data=> {
-            setChannel(data.content);
-            setChannelLength(data.pageable.total)
+            setMention(data.content);
+            setMentionLength(data.pageable.total)
         })
-    },[page, rowsPerPage, debounce, type, sort]);
+    },[page, rowsPerPage, debounce, type, daytime, sort]);
 
     const handleChangePage = (event: any, newPage: number) => {
         setPage(newPage);
@@ -70,43 +78,32 @@ export default function ChannelPage() {
         setPage(0);
         setFilterName(event.target.value);
     };
-    const isNotFound = !channel.length && !!filterName;
+    const isNotFound = !mention.length && !!filterName;
 
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const [anchorElOpen, setAnchorElOpen] = useState<null | string>(null);
-    const openEl = Boolean(anchorEl);
-    const handleClick = (event: React.MouseEvent<HTMLButtonElement>, userId: string | null) => {
-        setAnchorElOpen(userId);
-        setAnchorEl(event.currentTarget);
-    };
-
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
-    const [openView, setOpenView] = useState<string | null>(null);
 
     return (
         <>
             <Helmet>
-                <title> Channel | Komu Dashboard </title>
+                <title> Mention | Komu Dashboard </title>
             </Helmet>
-
             <Container>
                 <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
                     <Typography variant="h4" gutterBottom>
-                        Channel
+                        Mention
                     </Typography>
                 </Stack>
-
-                <Card>
-                    <ToolHeader 
+               
+                <Card>         
+                    <DailyListToolbar 
                         filterName={filterName} 
                         onFilterName={handleFilterByName} 
-                        type={type}
-                        setType={setType}
+                        filter={type}
+                        setFilter={setType}
+                        setDayTime={setDayTime}
+                        label="Type"
+                        placeholder="Search by email..."
                     />
-
-                    <Scrollbar>
+                    <Scrollbar>                    
                         <Table>
                             <TableHeader 
                                 headLabel={TABLE_HEAD}
@@ -122,50 +119,19 @@ export default function ChannelPage() {
                                     </TableRow>                             
                                 :null}
 
-                                {channel && !loading ? channel.map((row: ChannelFace, index: number) => {
+                                {mention && !loading ? mention.map((row: MentionFace, index: number) => {
                                     return (
                                         <TableRow key={index}>           
                                             <TableCell align="left">{row.id}</TableCell>
-                                            <TableCell align="left"><b>{(row.name)}</b></TableCell>
-                                            <TableCell align="left">{row.type}</TableCell>  
+                                            <TableCell align="left"><b>{row.author}</b></TableCell>
+                                            <TableCell align="left"><b>{row.mention}</b></TableCell>    
+                                            <TableCell align="left">{row.channel}</TableCell>
+                                            <TableCell align="left">{formatDateTime(String(row.time))}</TableCell>
+                                            <TableCell align="left">{row.reaction ? formatDateTime(String(row.reaction)) : null}</TableCell>
                                             <TableCell align="left">
-                                                <Button
-                                                    id="basic-button"
-                                                    aria-controls={openEl ? 'basic-menu' : undefined}
-                                                    aria-haspopup="true"
-                                                    aria-expanded={openEl ? 'true' : undefined}
-                                                    variant="outlined"
-                                                    onClick={(event: React.MouseEvent<HTMLButtonElement>) => handleClick(event, row.id)}
-                                                >
-                                                    Action
-                                                </Button>
-                                                {row.id === anchorElOpen && (
-                                                    <Menu
-                                                        id="basic-menu"
-                                                        anchorEl={anchorEl}
-                                                        open={openEl}
-                                                        onClose={handleClose}
-                                                        MenuListProps={{
-                                                            'aria-labelledby': 'basic-button',
-                                                        }}
-                                                    >
-                                                        <MenuItem 
-                                                            sx={{
-                                                                display: 'flex',
-                                                                alignItems: 'center',
-                                                                gap: '5px',
-                                                                color: '#212b36c9',
-                                                            }}
-                                                            onClick={() => {
-                                                                setOpenView(row.id);
-                                                                setAnchorEl(null);
-                                                            }}
-                                                        >
-                                                            <RemoveRedEyeIcon />
-                                                            View Member
-                                                        </MenuItem>
-                                                    </Menu>
-                                                )}    
+                                                <Label color={row.confirm ? "success" : "error"}>
+                                                    {row.confirm ? "Spare" : "Punish"}
+                                                </Label>
                                             </TableCell>                                   
                                         </TableRow>
                                     );
@@ -196,26 +162,18 @@ export default function ChannelPage() {
                             )}
                         </Table>
                     </Scrollbar>
-
                     <TablePagination
-                        rowsPerPageOptions={rowPage(channellength)}
+                        rowsPerPageOptions={rowPage(mentionlength)}
                         component="div"
-                        count={channellength}
+                        count={mentionlength}
                         rowsPerPage={rowsPerPage}
                         page={page}
                         onPageChange={handleChangePage}
                         onRowsPerPageChange={handleChangeRowsPerPage}
                     />
                 </Card>
-                <DialogView 
-                    open={openView}
-                    setOpen={setOpenView}
-                    list={channel?.filter(item => item?.id === openView)}
-                />
+                
             </Container>
         </>
     );
 }
-
-
-

@@ -42,9 +42,7 @@ const StyledContent = styled("div")(({ theme }) => ({
   padding: theme.spacing(12, 0),
 }));
 
-// ----------------------------------------------------------------------
-const clientId =
-  "498168811060-ii509rnksf25l04drpgka1kjh0jgs14f.apps.googleusercontent.com";
+const clientId = String(process.env.REACT_APP_GOOGLE_CLIENT_ID);
 
 export default function LoginPage() {
   const navigate = useNavigate();

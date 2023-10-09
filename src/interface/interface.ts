@@ -12,8 +12,10 @@ export type dailystype = {
     dailyContent: string;
     createdAt: string;
     id: number;
-    userid: string;
+    userid?: string;
+    userId?: string;
     channelFullName:string;
+    avatar?: string;
   };
 
 //Meeting Page
@@ -27,7 +29,19 @@ export interface GetMeeting{
     task:string,
     to:number,
     from:number,
+    sort: string,
 }
+
+export interface PostMention{
+  page?:number,
+  size?:number,
+  sort?:string,
+  to?:number | null,
+  from?:number | null,
+  type?: boolean | string,
+  name?: string,
+}
+
 export interface MeetingFace{
   id:number,
   createdTimestamp:string,
@@ -45,6 +59,19 @@ export interface ChannelFace{
   type:string,
 }
 
+//Mention
+export interface MentionFace{
+  id: number,
+  author:string,
+  mention: string,
+  channel: string,
+  type:string,
+  time: number,
+  reaction: number,
+  confirm: boolean,
+  punish: boolean,
+}
+
 //dashBoard 
 export interface Report
 {
@@ -55,6 +82,7 @@ export interface Report
   totalChannel: number,
 }
 export interface reportMsgToday {
+  [x: string]: any;
   VINH: number;
   HANOI: number;
   HANOI2: number;
@@ -64,11 +92,46 @@ export interface reportMsgToday {
   SAIGON: number;
   SAIGON2: number;
 }
+
+export interface reportRoleType {
+  name: string;
+  total: number
+}
 export interface GetChannel{
   page:number,
   size:number,
   name?:string,
   deactive?: boolean | null,
+  type?: string,
+  sort?: string,
+}
+
+export interface GetChannelMember{
+  id?: string;
+  searchId?: string;
+}
+
+export interface PostRemoteMemberChannel{
+  channelId?: string;
+  userId?: string;
+}
+
+export interface GetUser{
+  page:number,
+  size:number,
+  name?:string,
+  deactive?: boolean | null,
+  roles: string[] | null,
+  sort: string,
+  server_deactive: boolean | null,
+}
+
+export interface PostEditUser{
+  userId: string;
+  username: string;
+  email: string;
+  roles: string[];
+  roles_discord: string[];
 }
 
   // message 
@@ -82,14 +145,14 @@ export interface Imessage{
 
  export interface Iuser{
   
-  avatar: string,
-  userId: string,
-  username: string,
-  email: string,
-  roles: Array<string>|null,
-  roles_discord: Array<string>|null,
+  avatar: string | null,
+  userId: string | null,
+  username: string | null,
+  email: string | null,
+  roles: Array<string> |null,
+  roles_discord: Array<string> |null,
   deactive: boolean,
-
+  server_deactive: boolean | null,
 }
 //Penalty
 export interface Ipenalty{
@@ -108,10 +171,28 @@ export interface GetPenalty{
   username:string,
   to:number,
   from:number,
-  // amountStart:number,
-  // amountEnd:number,
+  sort: string,
 }
 export interface Amount{
   max:string,
   min:string,
 }
+
+export type FilterParams = {
+  page?: number;
+  size?: number;
+  email?: string;
+  to?:number;
+  from?:number;
+  filter?: string;
+  sort?: string;
+};
+
+export type FilterParamsMessage = {
+  page?: number;
+  size?: number;
+  title?: string;
+  from?:number;
+  to?:number;
+  sort: string,
+};
