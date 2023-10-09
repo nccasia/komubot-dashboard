@@ -49,7 +49,7 @@ export default function ToolHeader({
           <TextInputSearch
             filterName={filterName}
             onFilterName={onFilterName}
-            placeholder="Search by email..."
+            placeholder="Search by name..."
           />
         </Grid>
         <Grid item md={4} display={{ xs: "none", sm: "none", md: "block" }}></Grid>
