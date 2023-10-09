@@ -1,6 +1,5 @@
 import {apiAxios, meetingLink} from '../../axios/apiAxios';
 import {GetMeeting} from "../../interface/interface"
-import { notyf } from "../../utils/notif"
 
 export const getMeeting= async (index:GetMeeting, setLoading: (isLoading: boolean) => void) => {
     try {   
@@ -12,11 +11,13 @@ export const getMeeting= async (index:GetMeeting, setLoading: (isLoading: boolea
         if(index.task){
             queryParams +=`&task=${index.task}`;
         }  
+        if(index.sort){
+            queryParams +=`&sort=${index.sort}`;
+        }  
         const res = await apiAxios.get(meetingLink+queryParams);
         setLoading(false);
         return res.data;
     } catch (error:any) {
         setLoading(false);
-        notyf.error(String(error.message));
     }
 };

@@ -1,91 +1,96 @@
+import React from 'react';
 import PropTypes from 'prop-types';
-// @mui
-import { styled, alpha } from '@mui/material/styles';
-import { Toolbar, Tooltip, IconButton, Typography, OutlinedInput, InputAdornment } from '@mui/material';
-// component
-import Iconify from '../../../components/iconify';
-
-// ----------------------------------------------------------------------
+import { styled } from '@mui/material/styles';
+import { Toolbar, Grid } from '@mui/material';
+import { TextInputMenu, TextInputSearch,  } from "../../../components/input";
 
 const StyledRoot = styled(Toolbar)(({ theme }) => ({
-  height: 96,
-  display: 'flex',
-  justifyContent: 'space-between',
-  padding: theme.spacing(0, 1, 0, 3),
+  padding: 25,
 }));
-
-const StyledSearch = styled(OutlinedInput)(({ theme }:any) => ({
-  width: 240,
-  transition: theme.transitions.create(['box-shadow', 'width'], {
-    easing: theme.transitions.easing.easeInOut,
-    duration: theme.transitions.duration.shorter,
-  }),
-  '&.Mui-focused': {
-    width: 320,
-    boxShadow: theme.customShadows.z8,
-  },
-  '& fieldset': {
-    borderWidth: `1px !important`,
-    borderColor: `${alpha(theme.palette.grey[500], 0.32)} !important`,
-  },
-}));
-
-// ----------------------------------------------------------------------
 
 UserListToolbar.propTypes = {
-  numSelected: PropTypes.number.isRequired,
   filterName: PropTypes.string.isRequired,
   onFilterName: PropTypes.func.isRequired,
-  onClickFilter: PropTypes.func,
+  role: PropTypes.string.isRequired,
+  setRole: PropTypes.func.isRequired,
+  status: PropTypes.string.isRequired,
+  setStatus: PropTypes.func.isRequired,
 };
 
-export default function UserListToolbar({ numSelected, filterName, onFilterName,onClickFilter }:PropTypes.InferProps<typeof UserListToolbar.propTypes>) {
-  
-  // console.log(filterName);
-  return (
-    <StyledRoot
-      sx={{
-        ...(numSelected > 0 && {
-          color: 'primary.main',
-          bgcolor: 'primary.lighter',
-        }),
-      }}
-    >
-      {numSelected > 0 ? (
-        <Typography component="div" variant="subtitle1">
-          {numSelected} selected
-        </Typography>
-      ) : 
-      
-      (
-        <StyledSearch
-          value={filterName}
-          onChange={onFilterName}
-          placeholder="Search by email..."
-          startAdornment={
-            <InputAdornment position="start">
-              <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled', width: 20, height: 20 }} />
-            </InputAdornment>
-          }
-        />
-      )
-      }
+const roles = [
+  {
+    value: 'ALL',
+    label: 'ALL',
+  },
+  {
+    value: 'PM',
+    label: 'PM',
+  },
+  {
+    value: 'STAFF',
+    label: 'STAFF',
+  },
+  {
+    value: 'INTERN',
+    label: 'INTERN',
+  },
+];
 
-      {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton>
-            <Iconify icon="eva:trash-2-fill" />
-          </IconButton>
-        </Tooltip>
-      ) :
-      (
-        <Tooltip title="Filter list">
-          <IconButton onClick={onClickFilter?onClickFilter:undefined}>
-            <Iconify icon="ic:round-filter-list" />
-          </IconButton>
-        </Tooltip>
-      )
-      }
+const statusList = [
+  {
+    value: 'All',
+    label: 'All',
+  },
+  {
+    value: 'Enable',
+    label: 'Enable',
+  },
+  {
+    value: 'Disable',
+    label: 'Disable',
+  },
+  {
+    value: 'Deactive',
+    label: 'Deactive',
+  },
+];
+
+export default function UserListToolbar({ 
+  filterName, 
+  onFilterName,
+  role,
+  setRole,
+  status,
+  setStatus,
+}:PropTypes.InferProps<typeof UserListToolbar.propTypes>) {
+  
+  return (
+    <StyledRoot> 
+      <Grid container spacing={3} >
+        <Grid item xs={12} sm={12} md={4}>
+          <TextInputSearch
+            filterName={filterName}
+            onFilterName={onFilterName}
+            placeholder="Search by email..."
+          />
+        </Grid>
+        <Grid item xs={12} sm={12} md={4}>
+          <TextInputMenu
+            filterDaily={role}
+            setFilterDaily={setRole}
+            list={roles}
+            label="Roles"
+          />
+        </Grid>
+        <Grid item xs={12} sm={12} md={4}>
+          <TextInputMenu
+            filterDaily={status}
+            setFilterDaily={setStatus}
+            list={statusList}
+            label="Status"
+          />
+        </Grid>
+      </Grid>
     </StyledRoot>
   );
 }

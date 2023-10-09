@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { Report, reportMsgToday } from "../interface/interface";
+import { Report, reportMsgToday, reportRoleType  } from "../interface/interface";
 import {
   getReport,
   getReportMsgMonthly,
   getReportMsgToday,
+  getReportRoleType,
 } from "./../api/appApi/appApi";
 
 export const useFetchDashboard = () => {
@@ -35,28 +36,34 @@ export const useFetchDashboard = () => {
     SAIGON2: 0,
   });
 
+  const [reportRoleType, setReportRoleType] = useState<reportRoleType[]>([]);
+  const [reportRoomType, setReportRoomType] = useState<reportRoleType[]>([]);
+
   useEffect(() => {
-    const fetch = async () => {
+    const fetchReport = async () => {
       const data = await getReport();
       data && setReport(data.result);
     };
-    fetch();
-  }, []);
-  useEffect(() => {
-    const fetch = async () => {
+    const fetchReportMsgMonthly = async () => {
       const dataMonthly = await getReportMsgMonthly();
       dataMonthly && setReportMsgMonthly(dataMonthly.result);
     };
-    fetch();
-  }, []);
-
-  useEffect(() => {
-    const fetch = async () => {
+    const fetchReportMsgToday = async () => {
       const dataToday = await getReportMsgToday();
       dataToday && setReportMsgToday(dataToday.result);
     };
-    fetch();
+    const fetchReportRoleType = async () => {
+      const dataToday = await getReportRoleType();
+      if(dataToday){
+        setReportRoleType(dataToday.role);
+        setReportRoomType(dataToday?.room);
+      }
+    };
+    fetchReport();
+    fetchReportMsgMonthly();
+    fetchReportMsgToday();
+    fetchReportRoleType();
   }, []);
 
-  return { report, reportMsgToday, reportMsgMonthly };
+  return { report, reportMsgToday, reportMsgMonthly, reportRoleType, reportRoomType };
 };

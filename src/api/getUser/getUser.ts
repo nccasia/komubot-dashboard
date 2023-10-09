@@ -1,5 +1,4 @@
 import { getAccessToken,removeAccessToken } from "./../../utils/localStorerage";
-import * as _jsonwebtoken from "jsonwebtoken";
 import jwt_decode from "jwt-decode";
 
 export const GetUser = () => {

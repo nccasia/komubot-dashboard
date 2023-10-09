@@ -1,19 +1,14 @@
 import PropTypes from 'prop-types';
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-// @mui
 import { Avatar, Box, Drawer, Link, Typography } from '@mui/material';
 import { alpha, styled } from '@mui/material/styles';
-// mock
-import account from '../../../_mock/account';
-// hooks
 import useResponsive from '../../../hooks/useResponsive';
-// components
 import Logo from '../../../components/logo';
 import NavSection from '../../../components/nav-section';
-//
 import navConfig from './config';
 import { GetUser } from '../../../api/getUser/getUser';
+import Scrollbar from '../../../components/scrollbar/Scrollbar';
 
 // ----------------------------------------------------------------------
 
@@ -48,67 +43,68 @@ export default function Nav({ openNav, onCloseNav }: PropTypes.InferProps<typeof
 
   const renderContent = (
     <>
-        <Box sx={{ px: 2.5, py: 3, display: 'inline-flex' }}>
-          <Logo />
-        </Box>
+      <Box sx={{ px: 2.5, py: 3, display: 'inline-flex' }}>
+        <Logo />
+      </Box>
+      <Box sx={{ mb: 3, mx: 2.5 }}>
+        <Link underline="none">
+          <StyledAccount>
+            <Avatar src="/assets/avatar.jpg" alt="photoURL" />
 
-        <Box sx={{ mb: 5, mx: 2.5 }}>
-          <Link underline="none">
-            <StyledAccount>
-              <Avatar src={account.photoURL} alt="photoURL" />
+            <Box sx={{ ml: 1 }}>
+              <Typography variant="subtitle2" sx={{ color: 'text.primary', wordBreak:'break-word'}}>
+                {GetUser()}
+              </Typography>
 
-              <Box sx={{ ml: 2 }}>
-                <Typography variant="subtitle2" sx={{ color: 'text.primary', wordBreak:'break-word'}}>
-                  {GetUser()}
-                </Typography>
-
-                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                  
-                </Typography>
-              </Box>
-            </StyledAccount>
-          </Link>
-        </Box>
-        <NavSection data={navConfig} />
+              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                
+              </Typography>
+            </Box>
+          </StyledAccount>
+        </Link>
+      </Box>
+      <NavSection data={navConfig} />    
     </>
   );
 
   return (
-    <Box
-      component="nav"
-      sx={{
-        flexShrink: { lg: 0 },
-        width: { lg: NAV_WIDTH },
-      }}
-    >
-      {isDesktop ? (
-        <Drawer
-          open
-          variant="permanent"
-          PaperProps={{
-            sx: {
-              width: NAV_WIDTH,
-              bgcolor: 'background.default',
-              borderRightStyle: 'dashed',
-            },
-          }}
-        >
-          {renderContent}
-        </Drawer>
-      ) : (
-        <Drawer
-          open={openNav}
-          onClose={onCloseNav}
-          ModalProps={{
-            keepMounted: true,
-          }}
-          PaperProps={{
-            sx: { width: NAV_WIDTH },
-          }}
-        >
-          {renderContent}
-        </Drawer>
-      )}
-    </Box>
+    <Scrollbar>
+      <Box
+        component="nav"
+        sx={{
+          flexShrink: { lg: 0 },
+          width: { lg: NAV_WIDTH },
+        }}
+      >
+        {isDesktop ? (
+          <Drawer
+            open
+            variant="permanent"
+            PaperProps={{
+              sx: {
+                width: NAV_WIDTH,
+                bgcolor: 'background.default',
+                borderRightStyle: 'dashed',
+              },
+            }}
+          >
+            {renderContent}
+          </Drawer>
+        ) : (
+          <Drawer
+            open={openNav}
+            onClose={onCloseNav}
+            ModalProps={{
+              keepMounted: true,
+            }}
+            PaperProps={{
+              sx: { width: NAV_WIDTH },
+            }}
+          >
+            {renderContent}
+          </Drawer>
+        )}
+      </Box>
+    </Scrollbar>
   );
 }

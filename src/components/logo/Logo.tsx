@@ -1,30 +1,9 @@
 import PropTypes from 'prop-types';
 import { forwardRef } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-// @mui
-import { useTheme } from '@mui/material/styles';
 import { Box, Link } from '@mui/material';
-import ncclogo from '../../images/ncclogo.png'
-// ----------------------------------------------------------------------
 
 const Logo:any = forwardRef(({ disabledLink = false, sx, ...other }:PropTypes.InferProps<typeof Logo.propTypes>, ref) => {
-  const theme = useTheme();
-
-  const PRIMARY_LIGHT = theme.palette.primary.light;
-
-  const PRIMARY_MAIN = theme.palette.primary.main;
-
-  const PRIMARY_DARK = theme.palette.primary.dark;
-
-  // OR using local (public folder)
-  // -------------------------------------------------------
-  // const logo = (
-  //   <Box
-  //     component="img"
-  //     src="/logo/logo_single.svg" => your path
-  //     sx={{ width: 40, height: 40, cursor: 'pointer', ...sx }}
-  //   />
-  // );
 
   const logo = (
     <Box
@@ -38,8 +17,7 @@ const Logo:any = forwardRef(({ disabledLink = false, sx, ...other }:PropTypes.In
       }}
       {...other}
     >
-      <img style={{width:'100%', height:'100%'}} src={`${ncclogo}`} />
-
+      <img style={{width:'100%', height:'100%'}} src="/assets/ncclogo.png" alt="ncclogo" />
     </Box>
   );
 

@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { Box,styled, } from '@mui/material';
+import { styled, } from '@mui/material';
 
 Scrollbar.propTypes = {
   children: PropTypes.node.isRequired,
@@ -17,10 +17,17 @@ function Scrollbar({ children}:PropTypes.InferProps<typeof Scrollbar.propTypes>)
 
 export default (Scrollbar);
 
-const StyledBox = styled(Box)(({ theme }) => ({
+const StyledBox = styled('div')(({ theme }) => ({
     overflow:'auto',
-    '& ::-webkit-scrollbar': {
-      height:'1px',
-      width:'1px',
+    '&::-webkit-scrollbar': {
+      height:'2px',
+      width:'2px',
+    },
+    '&::-webkit-scrollbar-thumb': {
+      background: '#919eab',
+      borderRadius: '2px',
+    },
+    '&::-webkit-scrollbar-track': {
+      background: '#f1f1f1',
     },
 }));

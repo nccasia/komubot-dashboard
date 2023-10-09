@@ -1,58 +1,45 @@
-import { filter } from "lodash";
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
-// @mui
 import {
   Avatar,
   Button,
   Card,
-  Checkbox,
   Container,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  IconButton,
-  MenuItem,
   Paper,
-  Popover,
   Stack,
   Table,
   TableBody,
   TableCell,
-  TableContainer,
   TablePagination,
   TableRow,
   Typography,
+  Menu,
+  MenuItem,
+  CircularProgress,
 } from "@mui/material";
-import Deleteimg from "../images/Deleteimg.png";
-// components
-import Iconify from "../components/iconify";
 import Label from "../components/label";
-// sections
-import { apiAxios, userLink } from "../axios/apiAxios";
 import {
-  UserListHead,
   UserListToolbar,
+  DialogAble,
+  DialogEdit,
 } from "../sections/@dashboard/usediscord";
-// mock
-import { patchUser } from "../api/userApi/userPatch";
-import { Alert, AlertTitle } from "@mui/lab";
 import { Iuser } from "../interface/interface";
-import { getUser } from "../api/user/userApi";
+import { deleteDeactiveUser, getUser, patchUser, postDeactiveUser } from "../api/user/userApi";
 import { useDebounce } from "../utils/useDebounce";
 import { rowPage } from "../utils/rowPage";
-import Snackbar from "@mui/material/Snackbar";
-import { notyf } from "../utils/notif";
-import axios from "axios";
-import {getComparator,applySortFilter} from "../utils/applySortFilter"
-// ----------------------------------------------------------------------
+import EditIcon from '@mui/icons-material/Edit';
+import CloseIcon from '@mui/icons-material/Close';
+import DoneIcon from '@mui/icons-material/Done';
+import AirplanemodeActiveIcon from '@mui/icons-material/AirplanemodeActive';
+import WifiTetheringIcon from '@mui/icons-material/WifiTethering';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import TableHeader from "../components/table/TableHeader";
+import Scrollbar from "../components/scrollbar/Scrollbar";
 
 const TABLE_HEAD = [
   { id: "Avatar", label: "Avatar", alignCenter: false },
   { id: "UserId", label: "UserId", alignRight: false },
-  { id: "Username", label: "Username", alignRight: false },
+  { id: "Username", label: "Username", alignRight: false, sort: true },
   { id: "Email", label: "Email", alignRight: false },
   { id: "Roles", label: "Roles", alignRight: false },
   { id: "Roles_discord", label: "Roles_discord", alignRight: false },
@@ -60,90 +47,35 @@ const TABLE_HEAD = [
   { id: "Action", label: "Action", alignRight: true },
 ];
 
-// ----------------------------------------------------------------------
-
 export default function UserDiscord() {
-  const [open, setOpen] = useState(null);
-  const [openfilter, setOpenFilter] = useState(null);
-
   const [page, setPage] = useState(0);
-
-  const [order, setOrder] = useState("asc");
-
-  const [selected, setSelected] = useState<string[]>([]);
-
-  const [orderBy, setOrderBy] = useState("email");
-
   const [filterName, setFilterName] = useState("");
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [users, setUsers] = useState<Iuser[]>([]);
-  const [select, setSelect] = useState<Iuser>();
+  const [select, setSelect] = useState<string | null>(null);
+  const [selectDeactive, setSelectDeactive] = useState<string | null>(null);
+  const [selectDelete, setSelectDelete] = useState<string | null>(null);
   const debounce = useDebounce(filterName.trim(), 900);
   const [userllength, setUerLength] = useState<number>(0);
-  // console.log(users)
-
-  // call api
-  const [filter, setFilter] = useState<boolean | null>(null);
+  const [role, setRole] = useState('ALL');
+  const [status, setStatus] = useState('All');
+  const [sort, setSort] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
   useEffect(() => {
     getUser({
       page: page + 1,
       size: rowsPerPage,
       name: debounce,
-      deactive: filter,
-    }).then((data) => {
+      deactive: status === 'All' ? null : status === 'Enable' ? false : status === 'Disable' ? true : null,
+      roles: role==='ALL' ? [] : [role],
+      sort: sort ? "DESC" : "ASC", 
+      server_deactive: status === 'Deactive' ? true : status === 'All'? null : false,
+    }, setLoading).then((data) => {
       setUsers(data.content);
       setUerLength(data.pageable.total);
     });
-  }, [page, rowsPerPage, debounce, filter]);
-
-  const handleOpenMenu = (event: any) => {
-    setOpen(event.currentTarget);
-  };
-
-  const handleCloseMenu = () => {
-    setOpen(null);
-  };
-  const handleOpenFilter = (event: any) => {
-    setOpenFilter(event.currentTarget);
-  };
-
-  const handleCloseFilter = () => {
-    setOpenFilter(null);
-  };
-
-  const handleRequestSort = (event: any, property: string) => {
-    const isAsc = orderBy === property && order === "asc";
-    setOrder(isAsc ? "desc" : "asc");
-    setOrderBy(property);
-  };
-
-  const handleSelectAllClick = (event: any) => {
-    if (event.target.checked) {
-      const newSelecteds: any = users.map((n: Iuser) => n.userId);
-      setSelected(newSelecteds);
-      return;
-    }
-    setSelected([]);
-  };
-
-  const handleClick = (event: any, name: string) => {
-    const selectedIndex: number = selected.indexOf(name);
-    let newSelected: any = [];
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      );
-    }
-    setSelected(newSelected);
-  };
+  }, [page, rowsPerPage, debounce, status, role, sort]);
 
   const handleChangePage = (event: any, newPage: number) => {
     setPage(newPage);
@@ -159,32 +91,17 @@ export default function UserDiscord() {
     setFilterName(event.target.value);
   };
 
-  const editUser = (index: string, main: boolean) => {
-    try {
-      const list: Iuser[] = users;
-      list.forEach((item: Iuser) => {
-        if (item.userId === index) {
-          item.deactive = !main;
-        }
-      });
-      patchUser({ index: index, data: list });
-      // console.log(patchUser)
-      notyf.success("Successfully");
-      handleCloseMenu();
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        notyf.error(error.response?.data.message);
-      }
-    }
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [anchorElOpen, setAnchorElOpen] = useState<null | string>(null);
+  const openEl = Boolean(anchorEl);
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>, userId: string | null) => {
+    setAnchorElOpen(userId);
+    setAnchorEl(event.currentTarget);
   };
-
-  const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - users.length) : 0;
-
-  const filteredUsers = applySortFilter(users, getComparator(order, orderBy));
-  // console.log(filterName)
-
-  const isNotFound = !filteredUsers.length && !!filterName;
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  const [openEdit, setOpenEdit] = useState<string | null>(null);
 
   return (
     <>
@@ -200,35 +117,35 @@ export default function UserDiscord() {
           mb={5}
         >
           <Typography variant="h4" gutterBottom>
-            User
+            Users
           </Typography>
-          {/* <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
-            New User
-          </Button> */}
         </Stack>
 
         <Card>
           <UserListToolbar
-            numSelected={selected.length}
             filterName={filterName}
             onFilterName={handleFilterByName}
-            onClickFilter={handleOpenFilter}
+            role={role}
+            setRole={setRole}
+            status={status}
+            setStatus={setStatus}
           />
-
-          {/* <Scrollbar sx={{}}> */}
-          <TableContainer>
+          <Scrollbar>
             <Table>
-              <UserListHead
-                order={order}
-                orderBy={orderBy}
+              <TableHeader 
                 headLabel={TABLE_HEAD}
-                rowCount={users.length}
-                numSelected={selected.length}
-                onRequestSort={handleRequestSort}
-                onSelectAllClick={handleSelectAllClick}
+                sort={sort}
+                setSort={setSort}
               />
               <TableBody>
-                {filteredUsers.map((row: Iuser) => {
+                {loading?                                  
+                  <TableRow >
+                      <TableCell align="center" colSpan={TABLE_HEAD.length}>  
+                          <CircularProgress sx={{color:'#80808085'}}/>
+                      </TableCell>  
+                  </TableRow>                             
+                :null}
+                {users ? users.map((row: Iuser) => {
                   const {
                     avatar,
                     userId,
@@ -237,26 +154,18 @@ export default function UserDiscord() {
                     roles,
                     roles_discord,
                     deactive,
+                    server_deactive,
                   } = row;
-                  const selectedUser = selected.indexOf(userId) !== -1;
                   return (
                     <TableRow
                       hover
                       key={userId}
                       tabIndex={-1}
                       role="checkbox"
-                      selected={selectedUser}
                     >
-                      {/* <TableCell padding="checkbox">
-                          <Checkbox checked={selectedUser} onChange={(event) => handleClick(event, userId)} />
-                        </TableCell> */}
-
-                      <TableCell component="th" scope="row" padding="none">
-                        <Stack direction="row" alignItems="center" spacing={2}>
-                          <Avatar style={{ marginLeft: "10px" }} src={avatar} />
-                          <Typography variant="subtitle2" noWrap>
-                            {/* {avatar} */}
-                          </Typography>
+                      <TableCell align="center">
+                        <Stack direction="row" alignItems="center" >
+                          <Avatar style={{ marginLeft: "10px" }} src={`https://cdn.discordapp.com/avatars/${userId}/${avatar}`} />
                         </Stack>
                       </TableCell>
                       <TableCell align="left">{userId}</TableCell>
@@ -268,83 +177,145 @@ export default function UserDiscord() {
                       </TableCell>
 
                       <TableCell align="left">
-                        <Label
-                          color={deactive ? "error" : "success"}
-                          disableAnimation={deactive}
-                        >
-                          {deactive? "deactive":"active"}
+                        <Label color={deactive ? "error" : "success"}>
+                          {deactive? "Disable":"Enable"}
+                        </Label>
+                        <Label color={server_deactive ? "error" : "success"} sx={{marginTop: 1}}>
+                          {server_deactive? "Deactive":"Active"}
                         </Label>
                       </TableCell>
                       <TableCell align="center">
-                        <IconButton
-                          size="large"
-                          color="inherit"
-                          onClick={(e) => {
-                            setSelect(row);
-                            handleOpenMenu(e);
-                          }}
+                        <Button
+                          id="basic-button"
+                          aria-controls={openEl ? 'basic-menu' : undefined}
+                          aria-haspopup="true"
+                          aria-expanded={openEl ? 'true' : undefined}
+                          variant="outlined"
+                          onClick={(event: React.MouseEvent<HTMLButtonElement>) => handleClick(event, userId)}
                         >
-                          {deactive ? <Iconify color={"green"}  width={25} icon={"material-symbols:check-small"} /> : <Iconify color={"red"} width={20} icon={"ic:outline-clear"} />}
-                          {/* <Iconify  icon={"eva:more-vertical-fill"} /> */}
-                        </IconButton>
-                      </TableCell>          
+                          Action
+                        </Button>
+                        {userId === anchorElOpen && (
+                          <Menu
+                            id="basic-menu"
+                            anchorEl={anchorEl}
+                            open={openEl}
+                            onClose={handleClose}
+                            MenuListProps={{
+                              'aria-labelledby': 'basic-button',
+                            }}
+                          >
+                            <MenuItem 
+                              onClick={() => {
+                                handleClose();
+                                setOpenEdit(userId);
+                              }}
+                              sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '5px',
+                                color: '#212b36c9',
+                              }}
+                            >
+                              <EditIcon sx={{ fontSize: 16}}/> 
+                              Edit
+                            </MenuItem>
+
+                            <MenuItem 
+                              onClick={() => {
+                                handleClose();
+                                setSelect(userId);
+                              }}
+                            >
+                              {deactive ? 
+                                <span 
+                                  style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '5px',
+                                    color: '#212b36c9',
+                                  }}
+                                >
+                                  <DoneIcon sx={{ fontSize: 16}}/>
+                                  Enable
+                                </span>
+                              : 
+                                <span
+                                  style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '5px',
+                                    color: '#212b36c9',
+                                  }}
+                                >
+                                  <CloseIcon sx={{ fontSize: 16}}/> 
+                                  Disable
+                                </span>
+                              }
+                            </MenuItem>
+                            <MenuItem 
+                              onClick={() => {
+                                handleClose();
+                                setSelectDeactive(userId);
+                              }}
+                              sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '5px',
+                                color: '#212b36c9',
+                              }}
+                            >
+                              {server_deactive ? 
+                                <span 
+                                  style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '5px',
+                                    color: '#212b36c9',
+                                  }}
+                                >
+                                  <WifiTetheringIcon sx={{ fontSize: 16}}/>
+                                  Active
+                                </span>
+                              : 
+                                <span
+                                  style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '5px',
+                                    color: '#212b36c9',
+                                  }}
+                                >
+                                  <AirplanemodeActiveIcon sx={{ fontSize: 16}}/>
+                                  Deactive
+                                </span>
+                              }
+                            </MenuItem>
+                            {server_deactive && (
+                              <MenuItem 
+                                onClick={() => {
+                                  handleClose();
+                                  setSelectDelete(userId);
+                                }}
+                                sx={{
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  gap: '5px',
+                                  color: '#212b36c9',
+                                }}
+                              >
+                                <DeleteForeverIcon sx={{ fontSize: 16}}/> 
+                                Delete
+                              </MenuItem>
+                            )}
+                          </Menu>
+                        )}
+                      </TableCell> 
                     </TableRow>
                   );
-                })}
-
-                {select && (
-                  <Dialog
-                    open={Boolean(open)}
-                    onClose={handleCloseMenu}
-                    aria-labelledby="alert-dialog-title"
-                    aria-describedby="alert-dialog-description"
-                  >
-                    <DialogTitle
-                      id="alert-dialog-title"
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "center",
-                        alignItems: "center",
-                      }}
-                    >
-                      <img
-                        alt=""
-                        style={{ height: "100px" }}
-                        src={`${Deleteimg}`}
-                      />
-                    </DialogTitle>
-                    {/* {!deactive? 'active':'deactive'} */}
-                    <DialogContent sx={{ width: "400px", textAlign: "center" }}>
-                      <DialogContent>
-                        <b style={{ fontSize: "30px" }}>Are you sure?</b> <br />
-                        {!select.deactive ? "Deactive" : "Active"}
-                        {": "}"{select.username}"?
-                      </DialogContent>
-                    </DialogContent>
-                    <DialogActions
-                      style={{ alignItems: "center", justifyContent: "center" }}
-                    >
-                      <Button onClick={handleCloseMenu}>No</Button>
-                      <Button
-                        style={{ backgroundColor: "#7cd1f9", color: "#fff" }}
-                        onClick={() => editUser(select.userId, select.deactive)}
-                        // {!deactive? 'active':'deactive'}
-                        autoFocus
-                      >
-                        Yes
-                      </Button>
-                    </DialogActions>
-                  </Dialog>
-                )}
-                {/* {emptyRows > 0 && (
-                  <TableRow style={{ height: 53 * emptyRows }}>
-                    <TableCell colSpan={6} />
-                  </TableRow>
-                )} */}
+                }): null}
               </TableBody>
-
-              {isNotFound && (
+              {users?.length === 0 && filterName !=='' && (
                 <TableBody>
                   <TableRow>
                     <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
@@ -367,18 +338,10 @@ export default function UserDiscord() {
                   </TableRow>
                 </TableBody>
               )}
+              
             </Table>
-          </TableContainer>
-          {/* </Scrollbar> */}
-
+          </Scrollbar>
           <TablePagination
-            // labelDisplayedRows={({ from, to, count }) =>
-            //   ` Showing ${page + 1} ${
-            //     count !== -1
-            //       ? `of  ${Math.ceil(userllength / rowsPerPage)} results`
-            //       : `  `
-            //   }`
-            // }
             rowsPerPageOptions={rowPage(userllength)}
             component="div"
             count={userllength}
@@ -388,66 +351,74 @@ export default function UserDiscord() {
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </Card>
+        <DialogAble
+          type="able" 
+          select={select}
+          setSelect={setSelect}
+          list={users?.filter(item => item?.userId === select)}
+          handleClick={(userId: string | null) => {
+            patchUser(userId);
+            setSelect(null);
+            if(status === 'All' || status === 'Deactive'){
+              const list = users?.map(item => {
+                if(item?.userId === userId){
+                    return {...item, deactive: !item?.deactive}
+                } else{
+                    return item;
+                }
+              });
+              setUsers(list);
+            }
+            if(status === 'Disable' || status === 'Enable'){
+              const list = users?.filter(item => item?.userId !== userId);
+              setUsers(list);
+            }
+          }}
+        />
+        <DialogAble 
+          type="deactive"
+          select={selectDeactive}
+          setSelect={setSelectDeactive}
+          list={users?.filter(item => item?.userId === selectDeactive)}
+          handleClick={(userId: string | null) => {
+            postDeactiveUser(userId);
+            setSelectDeactive(null);
+            if(status !== 'Deactive'){
+              const list = users?.map(item => {
+                if(item?.userId === userId){
+                    return {...item, server_deactive: !item?.server_deactive}
+                } else{
+                    return item;
+                }
+              });
+              setUsers(list);
+            }
+            if(status === 'Deactive'){
+              const list = users?.filter(item => item?.userId !== userId);
+              setUsers(list);
+            } 
+          }}
+        />
+        <DialogAble 
+          type="delete"
+          select={selectDelete}
+          setSelect={setSelectDelete}
+          list={users?.filter(item => item?.userId === selectDelete)}
+          handleClick={(userId: string | null) => {
+            deleteDeactiveUser(userId);
+            setSelectDelete(null);
+            const list = users?.filter(item => item?.userId !== userId);
+            setUsers(list);
+          }}
+        />
+        <DialogEdit 
+          openEdit={openEdit}
+          setOpenEdit={setOpenEdit}
+          list={users?.filter(item => item?.userId === openEdit)}
+          users={users}
+          setUsers={setUsers}
+        /> 
       </Container>
-
-      <Popover
-        open={Boolean(openfilter)}
-        anchorEl={openfilter}
-        onClose={handleCloseFilter}
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-        transformOrigin={{ vertical: "top", horizontal: "center" }}
-        PaperProps={{
-          sx: {
-            p: 1,
-            width: 140,
-            "& .MuiMenuItem-root": {
-              px: 1,
-              typography: "body2",
-              borderRadius: 0.75,
-            },
-          },
-        }}
-      >
-        <Button
-          sx={{
-            color: "gray",
-            backgroundColor: filter === null ? "#b6b1b1" : "white",
-          }}
-          fullWidth
-          onClick={() => {
-            setFilter(null);
-            handleCloseFilter();
-          }}
-        >
-          All
-        </Button>
-        <Button
-          sx={{
-            color: "gray",
-            backgroundColor: filter === false ? "#b6b1b1" : "white",
-          }}
-          fullWidth
-          onClick={() => {
-            setFilter(false);
-            handleCloseFilter();
-          }}
-        >
-          Active
-        </Button>
-        <Button
-          sx={{
-            color: "gray",
-            backgroundColor: filter === true ? "#b6b1b1" : "white",
-          }}
-          fullWidth
-          onClick={() => {
-            setFilter(true);
-            handleCloseFilter();
-          }}
-        >
-          Deactive
-        </Button>
-      </Popover>
     </>
   );
 }

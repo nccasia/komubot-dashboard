@@ -1,18 +1,18 @@
 import React from 'react';
 import ThemeProvider from './theme';
 import Router from './routes';
-import ScrollToTop from './components/scroll-to-top';
-import { StyledChart } from './components/chart';
+import { BrowserRouter } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
+
 function App() {
   return (
-    <div className="App">
-      
-        <ThemeProvider>
-          <ScrollToTop />
-          <StyledChart />
-          <Router />      
-        </ThemeProvider>
-    </div>
+    <HelmetProvider>
+      <ThemeProvider>
+        <BrowserRouter>
+          <Router />
+        </BrowserRouter>   
+      </ThemeProvider>
+    </HelmetProvider>
   );
 }
 

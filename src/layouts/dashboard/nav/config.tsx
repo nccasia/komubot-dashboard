@@ -1,7 +1,4 @@
-// component
 import SvgColor from "../../../components/svg-color";
-
-// ----------------------------------------------------------------------
 
 const icon = (name: string) => (
   <SvgColor
@@ -17,8 +14,8 @@ const navConfig = [
     icon: icon("ic_analytics"),
   },
   {
-    title: "user",
-    path: "/dashboard/userdiscord",
+    title: "users",
+    path: "/dashboard/users",
     icon: icon("ic_user"),
   },
   {
@@ -46,7 +43,11 @@ const navConfig = [
     path: "/dashboard/daily",
     icon: icon("ic_daily"),
   },
-
+  {
+    title: "mention",
+    path: "/dashboard/mention",
+    icon: icon("ic_mention"),
+  },
 ];
 
 export default navConfig;
