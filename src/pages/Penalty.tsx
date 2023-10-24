@@ -118,14 +118,14 @@ export default function Penalty() {
                 {penal && !loading ? penal.map((row:Ipenalty, index:number) => {
                   return (
                     <TableRow key={index}>
-                      <TableCell align="left">{row.userId}</TableCell>
-                      <TableCell align="left"><b>{row.username}</b></TableCell>
-                      <TableCell align="left">{row.reason}</TableCell>
-                      <TableCell align="left">
+                      <TableCell align="center">{row.userId}</TableCell>
+                      <TableCell align="center"><b>{row.username}</b></TableCell>
+                      <TableCell align="center">{row.reason}</TableCell>
+                      <TableCell align="center">
                         <Label color={row.isReject?'error': 'success'}  disableAnimation={(row.isReject)} >{String(row.isReject)}</Label>
                       </TableCell>
-                      <TableCell align="left">{row.channelFullName}</TableCell> 
-                      <TableCell align="left">{Moment(Number(row.createdTimestamp)).format('HH:MM DD/MM/YYYY ')}</TableCell>                
+                      <TableCell align="center">{row.channelFullName}</TableCell> 
+                      <TableCell align="center">{Moment(Number(row.createdTimestamp)).format('HH:MM DD/MM/YYYY ')}</TableCell>                
                     </TableRow>
                   );
                 }):null}

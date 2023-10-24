@@ -7,6 +7,7 @@ import {
     channelAddMemberLink
 } from "../../axios/apiAxios";
 import {GetChannel, GetChannelMember, PostRemoteMemberChannel} from "../../interface/interface"
+import { notyf } from "../../utils/notif";
 
 export const getChannel = async (index:GetChannel,setLoading: (isLoading: boolean) => void) => {
     try {
@@ -35,6 +36,9 @@ export const getChannelMember = async (index: GetChannelMember, setLoading: (e: 
         let queryParams = `?&id=${index.id}`;
         if(index.searchId){
             queryParams +=`&searchId=${index.searchId}`;
+        }
+        if(index.threadId){
+            queryParams +=`&threadId=${index.threadId}`;
         }
         const res:any = await apiAxios.get(channelMemberLink+queryParams);
         setLoading(false);
@@ -67,8 +71,9 @@ export const getSearchMemberChannel = async (name: string, setLoading: (e: boole
 export const postAddMemberChannel = async (index: PostRemoteMemberChannel) => {
     try {
         await apiAxios.post(channelAddMemberLink , index);
+        notyf.success("Add member successfully");
         return true;
     } catch (error:any) {
-        
+        notyf.error("Add member error");
     }
 };

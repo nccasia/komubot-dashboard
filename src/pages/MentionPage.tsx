@@ -60,8 +60,12 @@ export default function MentionPage() {
             name: debounce,
         },setLoading)
         .then(data=> {
-            setMention(data.content);
-            setMentionLength(data.pageable.total)
+            if (data?.content) {
+                setMention(data.content);
+                setMentionLength(data.pageable.total);
+            } else {
+                //
+            }
         })
     },[page, rowsPerPage, debounce, type, daytime, sort]);
 
@@ -122,13 +126,13 @@ export default function MentionPage() {
                                 {mention && !loading ? mention.map((row: MentionFace, index: number) => {
                                     return (
                                         <TableRow key={index}>           
-                                            <TableCell align="left">{row.id}</TableCell>
-                                            <TableCell align="left"><b>{row.author}</b></TableCell>
-                                            <TableCell align="left"><b>{row.mention}</b></TableCell>    
-                                            <TableCell align="left">{row.channel}</TableCell>
-                                            <TableCell align="left">{formatDateTime(String(row.time))}</TableCell>
-                                            <TableCell align="left">{row.reaction ? formatDateTime(String(row.reaction)) : null}</TableCell>
-                                            <TableCell align="left">
+                                            <TableCell align="center">{row.id}</TableCell>
+                                            <TableCell align="center"><b>{row.author}</b></TableCell>
+                                            <TableCell align="center"><b>{row.mention}</b></TableCell>    
+                                            <TableCell align="center">{row.channel}</TableCell>
+                                            <TableCell align="center">{formatDateTime(String(row.time))}</TableCell>
+                                            <TableCell align="center">{row.reaction ? formatDateTime(String(row.reaction)) : null}</TableCell>
+                                            <TableCell align="center">
                                                 <Label color={row.confirm ? "success" : "error"}>
                                                     {row.confirm ? "Spare" : "Punish"}
                                                 </Label>

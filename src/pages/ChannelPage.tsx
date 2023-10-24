@@ -125,10 +125,10 @@ export default function ChannelPage() {
                                 {channel && !loading ? channel.map((row: ChannelFace, index: number) => {
                                     return (
                                         <TableRow key={index}>           
-                                            <TableCell align="left">{row.id}</TableCell>
-                                            <TableCell align="left"><b>{(row.name)}</b></TableCell>
-                                            <TableCell align="left">{row.type}</TableCell>  
-                                            <TableCell align="left">
+                                            <TableCell align="center">{row.id}</TableCell>
+                                            <TableCell align="center"><b>{(row.name)}</b></TableCell>
+                                            <TableCell align="center">{row.type}</TableCell>  
+                                            <TableCell align="center">
                                                 <Button
                                                     id="basic-button"
                                                     aria-controls={openEl ? 'basic-menu' : undefined}

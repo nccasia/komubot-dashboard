@@ -121,11 +121,11 @@ export default function Message() {
                     const {id, email, channelFullName, createdTimestamp, content,} = row;
                     return (
                       <TableRow hover key={id} tabIndex={-1} role="checkbox">
-                        <TableCell align="left">{id}</TableCell>
-                        <TableCell align="left">{email}</TableCell>
-                        <TableCell align="left">{channelFullName}</TableCell>
-                        <TableCell align="left">{createdTimestamp? formatDateTime(String(createdTimestamp)):null}</TableCell>
-                        <TableCell align="left">{content}</TableCell>                                             
+                        <TableCell align="center">{id}</TableCell>
+                        <TableCell align="center">{email}</TableCell>
+                        <TableCell align="center">{channelFullName}</TableCell>
+                        <TableCell align="center">{createdTimestamp? formatDateTime(String(createdTimestamp)):null}</TableCell>
+                        <TableCell align="center">{content}</TableCell>                                             
                       </TableRow>
                     );
                   }): null}                 

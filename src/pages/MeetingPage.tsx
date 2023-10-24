@@ -116,12 +116,12 @@ export default function MeetingPage() {
                                 {meeting && !loading ? meeting.map((row: MeetingFace) => {
                                     return (
                                         <TableRow hover key={Number(row.id)}>
-                                            <TableCell align="left">{formatDateTime(String(row.createdTimestamp))}</TableCell>
-                                            <TableCell align="left"><b>{row.task}</b></TableCell>
-                                            <TableCell align="left">{row.repeat}</TableCell>
-                                            <TableCell align="left">{row.repeatTime}</TableCell>
-                                            <TableCell align="left">{row.channelFullName}</TableCell>
-                                            <TableCell align="left">
+                                            <TableCell align="center">{formatDateTime(String(row.createdTimestamp))}</TableCell>
+                                            <TableCell align="center"><b>{row.task}</b></TableCell>
+                                            <TableCell align="center">{row.repeat}</TableCell>
+                                            <TableCell align="center">{row.repeatTime}</TableCell>
+                                            <TableCell align="center">{row.channelFullName}</TableCell>
+                                            <TableCell align="center">
                                                 <Label color={row.cancel?'success':'error'}>{String(row.cancel)}</Label>
                                             </TableCell>
                                         </TableRow>

@@ -47,7 +47,7 @@ export default function DashboardAppPage() {
         <Grid container spacing={3}>
           <Grid
             onClick={() =>
-              navigate("/dashboard/userdiscord", { replace: true })
+              navigate("/dashboard/users", { replace: true })
             }
             item
             xs={12}
@@ -173,11 +173,12 @@ export default function DashboardAppPage() {
         </p>
         <Grid container spacing={3}>
           <Grid item xs={12} md={6} lg={4}>
-            <AppCurrentVisits
+          {reportMsgToday && (
+              <AppCurrentVisits
               title="Total message today"
               chartData={[
-                { label: "Hà Nội", value: reportMsgToday.HANOI },
-                { label: "Hà Nội 2", value: reportMsgToday.HANOI2 },
+                { label: "Hà Nội", value: reportMsgToday.HANOI || 0  },
+                {  label: "Hà Nội 2", value: reportMsgToday["HANOI2"] || 0  },
                 { label: "Hà Nội 3", value: reportMsgToday.HANOI3 },
                 { label: "Vinh", value: reportMsgToday.VINH },
                 { label: "Đà Nẵng", value: reportMsgToday.DANANG },
@@ -192,13 +193,15 @@ export default function DashboardAppPage() {
                 theme.palette.error.main,
               ]}
             />
+            )}
           </Grid>
 
           <Grid item xs={12} md={6} lg={8}>
-            <AppConversionRates
+          {reportMsgMonthly && (
+              <AppConversionRates
               title="Total message of monthly"
               chartData={[
-                { label: "Vinh", value: reportMsgMonthly.VINH },
+                { label: "Vinh", value: reportMsgMonthly.VINH || 0 },
                 { label: "Đà Nẵng", value: reportMsgMonthly.DANANG },
                 { label: "Hà Nội", value: reportMsgMonthly.HANOI },
                 { label: "Hà Nội 2", value: reportMsgMonthly.HANOI2 },
@@ -208,6 +211,7 @@ export default function DashboardAppPage() {
                 { label: "Sài Gòn 2", value: reportMsgMonthly.SAIGON2 },
               ]}
             />
+            )}
           </Grid>
         </Grid>
       </Container>

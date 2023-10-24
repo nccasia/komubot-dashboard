@@ -168,21 +168,23 @@ export default function UserDiscord() {
                           <Avatar style={{ marginLeft: "10px" }} src={`https://cdn.discordapp.com/avatars/${userId}/${avatar}`} />
                         </Stack>
                       </TableCell>
-                      <TableCell align="left">{userId}</TableCell>
-                      <TableCell align="left">{username}</TableCell>
-                      <TableCell align="left">{email}</TableCell>
-                      <TableCell align="left">{roles?.join(", ")}</TableCell>
-                      <TableCell align="left">
+                      <TableCell align="center">{userId}</TableCell>
+                      <TableCell align="center">{username}</TableCell>
+                      <TableCell align="center">{email}</TableCell>
+                      <TableCell align="center">{roles?.join(", ")}</TableCell>
+                      <TableCell align="center">
                         {roles_discord?.join(", ")}
                       </TableCell>
 
-                      <TableCell align="left">
-                        <Label color={deactive ? "error" : "success"}>
-                          {deactive? "Disable":"Enable"}
-                        </Label>
-                        <Label color={server_deactive ? "error" : "success"} sx={{marginTop: 1}}>
-                          {server_deactive? "Deactive":"Active"}
-                        </Label>
+                      <TableCell align="center">
+                        <div style={{display: "flex", alignItems: "center", gap: "2px", justifyContent: "center"}}>
+                          <Label color={deactive ? "error" : "success"}>
+                            {deactive? "Disable":"Enable"}
+                          </Label>
+                          <Label color={server_deactive ? "error" : "success"} >
+                            {server_deactive? "Deactive":"Active"}
+                          </Label>
+                        </div>
                       </TableCell>
                       <TableCell align="center">
                         <Button

@@ -1,3 +1,4 @@
+import React from 'react';
 import {
     Dialog,
     DialogContent,
@@ -8,19 +9,20 @@ import {
     InputAdornment,
     Button,
     CircularProgress,
+    DialogActions,
+    DialogContentText,
 } from "@mui/material";
-import React from 'react';
+import ClearIcon from '@mui/icons-material/Clear';
+import SearchIcon from '@mui/icons-material/Search';
+import { styled } from "@mui/material/styles";
 import { 
     getChannelMember, 
     postRemoteMemberChannel, 
     getSearchMemberChannel,
     postAddMemberChannel
 } from "../../../api/channelApi/channelApi";
-import ClearIcon from '@mui/icons-material/Clear';
-import SearchIcon from '@mui/icons-material/Search';
-import { styled } from "@mui/material/styles";
 import Scrollbar from "../../../components/scrollbar/Scrollbar";
-
+import HighlightOffRoundedIcon from '@mui/icons-material/HighlightOffRounded';
 const TextInput = styled(TextField)(({ theme }) => ({
     margin: "8px 0",
     '& .css-soky2i-MuiInputBase-root-MuiOutlinedInput-root': {
@@ -86,13 +88,13 @@ function DialogView({
                 });
             }
         }  
-    }, [open, textKey, openMenuId, openMenuId?.id, openAdd]);
+    }, [open, textKey, openMenuId, openMenuId?.id]);
 
     const handleClickText = (item: any) => {
         setText(item?.username);
         setOpenMenuId(item);
         setTextKey("");
-        setOpenAdd(false);
+        
     }
 
     const handleEnterText =(e: any)=> {
@@ -187,7 +189,19 @@ function DialogView({
                                             if(data){
                                                 setOpenMenuId(null);
                                                 setText("");
-                                                setOpenAdd(true);
+                                                if(open){
+
+                                                    getChannelMember({
+                                                        id: open,
+                                                        searchId: openMenuId ? openMenuId?.id : "",
+                                                    }, setLoading).then((data: any)=> {
+                                                        if(data){
+                                                            setListMember(data?.list);
+                                                            setTotal(data?.total);
+                                                            setSearchList([]);
+                                                        }
+                                                    });
+                                                }
                                             }
                                         })
                                     }}

@@ -109,6 +109,7 @@ export interface GetChannel{
 export interface GetChannelMember{
   id?: string;
   searchId?: string;
+  threadId?: string;
 }
 
 export interface PostRemoteMemberChannel{

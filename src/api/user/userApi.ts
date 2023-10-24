@@ -1,5 +1,6 @@
 import { apiAxios, userLink, userEditLink, userDeactiveLink } from "../../axios/apiAxios";
 import { GetUser, PostEditUser } from "../../interface/interface";
+import { notyf } from "../../utils/notif";
 
 export const getUser = async (index: GetUser, setLoading: (isLoading: boolean) => void) => {
   try {
@@ -34,8 +35,10 @@ export const patchUser = async (userId: string | null) => {
 export const postEditUser = async (index: PostEditUser) => {
   try {
     await apiAxios.post(userEditLink , index);
+    notyf.success("Edit user successfully");
     return true;
   } catch (error) {
+    notyf.error("error");
     return false;
   }
 };
@@ -53,8 +56,10 @@ export const deleteDeactiveUser = async (userId: string | null) => {
   try {
     const queryParams = `/${userId}`
     await apiAxios.delete(userLink + queryParams);
+    notyf.success("Delete user successfully");
     return true;
   } catch (error) {
+    notyf.error("error");
     return false;
   }
 };

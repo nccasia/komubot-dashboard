@@ -18,7 +18,7 @@ export default function TableHeader({
             <TableRow>
                 {headLabel.map((headCell:any) => (
                     <TableCell key={headCell.id}>
-                        <div style={{display: "flex", alignItems: "center"}}>
+                        <div style={{display: "flex", alignItems: "center", justifyContent:"center"}}>
                             {headCell.label}
                             {headCell.sort && 
                                 <IconButton onClick={() => setSort(!sort)}>
